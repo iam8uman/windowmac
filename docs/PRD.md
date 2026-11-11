@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Owner | Suman Sharma ([@iam8uman](https://github.com/iam8uman)) |
-| Status | v1.1.0: renamed from Swoop to Windowmac (November 2026) |
+| Status | v1.2.0: Strip mode (November 2026) |
 | Repo | https://github.com/iam8uman/windowmac |
 | Website | https://windowmac.vercel.app |
 | License | MIT, free and open source |
@@ -37,7 +37,7 @@ It was built over the Dashain 2026 holiday as an open-source side project, inspi
 5. Stay native, light and private: no network, no account, only the Accessibility permission.
 
 **Non-goals (for now)**
-- Automatic tiling or a scrolling strip (that was a separate prototype, StripWM).
+- Automatic tiling of every screen. (Strip is opt-in, per screen, since v1.2.)
 - Window management across Spaces or Mission Control.
 - Windows or Linux versions.
 - A paid tier.
@@ -78,8 +78,11 @@ Arrows for halves and thirds, ↩ maximize, C centre, F fullscreen, T centre thi
 - **Stash:** tuck a window behind the left or right edge and reveal it on hover. Unstash puts it back.
 - **More:** undo, initial frame, and user-defined custom layouts
 
+### 5.3.1 Strip (v1.2)
+An opt-in scrolling layout, per display and Space. Trigger + S turns it on: the screen's normal, resizable windows become columns on one horizontal strip, ordered left to right and keeping roughly their widths. Strip keys act the moment they're pressed (and repeat while held) instead of on release: A/D focus, ⇧A/⇧D move, W cycle width ⅓ → ½ → ⅔, ⇧W full width, ⇧C centre, ⇧S float out / join. Trigger + scroll or swipe slides the strip and settles on a column. A frosted bar at the bottom shows one app icon per column (focused one ringed, off-screen ones dimmed) plus a key legend; clicking a tile while holding the trigger focuses it. A 0.4 s heartbeat keeps the strip in sync: closed, minimized, hidden or fullscreened windows leave, new windows join next to the focused one, ⌘-Tab or a click scrolls the window into view, and a hand-resized column keeps its width. Snapping a strip window with the radial menu floats it out. Without a strip on the screen, strip keys type as normal.
+
 ### 5.4 Settings
-General (launch at login, padding, step size, animation, cursor follows window, haptics, ignored apps, import/export/reset), Trigger (any combination of Fn, left/right ⌃⌥⌘⇧, hold delay, dead zone), Radial Menu (size, thickness, circle or rounded square, accent colour or custom colour, per-direction actions), Preview (padding, corners, border, fill, colour), Keybinds (recorder, conflicts, cycles), Layouts (custom fractions with a live thumbnail), Stash (sliver width, reveal on hover), About.
+General (launch at login, padding, step size, animation, cursor follows window, haptics, ignored apps, import/export/reset), Trigger (any combination of Fn, left/right ⌃⌥⌘⇧, hold delay, dead zone), Radial Menu (size, thickness, circle or rounded square, accent colour or custom colour, per-direction actions), Preview (padding, corners, border, fill, colour), Keybinds (recorder, conflicts, cycles), Layouts (custom fractions with a live thumbnail), Stash (sliver width, reveal on hover), Strip (width of new columns, new windows join, keep focused column centred, show the bar, off-screen sliver), About.
 
 ### 5.5 Automation
 `windowmac://` links for every action, for example `windowmac://action/right-half`, `windowmac://screen/next`, `windowmac://direction/top-left`, `windowmac://custom/<name>`, `windowmac://stash/left`, `windowmac://undo`, `windowmac://settings`. Running `Windowmac --list` prints every command.
@@ -102,12 +105,13 @@ Sources/WindowmacCore   Pure logic, no AppKit, unit-tested
   Interaction         RadialDirection math, CycleTracker, FrameHistory (undo)
   Settings            WindowmacSettings, TriggerKey, Keybind, themes, forgiving Codable
   Commands            windowmac:// URL parser and command list
+  Strip               StripLayout (columns, widths, focus, scroll) and StripPlacement (parking)
 
 Sources/Windowmac       The app
   App/                main, AppDelegate (menu bar, permission, URL scheme), SettingsStore
-  Windows/            AX helpers, AXWindow, Screens, FrameAnimator, WindowEngine, StashManager
+  Windows/            AX helpers, AXWindow, Screens, FrameAnimator, WindowEngine, StashManager, StripManager
   Trigger/            TriggerController (CGEventTap: modifiers, keys, mouse)
-  Overlays/           OverlayPanel, RadialMenu, Preview
+  Overlays/           OverlayPanel, RadialMenu, Preview, StripBar
   Settings/           SwiftUI settings window
 ```
 
@@ -117,6 +121,7 @@ Sources/Windowmac       The app
 - **Screen-space geometry** throughout (top-left origin, like AX), converted to AppKit coordinates only for overlays.
 - **Animation:** a 120 Hz ease-out timer. If an app is slow to respond to AX calls, the window jumps straight to its final frame.
 - **Settings** are stored as JSON in UserDefaults. Decoding is forgiving: unknown or broken fields fall back to defaults instead of wiping the user's setup.
+- **Strip** is a pure model in `WindowmacCore/Strip.swift` (`StripLayout`, `StripPlacement`, unit-tested) applied by `StripManager`. Columns scrolled off screen are parked at a free edge with a sliver showing, or below the screen when that edge touches another display. Strips are keyed by display; a strip is "active" only while its windows are on screen, which is how it follows Spaces without private APIs.
 - **Stash** refuses edges that touch another display, because the window would just appear there.
 
 ### 6.4 Build and release
@@ -168,4 +173,5 @@ A single static page in Ubuntu / Ubuntu Mono on an indigo and blue palette. The 
 | 2026-10-20 | Default trigger changed from Right ⌥ to **Left ⌥** (v1.0.1) |
 | 2026-10-20 | One-line installer and illustrated first-run guide added to the site |
 | 2026-10-20 | Website type set in Ubuntu, original blue palette kept |
+| 2026-11-11 | **Strip** added (v1.2.0): opt-in scrolling columns per screen with a bar of app icons, replacing the old "no scrolling strip" non-goal |
 | 2026-11-11 | Renamed **Swoop → Windowmac** (v1.1.0): new bundle ID, `windowmac://` scheme, windowmac.vercel.app; settings migrate from Swoop |

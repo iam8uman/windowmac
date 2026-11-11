@@ -14,7 +14,8 @@ private func triggerTapCallback(proxy: CGEventTapProxy,
 ///   • cursor movement picks a direction on the radial menu,
 ///   • left-click cycles through that direction's actions,
 ///   • trigger + key runs a keybind (pressing it again cycles),
-///   • releasing the trigger applies the choice; Esc or right-click cancels.
+///   • releasing the trigger applies the choice; Esc or right-click cancels,
+///   • strip keys act instantly, scrolling slides the strip, and the strip bar's tiles can be clicked.
 /// Keys that aren't keybinds pass straight through and cancel, so typing with
 /// the trigger modifier (e.g. ⌥ for special characters) never gets in the way.
 final class TriggerController {
@@ -36,13 +37,16 @@ final class TriggerController {
     }
 
     private struct Session {
-        let window: AXWindow
-        let start: CGPoint
+        var window: AXWindow
+        var start: CGPoint
         var source: Source?
         var index = 0
         var direction: RadialDirection = .center
         var visible = false
         var timer: Timer?
+        /// Strip keys or scrolling were used: the radial menu steps aside and release does nothing.
+        var usedStrip = false
+        var scrolled = false
     }
 
     var isPaused = false
@@ -68,7 +72,7 @@ final class TriggerController {
         if tap != nil { return true }
         let types: [CGEventType] = [.flagsChanged, .keyDown, .keyUp, .mouseMoved,
                                     .leftMouseDown, .leftMouseUp, .leftMouseDragged,
-                                    .rightMouseDown, .rightMouseUp]
+                                    .rightMouseDown, .rightMouseUp, .scrollWheel]
         let mask = types.reduce(CGEventMask(0)) { $0 | (CGEventMask(1) << CGEventMask($1.rawValue)) }
         guard let tap = CGEvent.tapCreate(tap: .cgSessionEventTap,
                                           place: .headInsertEventTap,
@@ -114,6 +118,21 @@ final class TriggerController {
                 return nil
             }
             let extra = TriggerKey.extraModifiers(flags: event.flags.rawValue, trigger: settings.triggerKeys)
+            if let bind = settings.keybind(keyCode: UInt16(code), modifiers: extra),
+               let first = bind.actions.first?.builtin, first.isImmediate {
+                // Without a strip on this screen, strip keys type as normal (⌥A is å on many layouts).
+                guard first == .stripToggle || engine.strips.hasStrip(for: session!.window) else {
+                    end(commit: false)
+                    return pass
+                }
+                swallowedKeyUps.insert(code)
+                let repeating = event.getIntegerValueField(.keyboardEventAutorepeat) != 0
+                // Holding A or D keeps stepping through columns; toggles don't repeat.
+                if !repeating || [.stripFocusLeft, .stripFocusRight, .stripMoveLeft, .stripMoveRight].contains(first) {
+                    runStripAction(first)
+                }
+                return nil
+            }
             if let bind = settings.keybind(keyCode: UInt16(code), modifiers: extra) {
                 swallowedKeyUps.insert(code)
                 // Holding a key down shouldn't spin through the cycle.
@@ -144,7 +163,30 @@ final class TriggerController {
             select(.direction(dir), advanceIfSame: false)
             return pass
 
+        case .scrollWheel:
+            guard session != nil else { return pass }
+            let continuous = event.getIntegerValueField(.scrollWheelEventIsContinuous) != 0
+            var dx = CGFloat(event.getDoubleValueField(.scrollWheelEventPointDeltaAxis2))
+            var dy = CGFloat(event.getDoubleValueField(.scrollWheelEventPointDeltaAxis1))
+            if !continuous { dx *= 4; dy *= 4 } // mouse wheel notches are small
+            // Sideways swipes, or a plain wheel, both slide the strip.
+            let delta = abs(dx) >= abs(dy) ? dx : dy
+            guard delta != 0, engine.strips.scroll(by: -delta, at: event.location) else { return pass }
+            session?.scrolled = true
+            stepAsideForStrip()
+            return nil
+
         case .leftMouseDown:
+            if session != nil, engine.strips.bar.contains(event.location) {
+                if let i = engine.strips.bar.tileIndex(at: event.location),
+                   let (strip, _) = engine.strips.barModel(at: event.location) {
+                    engine.strips.focusColumn(i, in: strip)
+                    if let w = strip.focusedWindow { session?.window = w }
+                    stepAsideForStrip()
+                }
+                swallowMouseUp = true
+                return nil
+            }
             guard let s = session, s.visible else { return pass }
             if let src = s.source { select(src, advanceIfSame: true) }
             swallowMouseUp = true
@@ -193,8 +235,38 @@ final class TriggerController {
         guard var s = session, !s.visible else { return }
         s.visible = true
         session = s
-        if settings.radialMenuEnabled { radial.show(at: s.start, theme: settings.radialTheme) }
+        if settings.radialMenuEnabled && !s.usedStrip { radial.show(at: s.start, theme: settings.radialTheme) }
+        engine.strips.showBarIfStrip(at: s.window.frame?.center ?? s.start, sticky: true)
         refresh()
+    }
+
+    /// Runs a strip action right away and keeps the session going for the next key.
+    private func runStripAction(_ action: WindowAction) {
+        guard let s = session else { return }
+        stepAsideForStrip()
+        engine.perform(.builtin(action), on: s.window)
+        // Focus moved to another column: later keys (and a flick) apply to that window.
+        if let w = engine.strips.strip(containing: s.window)?.focusedWindow { session?.window = w }
+        if settings.hapticFeedback {
+            NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+        }
+    }
+
+    /// Strip in use: hide the radial menu and preview, and make release a no-op.
+    private func stepAsideForStrip() {
+        guard var s = session else { return }
+        s.usedStrip = true
+        s.source = nil
+        // Only a deliberate flick from here on brings the radial menu back.
+        s.start = Screens.mouseLocation
+        s.direction = .center
+        if !s.visible {
+            s.visible = true
+            s.timer?.invalidate()
+        }
+        session = s
+        radial.hide()
+        preview.hide()
     }
 
     private func actions(for source: Source) -> [ActionRef] {
@@ -234,7 +306,8 @@ final class TriggerController {
     }
 
     private func refresh() {
-        guard let s = session, s.visible else { return }
+        guard let s = session, s.visible, !s.usedStrip || s.source != nil else { return }
+        if s.usedStrip, settings.radialMenuEnabled { radial.show(at: s.start, theme: settings.radialTheme) }
         let action = currentAction(s)
         let list = s.source.map(actions(for:)) ?? []
 
@@ -269,6 +342,8 @@ final class TriggerController {
         session = nil
         radial.hide()
         preview.hide()
+        if s.scrolled { engine.strips.endScrolling() }
+        engine.strips.bar.hide(after: s.usedStrip ? 0.8 : 0)
 
         guard commit, s.visible, let source = s.source, let action = currentAction(s) else { return }
         let index = s.index

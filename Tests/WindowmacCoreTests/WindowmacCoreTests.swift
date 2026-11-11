@@ -174,7 +174,7 @@ final class SettingsTests: XCTestCase {
         let s = try JSONDecoder().decode(WindowmacSettings.self, from: Data(json.utf8))
         XCTAssertEqual(s.padding, 20)
         XCTAssertEqual(s.triggerKeys, [.leftOption]) // fell back to default
-        XCTAssertEqual(s.keybinds.count, 1)
+        XCTAssertEqual(s.keybinds.count, 1 + WindowmacSettings.defaultStripKeybinds.count) // plus the Strip keys, added once
         XCTAssertEqual(s.keybinds[0].actions, [.builtin(.rightHalf)])
         XCTAssertEqual(s.radialActions, WindowmacSettings.defaultRadialActions)
     }
@@ -226,5 +226,177 @@ final class TrialTests: XCTestCase {
     func testDisabledLicensingIsFree() {
         XCTAssertEqual(TrialPolicy.status(trialStart: start, now: start + day * 100, hasEntitlement: false, licensingEnabled: false), .free)
         XCTAssertTrue(LicenseStatus.free.canUseWindowmac)
+    }
+}
+
+final class StripTests: XCTestCase {
+    let viewport = CGRect(x: 0, y: 25, width: 1200, height: 800)
+    let gap: CGFloat = 10
+
+    func strip(_ widths: [Double], focused: Int = 0) -> StripLayout {
+        StripLayout(columns: widths.enumerated().map { .init(id: UInt32($0.offset + 1), width: $0.element) }, focused: focused)
+    }
+
+    func testTwoHalvesFillTheScreenWithEvenGaps() {
+        let s = strip([0.5, 0.5])
+        let f = s.frames(viewport: viewport, gap: gap)
+        XCTAssertEqual(f[0], CGRect(x: 10, y: 35, width: 585, height: 780))
+        XCTAssertEqual(f[1], CGRect(x: 605, y: 35, width: 585, height: 780))
+        XCTAssertEqual(s.contentWidth(viewport: viewport, gap: gap), viewport.width)
+        XCTAssertEqual(s.maxScroll(viewport: viewport, gap: gap), 0)
+    }
+
+    func testFocusingOffScreenColumnScrollsJustEnough() {
+        var s = strip([0.5, 0.5, 0.5, 0.5])
+        XCTAssertTrue(s.focus(by: 1))
+        s.reveal(viewport: viewport, gap: gap)
+        XCTAssertEqual(s.scroll, 0) // second column already fully visible
+        s.focus(by: 1)
+        s.reveal(viewport: viewport, gap: gap)
+        let f = s.frames(viewport: viewport, gap: gap)[2]
+        XCTAssertEqual(f.maxX, viewport.maxX - gap, accuracy: 0.5)
+        XCTAssertFalse(s.focus(by: 5) && s.focused != 3)
+        XCTAssertEqual(s.focused, 3)
+        XCTAssertFalse(s.focus(by: 1)) // already at the end
+    }
+
+    func testScrollingBackLeft() {
+        var s = strip([0.5, 0.5, 0.5], focused: 2)
+        s.reveal(viewport: viewport, gap: gap)
+        XCTAssertGreaterThan(s.scroll, 0)
+        s.focus(index: 0)
+        s.reveal(viewport: viewport, gap: gap)
+        XCTAssertEqual(s.scroll, 0)
+    }
+
+    func testMoveColumnKeepsFocusOnIt() {
+        var s = strip([0.5, 0.5, 0.5])
+        XCTAssertTrue(s.moveFocused(by: 1))
+        XCTAssertEqual(s.columns.map(\.id), [2, 1, 3])
+        XCTAssertEqual(s.focused, 1)
+        XCTAssertFalse(strip([0.5]).focusedID == nil)
+        var one = strip([0.5])
+        XCTAssertFalse(one.moveFocused(by: -1))
+    }
+
+    func testCycleWidthAndFullWidth() {
+        var s = strip([0.5])
+        s.cycleWidth()
+        XCTAssertEqual(s.columns[0].width, 2.0 / 3.0, accuracy: 0.001)
+        s.cycleWidth()
+        XCTAssertEqual(s.columns[0].width, 1.0 / 3.0, accuracy: 0.001)
+        s.toggleFullWidth()
+        XCTAssertEqual(s.frames(viewport: viewport, gap: gap)[0].width, viewport.width - 2 * gap)
+        s.cycleWidth() // leaves full width first
+        XCTAssertFalse(s.columns[0].fullWidth)
+        XCTAssertEqual(s.columns[0].width, 1.0 / 3.0, accuracy: 0.001)
+    }
+
+    func testWidthRoundTrip() {
+        let s = strip([0.4])
+        let w = s.width(of: 0, viewport: viewport, gap: gap)
+        XCTAssertEqual(StripLayout.fraction(forWidth: w, viewport: viewport, gap: gap), 0.4, accuracy: 0.0001)
+        XCTAssertEqual(StripLayout.clampWidth(5), 1)
+        XCTAssertEqual(StripLayout.clampWidth(.nan), 0.5)
+    }
+
+    func testInsertAndRemove() {
+        var s = strip([0.5, 0.5], focused: 0)
+        s.insertAfterFocused(.init(id: 9, width: 0.5))
+        XCTAssertEqual(s.columns.map(\.id), [1, 9, 2])
+        XCTAssertEqual(s.focusedID, 9)
+        XCTAssertTrue(s.remove(id: 9))
+        XCTAssertEqual(s.focusedID, 1)
+        s.focus(index: 1)
+        s.remove(id: 2)
+        XCTAssertEqual(s.focusedID, 1)
+        s.remove(id: 1)
+        XCTAssertTrue(s.isEmpty)
+        XCTAssertNil(s.focusedID)
+        XCTAssertFalse(s.remove(id: 1))
+    }
+
+    func testSettleSnapsToAColumnAndFocusesIt() {
+        var s = strip([0.5, 0.5, 0.5, 0.5])
+        s.scroll(by: 700, viewport: viewport, gap: gap)
+        s.settle(viewport: viewport, gap: gap)
+        XCTAssertEqual(s.scroll, 595, accuracy: 0.5) // column 2's left edge
+        XCTAssertEqual(s.focused, 1)
+        XCTAssertGreaterThanOrEqual(s.visibleFraction(of: s.focused, viewport: viewport, gap: gap), 0.99)
+    }
+
+    func testScrollIsClamped() {
+        var s = strip([0.5, 0.5, 0.5])
+        s.scroll(by: -500, viewport: viewport, gap: gap)
+        XCTAssertEqual(s.scroll, 0)
+        s.scroll(by: 10_000, viewport: viewport, gap: gap)
+        XCTAssertEqual(s.scroll, s.maxScroll(viewport: viewport, gap: gap))
+    }
+
+    func testParkingOffScreenColumns() {
+        let screen = CGRect(x: 0, y: 0, width: 1200, height: 850)
+        let onScreen = CGRect(x: 10, y: 35, width: 585, height: 780)
+        XCTAssertEqual(StripPlacement.frame(for: onScreen, screen: screen, peek: 8, leftFree: true, rightFree: true, bottomFree: true), onScreen)
+
+        let farRight = CGRect(x: 1800, y: 35, width: 585, height: 780)
+        XCTAssertEqual(StripPlacement.frame(for: farRight, screen: screen, peek: 8, leftFree: true, rightFree: true, bottomFree: true).minX, 1192)
+
+        let farLeft = CGRect(x: -900, y: 35, width: 585, height: 780)
+        XCTAssertEqual(StripPlacement.frame(for: farLeft, screen: screen, peek: 8, leftFree: true, rightFree: true, bottomFree: true).maxX, 8)
+
+        // Partly visible with nothing beyond the edge: left where it is.
+        let partly = CGRect(x: 1000, y: 35, width: 585, height: 780)
+        XCTAssertEqual(StripPlacement.frame(for: partly, screen: screen, peek: 8, leftFree: true, rightFree: true, bottomFree: true), partly)
+
+        // Another display on the right: hang it below the screen instead.
+        let parked = StripPlacement.frame(for: partly, screen: screen, peek: 8, leftFree: true, rightFree: false, bottomFree: true)
+        XCTAssertEqual(parked.minY, 842)
+        XCTAssertLessThanOrEqual(parked.maxX, screen.maxX)
+    }
+
+    func testBottomIsFree() {
+        let main = CGRect(x: 0, y: 0, width: 1440, height: 900)
+        XCTAssertTrue(StripPlacement.bottomIsFree(screen: main, otherScreens: [main, CGRect(x: 1440, y: 0, width: 1920, height: 1080)]))
+        XCTAssertFalse(StripPlacement.bottomIsFree(screen: main, otherScreens: [CGRect(x: 0, y: 900, width: 1920, height: 1080)]))
+    }
+}
+
+final class StripSettingsTests: XCTestCase {
+    func testStripActionsAreImmediateAndListed() {
+        XCTAssertTrue(WindowAction.stripFocusRight.isImmediate)
+        XCTAssertFalse(WindowAction.leftHalf.isImmediate)
+        XCTAssertEqual(ActionCategory.strip.actions.count, 11)
+    }
+
+    func testDefaultStripKeysDontClash() {
+        let combos = WindowmacSettings.defaultKeybinds.map { "\($0.keyCode)-\($0.modifiers.rawValue)" }
+        XCTAssertEqual(combos.count, Set(combos).count)
+        XCTAssertEqual(WindowmacSettings().shortcut(for: .stripToggle), "S")
+        XCTAssertEqual(WindowmacSettings().shortcut(for: .stripMoveRight), "⇧D")
+    }
+
+    func testOldSetupsGetStripKeysWithoutOverwritingTheirs() throws {
+        // A pre-Strip setup where the user bound A to Maximize.
+        let json = #"{"keybinds":[{"keyCode":0,"modifiers":0,"actions":["maximize"]}]}"#
+        let s = try JSONDecoder().decode(WindowmacSettings.self, from: Data(json.utf8))
+        XCTAssertEqual(s.keybind(keyCode: 0, modifiers: [])?.actions, [.builtin(.maximize)])
+        XCTAssertEqual(s.keybind(keyCode: 2, modifiers: [])?.actions, [.builtin(.stripFocusRight)])
+        XCTAssertEqual(s.keybind(keyCode: 1, modifiers: [])?.actions, [.builtin(.stripToggle)])
+
+        // Once saved, deleting a strip key sticks.
+        var saved = s
+        saved.keybinds.removeAll { $0.keyCode == 1 }
+        let again = try JSONDecoder().decode(WindowmacSettings.self, from: JSONEncoder().encode(saved))
+        XCTAssertNil(again.keybind(keyCode: 1, modifiers: []))
+    }
+
+    func testStripURLs() {
+        XCTAssertEqual(CommandParser.parse(URL(string: "windowmac://strip/toggle")!), .action(.builtin(.stripToggle)))
+        XCTAssertEqual(CommandParser.parse(URL(string: "windowmac://strip/move-left")!), .action(.builtin(.stripMoveLeft)))
+        XCTAssertEqual(CommandParser.parse(URL(string: "windowmac://strip/centre")!), .action(.builtin(.stripCenter)))
+        XCTAssertEqual(CommandParser.parse(URL(string: "windowmac://action/strip-focus-right")!), .action(.builtin(.stripFocusRight)))
+        for url in CommandParser.allCommands() {
+            XCTAssertNotNil(CommandParser.parse(URL(string: url)!), url)
+        }
     }
 }

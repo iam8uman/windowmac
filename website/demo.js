@@ -446,3 +446,351 @@
     io.observe(stage);
   }
 })();
+
+/* Strip demo: windows as columns on one horizontal strip that scrolls, with the bar of app icons
+   at the bottom. Same model as the app (StripLayout): widths are fractions of the screen, gaps are
+   even, focusing a column scrolls just enough to show it, and columns off screen peek in at the edge. */
+(() => {
+  "use strict";
+  const root = document.getElementById("strip-demo");
+  if (!root) return;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const screen = root.querySelector(".strip-screen");
+  const desk = root.querySelector(".strip-desk");
+  const track = root.querySelector(".strip-track");
+  const tiles = root.querySelector(".strip-tiles");
+  const appLabel = root.querySelector("[data-strip-app]");
+  const legend = [...root.querySelectorAll("[data-strip]")];
+
+  const GAP = 1.2;          // % of the screen width
+  const VGAP = 2.2;         // % of the screen height
+  const PEEK = 0.9;         // how much of an off-screen column shows at the edge
+  const PRESETS = [1 / 3, 1 / 2, 2 / 3];
+  const MAX = 9;
+
+  const APPS = {
+    browser: { name: "Browser", title: "windowmac.vercel.app", glyph: "◎", icon: "linear-gradient(145deg,#5AC8FA,#0A84FF)",
+      body: '<div class="body browser"><div class="b-hero"></div><div class="b-line"></div><div class="b-line short"></div><div class="b-grid"><span></span><span></span><span></span></div></div>' },
+    terminal: { name: "Terminal", title: "~/windowmac", glyph: "›_", icon: "linear-gradient(145deg,#3A3C66,#11122C)",
+      body: '<pre class="body terminal">$ swift test\nExecuted 39 tests, 0 failures\n$ open -g "windowmac://strip/right"\n$ <span class="caret"></span></pre>' },
+    notes: { name: "Notes", title: "Ideas", glyph: "✎", icon: "linear-gradient(145deg,#FFE27A,#FFB800)",
+      body: '<div class="body notes"><p class="n-title">Launch checklist</p><p>☑ Strip mode</p><p>☑ Bar of icons</p><p>☐ Post on X</p><p>☐ Chiya</p></div>' },
+    editor: { name: "Editor", title: "Strip.swift", glyph: "{ }", icon: "linear-gradient(145deg,#B48CFF,#6E3BFF)",
+      body: '<div class="body app-editor"><span class="c">// focus scrolls the strip</span>\n<span class="k">mutating func</span> reveal() {\n  <span class="k">if</span> left &lt; scroll {\n    scroll = left\n  }\n}\n<span class="s">"columns"</span></div>' },
+    calendar: { name: "Calendar", title: "November", glyph: "31", icon: "linear-gradient(145deg,#FF7A7A,#FF3B30)",
+      body: '<div class="body app-calendar">' + Array.from({ length: 28 }, (_, i) => `<span class="${[3, 9, 17].includes(i) ? "ev" : [12, 22].includes(i) ? "ev2" : ""}"></span>`).join("") + "</div>" },
+    photos: { name: "Photos", title: "Dashain", glyph: "❀", icon: "conic-gradient(from 30deg,#FF9F0A,#FF375F,#BF5AF2,#0A84FF,#30D158,#FF9F0A)",
+      body: '<div class="body app-photos">' + [["#FFB36B", "#FF5E62"], ["#7FD1FF", "#3A7BFF"], ["#9BF0B5", "#1FB574"], ["#E2B0FF", "#9F44D3"], ["#FFE29A", "#FFA94D"], ["#B8C6FF", "#5B6CFF"]].map(([a, b]) => `<span style="--a:${a};--b:${b}"></span>`).join("") + "</div>" },
+    mail: { name: "Mail", title: "Inbox", glyph: "✉", icon: "linear-gradient(145deg,#6FB7FF,#1A6DFF)",
+      body: '<div class="body app-mail"><p><b>Design review</b>Moved to Thursday</p><p><b>Release 1.2</b>Strip is in</p><p><b>Chiya?</b>4 pm</p></div>' },
+    music: { name: "Music", title: "Now Playing", glyph: "♪", icon: "linear-gradient(145deg,#FF6F91,#FF2D55)",
+      body: '<div class="body browser"><div class="b-hero" style="background:linear-gradient(135deg,#FF6F91,#BF5AF2)"></div><div class="b-line"></div><div class="b-line short"></div></div>' },
+  };
+  const START = [["browser", .5], ["terminal", 1 / 3], ["notes", 1 / 3], ["editor", 2 / 3], ["calendar", .5], ["photos", 1 / 3]];
+  const EXTRA = ["mail", "music", "notes", "terminal", "browser"];
+
+  let state; // { cols: [{ id, app, w, full, el }], focused, scroll }
+  let nextId = 1;
+
+  // ---------- Model ----------
+  const colWidth = (c) => (c.full ? 100 - 2 * GAP : c.w * (100 - GAP) - GAP);
+  const leftOf = (i) => { let x = GAP; for (let j = 0; j < i; j++) x += colWidth(state.cols[j]) + GAP; return x; };
+  const contentWidth = () => (state.cols.length ? leftOf(state.cols.length) : 0);
+  const maxScroll = () => Math.max(0, contentWidth() - 100);
+  const clamp = () => { state.scroll = Math.min(Math.max(state.scroll, 0), maxScroll()); };
+  const visibleFraction = (i) => {
+    const l = leftOf(i) - state.scroll, w = colWidth(state.cols[i]);
+    return Math.max(0, Math.min(1, (Math.min(l + w, 100) - Math.max(l, 0)) / w));
+  };
+
+  function reveal() {
+    const i = state.focused;
+    if (!state.cols[i]) return;
+    const l = leftOf(i), w = colWidth(state.cols[i]);
+    if (l - GAP < state.scroll) state.scroll = l - GAP;
+    else if (l + w + GAP > state.scroll + 100) state.scroll = l + w + GAP - 100;
+    clamp();
+  }
+
+  function settle() {
+    if (!state.cols.length) return;
+    const edges = state.cols.map((_, i) => leftOf(i) - GAP).concat(contentWidth() - 100);
+    state.scroll = edges.reduce((best, e) => (Math.abs(e - state.scroll) < Math.abs(best - state.scroll) ? e : best), edges[0]);
+    clamp();
+    if (visibleFraction(state.focused) < 0.99) {
+      let best = state.focused;
+      state.cols.forEach((_, i) => { if (visibleFraction(i) > visibleFraction(best)) best = i; });
+      state.focused = best;
+      reveal();
+    }
+  }
+
+  const ACTIONS = {
+    focusLeft: () => step(-1),
+    focusRight: () => step(1),
+    moveLeft: () => move(-1),
+    moveRight: () => move(1),
+    cycleWidth: () => {
+      const c = state.cols[state.focused];
+      if (c.full) c.full = false;
+      else c.w = PRESETS.find((p) => p > c.w + 0.02) ?? PRESETS[0];
+      return true;
+    },
+    fullWidth: () => { const c = state.cols[state.focused]; c.full = !c.full; return true; },
+    center: () => {
+      const i = state.focused;
+      state.scroll = leftOf(i) + colWidth(state.cols[i]) / 2 - 50;
+      render(false);
+      return "done";
+    },
+    add: () => addWindow(),
+  };
+
+  function step(d) {
+    const n = Math.min(Math.max(state.focused + d, 0), state.cols.length - 1);
+    if (n === state.focused) return false;
+    state.focused = n;
+    return true;
+  }
+  function move(d) {
+    const n = Math.min(Math.max(state.focused + d, 0), state.cols.length - 1);
+    if (n === state.focused) return false;
+    [state.cols[state.focused], state.cols[n]] = [state.cols[n], state.cols[state.focused]];
+    state.focused = n;
+    return true;
+  }
+
+  function run(name) {
+    const result = ACTIONS[name] && ACTIONS[name]();
+    if (result === "done") return;
+    if (result === false) { bump(); return; }
+    render(true);
+  }
+
+  // ---------- Windows ----------
+  function makeWindow(app) {
+    const a = APPS[app];
+    const el = document.createElement("div");
+    el.className = "win";
+    el.innerHTML = `<div class="bar"><i title="Close"></i><i></i><i></i><span>${a.title}</span></div>${a.body}`;
+    return el;
+  }
+
+  function addCol(app, w) {
+    const c = { id: nextId++, app, w, full: false, el: makeWindow(app) };
+    c.el.dataset.id = c.id;
+    return c;
+  }
+
+  function addWindow() {
+    if (state.cols.length >= MAX) return false;
+    const used = new Set(state.cols.map((c) => c.app));
+    const app = EXTRA.find((a) => !used.has(a)) || EXTRA[state.cols.length % EXTRA.length];
+    const c = addCol(app, 0.5);
+    // New windows open next to the focused one, growing out of it.
+    const from = state.cols[state.focused];
+    if (from && from.el.style.left) {
+      ["left", "top", "width", "height"].forEach((k) => (c.el.style[k] = from.el.style[k]));
+      c.el.style.opacity = "0";
+    }
+    track.appendChild(c.el);
+    state.cols.splice(state.focused + 1, 0, c);
+    state.focused += 1;
+    requestAnimationFrame(() => { c.el.style.opacity = ""; render(true); });
+    return "done";
+  }
+
+  function closeCol(id) {
+    const i = state.cols.findIndex((c) => c.id === id);
+    if (i < 0) return;
+    const [c] = state.cols.splice(i, 1);
+    c.el.style.opacity = "0";
+    c.el.style.transform = "scale(.92)";
+    setTimeout(() => c.el.remove(), 260);
+    if (i <= state.focused) state.focused = Math.max(0, state.focused - 1);
+    if (!state.cols.length) { reset(); return; }
+    render(true);
+  }
+
+  // ---------- Drawing ----------
+  function render(doReveal) {
+    if (doReveal) reveal();
+    const h = 100 - 2 * VGAP;
+    state.cols.forEach((c, i) => {
+      const w = colWidth(c);
+      let x = leftOf(i) - state.scroll;
+      const parked = x + w < 0 || x > 100;
+      if (x + w < 0) x = -w + PEEK;        // off to the left: a sliver at the edge
+      else if (x > 100) x = 100 - PEEK;    // off to the right
+      Object.assign(c.el.style, { left: x + "%", top: VGAP + "%", width: w + "%", height: h + "%", zIndex: String(i === state.focused ? 3 : parked ? 1 : 2) });
+      c.el.classList.toggle("active", i === state.focused);
+      c.el.classList.toggle("parked", parked);
+    });
+    tiles.innerHTML = "";
+    state.cols.forEach((c, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = APPS[c.app].glyph;
+      b.style.setProperty("--icon", APPS[c.app].icon);
+      b.setAttribute("aria-label", `Focus ${APPS[c.app].name}`);
+      b.classList.toggle("on", i === state.focused);
+      b.classList.toggle("seen", visibleFraction(i) > 0.02);
+      b.addEventListener("click", () => { engage(); state.focused = i; render(true); });
+      tiles.appendChild(b);
+    });
+    const f = state.cols[state.focused];
+    if (f && appLabel) appLabel.textContent = APPS[f.app].name;
+    legend.forEach((b) => { if (b.dataset.strip === "add") b.disabled = state.cols.length >= MAX; });
+  }
+
+  function bump() {
+    const f = state.cols[state.focused];
+    if (f && !reduceMotion) f.el.animate([{ transform: "translateX(0)" }, { transform: "translateX(-.6%)" }, { transform: "translateX(.6%)" }, { transform: "translateX(0)" }], { duration: 220 });
+  }
+
+  function reset() {
+    track.innerHTML = "";
+    state = { cols: START.map(([app, w]) => addCol(app, w)), focused: 0, scroll: 0 };
+    state.cols.forEach((c) => track.appendChild(c.el));
+    render(true);
+  }
+  reset();
+
+  // ---------- Input ----------
+  let engaged = false;
+  function engage() { if (!engaged) { engaged = true; stopGhost(); } }
+
+  let over = false, altDown = false;
+  root.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") { over = true; engage(); } });
+  root.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") over = false; });
+  root.addEventListener("focusin", engage);
+  const armed = () => over || root.contains(document.activeElement);
+
+  const KEYMAP = {
+    KeyA: ["focusLeft", "moveLeft"], KeyD: ["focusRight", "moveRight"],
+    KeyW: ["cycleWidth", "fullWidth"], KeyC: [null, "center"],
+  };
+  window.addEventListener("keydown", (e) => {
+    if (!armed()) return;
+    if (e.key === "Alt") { altDown = true; e.preventDefault(); return; }
+    if (!(e.altKey || altDown)) return;
+    const pair = KEYMAP[e.code];
+    const name = pair && pair[e.shiftKey ? 1 : 0];
+    if (!name) return;
+    e.preventDefault();
+    engage();
+    if (e.repeat && !/focus|move/.test(name)) return;
+    run(name);
+    flash(name);
+  });
+  window.addEventListener("keyup", (e) => { if (e.key === "Alt") altDown = false; });
+  window.addEventListener("blur", () => { altDown = false; });
+
+  legend.forEach((b) => b.addEventListener("click", () => { engage(); run(b.dataset.strip); flash(b.dataset.strip); }));
+
+  function flash(name) {
+    const b = legend.find((x) => x.dataset.strip === name);
+    if (!b) return;
+    b.classList.add("pressed");
+    setTimeout(() => b.classList.remove("pressed"), 220);
+  }
+
+  // Click a window to focus it; the red dot closes it.
+  track.addEventListener("click", (e) => {
+    if (suppressClick) return;
+    const win = e.target.closest(".win");
+    if (!win) return;
+    engage();
+    const id = +win.dataset.id;
+    if (e.target.matches(".bar i:first-child")) { closeCol(id); return; }
+    const i = state.cols.findIndex((c) => c.id === id);
+    if (i >= 0) { state.focused = i; render(true); }
+  });
+
+  // Sideways scrolling (trackpad, or ⌥ + wheel) slides the strip, then it settles on a column.
+  let settleTimer = 0;
+  function slide(deltaPercent) {
+    state.scroll += deltaPercent;
+    clamp();
+    root.classList.add("dragging");
+    render(false);
+  }
+  function settleSoon(ms) {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => { root.classList.remove("dragging"); settle(); render(false); }, ms);
+  }
+  screen.addEventListener("wheel", (e) => {
+    const sideways = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+    if (!sideways && !(e.altKey || altDown)) return; // let the page scroll
+    e.preventDefault();
+    engage();
+    const px = sideways ? e.deltaX : e.deltaY;
+    slide((px * (e.deltaMode === 1 ? 16 : 1) / desk.clientWidth) * 100);
+    settleSoon(140);
+  }, { passive: false });
+
+  // Drag or swipe the screen sideways (touch, pen or mouse).
+  let drag = null, suppressClick = false;
+  screen.addEventListener("pointerdown", (e) => {
+    if (e.target.closest(".strip-tiles")) return;
+    drag = { x: e.clientX, y: e.clientY, id: e.pointerId, moved: false };
+  });
+  screen.addEventListener("pointermove", (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x;
+    if (!drag.moved) {
+      if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(e.clientY - drag.y)) return;
+      drag.moved = true;
+      engage();
+      screen.setPointerCapture(e.pointerId);
+    }
+    drag.x = e.clientX;
+    slide((-dx / desk.clientWidth) * 100);
+  });
+  const endDrag = () => {
+    if (!drag) return;
+    if (drag.moved) {
+      suppressClick = true;
+      setTimeout(() => (suppressClick = false), 0);
+      settleSoon(0);
+    }
+    drag = null;
+  };
+  screen.addEventListener("pointerup", endDrag);
+  screen.addEventListener("pointercancel", endDrag);
+
+  // ---------- Walkthrough until the visitor takes over ----------
+  let ghostToken = 0, ghostOn = false;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const SCRIPT = ["focusRight", "focusRight", "cycleWidth", "focusRight", "focusRight", "moveLeft", "center",
+                  "fullWidth", "fullWidth", "add", "focusRight", "focusLeft", "focusLeft", "focusLeft", "focusLeft", "focusLeft"];
+
+  function stopGhost() { ghostOn = false; ghostToken++; }
+
+  async function runGhost() {
+    if (reduceMotion || ghostOn || engaged) return;
+    ghostOn = true;
+    const token = ++ghostToken;
+    const alive = () => ghostOn && token === ghostToken && !engaged;
+    while (alive()) {
+      for (const name of SCRIPT) {
+        await sleep(1050);
+        if (!alive()) return;
+        run(name);
+        flash(name);
+      }
+      await sleep(1400);
+      if (!alive()) return;
+      reset();
+    }
+  }
+
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => {
+      for (const en of entries) {
+        if (en.isIntersecting) setTimeout(runGhost, 500);
+        else stopGhost();
+      }
+    }, { threshold: 0.4 }).observe(screen);
+  }
+})();

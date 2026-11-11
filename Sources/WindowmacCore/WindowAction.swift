@@ -12,6 +12,7 @@ public enum ActionCategory: String, CaseIterable, Sendable {
     case screens = "Screens"
     case sizeAndPosition = "Size & Position"
     case stash = "Stash"
+    case strip = "Strip"
     case more = "More"
 
     public var actions: [WindowAction] {
@@ -40,6 +41,11 @@ public enum WindowAction: String, Codable, CaseIterable, Identifiable, Sendable 
     case moveUp, moveDown, moveLeft, moveRight
     // Stash
     case stashLeft, stashRight, unstash
+    // Strip (scrolling columns)
+    case stripToggle, stripFloat
+    case stripFocusLeft, stripFocusRight, stripFocusFirst, stripFocusLast
+    case stripMoveLeft, stripMoveRight
+    case stripCycleWidth, stripFullWidth, stripCenter
     // More
     case undo, initialFrame
 
@@ -65,6 +71,9 @@ public enum WindowAction: String, Codable, CaseIterable, Identifiable, Sendable 
             return .sizeAndPosition
         case .stashLeft, .stashRight, .unstash:
             return .stash
+        case .stripToggle, .stripFloat, .stripFocusLeft, .stripFocusRight, .stripFocusFirst, .stripFocusLast,
+             .stripMoveLeft, .stripMoveRight, .stripCycleWidth, .stripFullWidth, .stripCenter:
+            return .strip
         case .undo, .initialFrame:
             return .more
         }
@@ -120,6 +129,17 @@ public enum WindowAction: String, Codable, CaseIterable, Identifiable, Sendable 
         case .stashLeft: return "Stash Left"
         case .stashRight: return "Stash Right"
         case .unstash: return "Unstash"
+        case .stripToggle: return "Strip This Screen"
+        case .stripFloat: return "Float / Join Strip"
+        case .stripFocusLeft: return "Focus Left Column"
+        case .stripFocusRight: return "Focus Right Column"
+        case .stripFocusFirst: return "Focus First Column"
+        case .stripFocusLast: return "Focus Last Column"
+        case .stripMoveLeft: return "Move Column Left"
+        case .stripMoveRight: return "Move Column Right"
+        case .stripCycleWidth: return "Cycle Column Width"
+        case .stripFullWidth: return "Full Width Column"
+        case .stripCenter: return "Centre Column"
         case .undo: return "Undo"
         case .initialFrame: return "Initial Frame"
         }
@@ -155,6 +175,17 @@ public enum WindowAction: String, Codable, CaseIterable, Identifiable, Sendable 
         case .stashLeft: return "sidebar.left"
         case .stashRight: return "sidebar.right"
         case .unstash: return "rectangle.portrait.and.arrow.right"
+        case .stripToggle: return "rectangle.split.3x1"
+        case .stripFloat: return "macwindow.on.rectangle"
+        case .stripFocusLeft: return "chevron.left"
+        case .stripFocusRight: return "chevron.right"
+        case .stripFocusFirst: return "chevron.left.2"
+        case .stripFocusLast: return "chevron.right.2"
+        case .stripMoveLeft: return "arrow.left.square"
+        case .stripMoveRight: return "arrow.right.square"
+        case .stripCycleWidth: return "arrow.left.and.right"
+        case .stripFullWidth: return "arrow.left.and.right.square"
+        case .stripCenter: return "align.horizontal.center"
         case .undo: return "arrow.uturn.backward"
         case .initialFrame: return "clock.arrow.circlepath"
         }
@@ -188,6 +219,10 @@ public enum WindowAction: String, Codable, CaseIterable, Identifiable, Sendable 
         default: return nil
         }
     }
+
+    /// Strip actions run the moment their key is pressed (and repeat while it's held),
+    /// instead of when the trigger is released.
+    public var isImmediate: Bool { category == .strip }
 
     /// Which way a screen-switching action goes, if it is one.
     public var screenTarget: ScreenTarget? {

@@ -37,6 +37,7 @@
     </a>
     <nav aria-label="Sections">
       <a href="#how">How it works</a>
+      <a href="#strip">Strip</a>
       <a href="#install">Install</a>
       <a href="#layouts">Layouts</a>
       <a href="#keys">Shortcuts</a>
@@ -135,6 +136,41 @@ $ <span class="caret"></span></pre>
       </ol>
     </section>
 
+    <section class="strip" id="strip" aria-labelledby="strip-title">
+      <div class="section-head">
+        <h2 id="strip-title">Lots of windows? Line them up on a strip.</h2>
+        <p>Hold ⌥ and press <kbd>S</kbd>. Every window on that screen becomes a column on one strip that scrolls sideways, wider than the screen if it needs to be. Move between columns with the keyboard or a swipe, and a bar at the bottom shows where you are. New windows join next to the one you're in.</p>
+      </div>
+
+      <div class="strip-demo" id="strip-demo" tabindex="0" aria-label="Interactive demo of Strip. Hold Option and press A or D to move between windows, or use the buttons below.">
+        <div class="strip-screen">
+          <div class="menubar" aria-hidden="true">
+            <span class="apple"></span><b data-strip-app>Notes</b><span>File</span><span>Edit</span><span>View</span><span>Window</span>
+            <span class="spacer"></span>
+            <span class="status-ring"></span><span class="clock">Tue 9:41</span>
+          </div>
+          <div class="strip-desk" aria-hidden="true">
+            <div class="strip-track"></div>
+            <div class="strip-bar"><div class="strip-tiles"></div><div class="strip-hint"><kbd>⌥</kbd> held · <kbd>A</kbd><kbd>D</kbd> focus · scroll to slide</div></div>
+          </div>
+        </div>
+        <div class="strip-legend" role="toolbar" aria-label="Strip actions">
+          <button type="button" data-strip="focusLeft"><kbd>A</kbd>Focus left</button>
+          <button type="button" data-strip="focusRight"><kbd>D</kbd>Focus right</button>
+          <button type="button" data-strip="moveLeft"><kbd>⇧A</kbd>Move left</button>
+          <button type="button" data-strip="moveRight"><kbd>⇧D</kbd>Move right</button>
+          <button type="button" data-strip="cycleWidth"><kbd>W</kbd>Cycle width</button>
+          <button type="button" data-strip="fullWidth"><kbd>⇧W</kbd>Full width</button>
+          <button type="button" data-strip="center"><kbd>⇧C</kbd>Centre</button>
+          <button type="button" data-strip="add"><kbd>+</kbd>New window</button>
+        </div>
+        <p class="demo-help">
+          <span class="desk-only">Try it: hold <kbd>⌥ Option</kbd> and press <kbd>A</kbd> or <kbd>D</kbd>, swipe sideways over the screen, or click an icon in the bar.</span>
+          <span class="touch-only">Try it: tap the buttons, swipe the screen sideways, or tap an icon in the bar.</span>
+        </p>
+      </div>
+    </section>
+
     <section class="install" id="install" aria-labelledby="install-title">
       <div class="section-head">
         <h2 id="install-title">Install in a minute</h2>
@@ -225,6 +261,7 @@ $ <span class="caret"></span></pre>
       <div class="catalogue" id="catalogue"></div>
       <ul class="extras">
         <li><b>Screens.</b> Send a window to the next display. It keeps its layout and the cursor comes along.</li>
+        <li><b>Strip.</b> Line up every window on a screen as scrolling columns. <a href="#strip">Try it above</a>.</li>
         <li><b>Stash.</b> Tuck a window behind the screen edge. Push the cursor against the edge to slide it back.</li>
         <li><b>Resize and nudge.</b> Larger, smaller, grow or shrink any edge, move in any direction.</li>
         <li><b>Undo.</b> Step back through a window's last positions.</li>
@@ -245,6 +282,16 @@ $ <span class="caret"></span></pre>
         <div><dt><kbd>=</kbd><kbd>−</kbd></dt><dd>Larger and smaller</dd></div>
         <div><dt><kbd>,</kbd><kbd>.</kbd><kbd>/</kbd></dt><dd>Stash left, stash right, unstash</dd></div>
         <div><dt><kbd>Z</kbd></dt><dd>Undo</dd></div>
+      </dl>
+      <h3 class="keys-sub">Strip</h3>
+      <dl class="keylist">
+        <div><dt><kbd>S</kbd></dt><dd>Strip this screen, or turn it off</dd></div>
+        <div><dt><kbd>A</kbd><kbd>D</kbd></dt><dd>Focus the column on the left or right</dd></div>
+        <div><dt><kbd>⇧A</kbd><kbd>⇧D</kbd></dt><dd>Move the column left or right</dd></div>
+        <div><dt><kbd>W</kbd><kbd>⇧W</kbd></dt><dd>Cycle width (⅓, ½, ⅔), full width</dd></div>
+        <div><dt><kbd>⇧C</kbd></dt><dd>Centre the column</dd></div>
+        <div><dt><kbd>⇧S</kbd></dt><dd>Float a window out of the strip, or back in</dd></div>
+        <div><dt>scroll</dt><dd>Slide the strip with the wheel or a swipe</dd></div>
       </dl>
     </section>
 

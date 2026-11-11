@@ -19,6 +19,7 @@ public enum WindowmacCommand: Equatable, Sendable {
 ///     windowmac://stash/left               windowmac://unstash
 ///     windowmac://custom/My%20Layout       windowmac://undo
 ///     windowmac://list/all                 windowmac://settings
+///     windowmac://strip/toggle             windowmac://strip/right   (focus the next column)
 ///
 /// Names ignore case, spaces, dashes and underscores, so "Right Half", "right-half" and "rightHalf" all work.
 public enum CommandParser {
@@ -69,6 +70,9 @@ public enum CommandParser {
         case "unstash":
             return .action(.builtin(.unstash))
 
+        case "strip", "column":
+            return stripActions[argument].map { .action(.builtin($0)) }
+
         case "undo":
             return .action(.builtin(.undo))
 
@@ -86,6 +90,14 @@ public enum CommandParser {
             return actionRef(named: verb, customLayouts: customLayouts).map { .action($0) }
         }
     }
+
+    static let stripActions: [String: WindowAction] = [
+        "toggle": .stripToggle, "": .stripToggle, "float": .stripFloat,
+        "left": .stripFocusLeft, "right": .stripFocusRight, "first": .stripFocusFirst, "last": .stripFocusLast,
+        "moveleft": .stripMoveLeft, "moveright": .stripMoveRight,
+        "width": .stripCycleWidth, "full": .stripFullWidth, "fullwidth": .stripFullWidth,
+        "center": .stripCenter, "centre": .stripCenter,
+    ]
 
     private static let aliases: [String: WindowAction] = [
         "max": .maximize,
@@ -114,6 +126,8 @@ public enum CommandParser {
         out += RadialDirection.allCases.map { "windowmac://direction/\(kebab($0.rawValue))" }
         out += ["next", "previous", "left", "right", "top", "bottom"].map { "windowmac://screen/\($0)" }
         out += ["windowmac://stash/left", "windowmac://stash/right", "windowmac://unstash", "windowmac://undo"]
+        out += ["toggle", "float", "left", "right", "first", "last", "move-left", "move-right", "width", "full-width", "centre"]
+            .map { "windowmac://strip/\($0)" }
         out += customLayouts.map { "windowmac://custom/\($0.name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? $0.name)" }
         out += ["windowmac://settings", "windowmac://list/all"]
         return out

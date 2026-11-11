@@ -15,6 +15,7 @@ struct SettingsView: View {
             KeybindsTab().tabItem { Label("Keybinds", systemImage: "keyboard") }
             CustomLayoutsTab().tabItem { Label("Layouts", systemImage: "square.grid.3x3.square") }
             StashTab().tabItem { Label("Stash", systemImage: "sidebar.right") }
+            StripTab().tabItem { Label("Strip", systemImage: "rectangle.split.3x1") }
             LicenseTab().tabItem { Label("License", systemImage: "checkmark.seal") }
             AboutTab().tabItem { Label("About", systemImage: "info.circle") }
         }
@@ -502,6 +503,58 @@ private struct StashTab: View {
             }
         }
         .formStyle(.grouped)
+    }
+}
+
+// MARK: - Strip
+
+private struct StripTab: View {
+    @EnvironmentObject var store: SettingsStore
+
+    private func key(_ a: WindowAction) -> String {
+        store.settings.shortcut(for: a).map { "trigger + \($0)" } ?? "no key"
+    }
+
+    var body: some View {
+        Form {
+            Section {
+                Text("Strip lines up every window on a screen as columns on one horizontal strip that can be wider than the screen. Moving focus scrolls the strip; columns off screen wait at the edge with a sliver showing. A bar of app icons at the bottom shows where you are.")
+                    .foregroundStyle(.secondary)
+                Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 6) {
+                    row("Turn on / off for this screen", key(.stripToggle))
+                    row("Focus left / right", "\(key(.stripFocusLeft)) / \(key(.stripFocusRight))")
+                    row("Move column left / right", "\(key(.stripMoveLeft)) / \(key(.stripMoveRight))")
+                    row("Cycle width ⅓ → ½ → ⅔", key(.stripCycleWidth))
+                    row("Full width", key(.stripFullWidth))
+                    row("Centre column", key(.stripCenter))
+                    row("Float out / join", key(.stripFloat))
+                    row("Slide the strip", "hold trigger + scroll or swipe")
+                    row("Jump to a window", "hold trigger, click its icon in the bar")
+                }
+                .font(.callout)
+            } header: {
+                Text("Strip")
+            } footer: {
+                Text("Change these keys in Keybinds. Snapping a strip window with the radial menu floats it out of the strip.")
+            }
+
+            Section("Behaviour") {
+                ValueSlider(title: "Width of new columns", value: $store.settings.stripDefaultWidth, range: 0.2...1, step: 0.05,
+                            format: { "\(Int(($0 * 100).rounded()))%" })
+                Toggle("New windows join the strip", isOn: $store.settings.stripAdoptNewWindows)
+                Toggle("Keep the focused column centred", isOn: $store.settings.stripCenterFocused)
+                Toggle("Show the bar of app icons", isOn: $store.settings.stripShowBar)
+                ValueSlider(title: "Off-screen sliver", value: $store.settings.stripPeek, range: 1...40, format: { "\(Int($0)) pt" })
+            }
+        }
+        .formStyle(.grouped)
+    }
+
+    private func row(_ title: String, _ keys: String) -> some View {
+        GridRow {
+            Text(title)
+            Text(keys).foregroundStyle(.secondary).monospaced()
+        }
     }
 }
 

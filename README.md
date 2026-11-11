@@ -27,6 +27,7 @@ Hold Option, flick the mouse toward where a window should go, and let go.</p>
 - **Live preview.** An outline shows exactly where the window will land before you commit.
 - **Keyboard shortcuts.** Hold the trigger and press a key: ← → ↑ ↓ for halves, ↩ to maximize, C to centre, 1–4 for quarters, [ ] to change screens, and more. Every key can be rebound.
 - **Cycles.** Press the same key again, or click while holding the trigger, to step through a direction: Right Half → Right Third → Right Two Thirds.
+- **Strip.** Too many windows? Hold the trigger and press S: every window on that screen becomes a column on one horizontal strip that scrolls. A / D move between columns (the strip scrolls to follow), ⇧A / ⇧D reorder, W cycles the width (⅓ → ½ → ⅔), ⇧W makes it full width, ⇧C centres it, and holding the trigger while scrolling or swiping slides the strip. A bar of app icons at the bottom shows every column; click one while holding the trigger to jump to it. New windows join next to the one you're in, closed ones leave, and switching apps scrolls the right window into view.
 - **Stash.** Tuck a window behind the screen edge, leaving a sliver. Push the cursor against the edge to slide it out.
 - **Every layout you'd expect:**
   - Maximize, Almost Maximize, Fullscreen, Centre, macOS Centre
@@ -77,6 +78,12 @@ The [website](https://windowmac.vercel.app/#install) shows each of these screens
 | , . / | Stash left / stash right / unstash |
 | Z / I | Undo / initial frame |
 | M / H | Minimize / hide app |
+| S | Strip this screen (again to turn it off) |
+| A / D | Strip: focus the column on the left / right |
+| ⇧A / ⇧D | Strip: move the column left / right |
+| W / ⇧W | Strip: cycle width / full width |
+| ⇧C / ⇧S | Strip: centre the column / float a window out or back in |
+| Scroll or swipe | Strip: slide the strip |
 
 Typing normally while holding the trigger is never blocked. Keys that aren't Windowmac shortcuts pass straight through.
 
@@ -89,6 +96,8 @@ open -g "windowmac://screen/next"
 open -g "windowmac://direction/top-left"     # whatever that direction does on your ring
 open -g "windowmac://custom/Writing%20Mode"  # your own layout
 open -g "windowmac://stash/right"
+open -g "windowmac://strip/toggle"        # strip this screen
+open -g "windowmac://strip/right"         # focus the next column (also: left, move-left, width, full-width, centre…)
 
 # chain them
 open -g "windowmac://action/left-half" && sleep 0.3 && open -g "windowmac://screen/next"
@@ -135,6 +144,8 @@ website/            Landing page (static, deployed on Vercel)
 **Why does it need Accessibility?** macOS only lets apps move other apps' windows through the Accessibility API. Windowmac uses it for that and nothing else.
 
 **Do I have to grant permission again after updating?** Yes, once. Builds aren't signed with a Developer ID yet, so macOS treats each update as a new app. Windowmac (and the one-line installer) clears the old entry so macOS asks again; just turn Windowmac back on. If it ever stops responding, choose **Fix Accessibility Permission…** from the menu bar icon, or run `tccutil reset Accessibility com.iam8uman.windowmac` and reopen Windowmac.
+
+**How does Strip hide windows that are scrolled off screen?** macOS can't truly hide a window, so columns off the screen are parked against the edge with a thin sliver showing (like Stash). If another display touches that edge, they hang below the screen instead. Turning Strip off, or quitting Windowmac, puts every window back where it was.
 
 **Can I use Caps Lock as the trigger?** Remap Caps Lock to Control in System Settings → Keyboard → Modifier Keys, then choose Right Control in Windowmac. You can also use Hyperkey or Karabiner-Elements.
 

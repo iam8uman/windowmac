@@ -10,6 +10,7 @@ final class WindowEngine {
     var cycles = CycleTracker()
     let animator = FrameAnimator()
     private(set) lazy var stash = StashManager(engine: self)
+    private(set) lazy var strips = StripManager(engine: self)
 
     private var settings: WindowmacSettings { SettingsStore.shared.settings }
 
@@ -68,6 +69,13 @@ final class WindowEngine {
     func perform(_ ref: ActionRef, on given: AXWindow? = nil, completion: ((AXWindow, CGRect?) -> Void)? = nil) {
         // After the free trial, actions need a license.
         guard LicenseManager.shared.allowAction() else { return }
+        // Strip actions work on the screen's strip; Strip This Screen works even with no window focused.
+        if let action = ref.builtin, action.category == .strip {
+            let window = given ?? AXWindow.frontmost()
+            if let window, isExcluded(window), action != .stripToggle { return }
+            strips.handle(action, window: window)
+            return
+        }
         guard let window = given ?? AXWindow.frontmost() else {
             NSSound.beep()
             return
@@ -85,9 +93,11 @@ final class WindowEngine {
             window.setFullscreen(!window.isFullscreen)
             return
         case .stashLeft?:
+            strips.release(window)
             stash.stash(window, side: .left)
             return
         case .stashRight?:
+            strips.release(window)
             stash.stash(window, side: .right)
             return
         case .unstash?:
@@ -99,6 +109,7 @@ final class WindowEngine {
                 return
             }
             stash.forget(window)
+            strips.release(window)
             move(window, to: previous) { completion?(window, $0) }
             return
         default:
@@ -120,6 +131,8 @@ final class WindowEngine {
         }
 
         stash.forget(window)
+        // Snapping a strip window floats it out of the strip.
+        strips.release(window)
         recordHistory(window, frame: current)
         let changesScreen = ref.builtin?.screenTarget != nil
         move(window, to: target) { [weak self] final in

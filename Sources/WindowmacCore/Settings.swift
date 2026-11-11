@@ -296,6 +296,18 @@ public struct WindowmacSettings: Codable, Equatable, Sendable {
     public var stashPeek: Double = 12
     public var stashRevealOnHover = true
 
+    // Strip
+    /// Width for windows that join a strip later (fraction of the screen).
+    public var stripDefaultWidth: Double = 0.5
+    /// Keep the focused column in the middle of the screen instead of scrolling as little as possible.
+    public var stripCenterFocused = false
+    /// New windows on a strip's screen join it automatically.
+    public var stripAdoptNewWindows = true
+    /// The bar of app icons at the bottom of the screen.
+    public var stripShowBar = true
+    /// How much of an off-screen column peeks in at the edge.
+    public var stripPeek: Double = 8
+
     // Actions
     public var radialActions: [RadialDirection: [ActionRef]] = WindowmacSettings.defaultRadialActions
     public var keybinds: [Keybind] = WindowmacSettings.defaultKeybinds
@@ -362,7 +374,25 @@ public struct WindowmacSettings: Codable, Equatable, Sendable {
         Keybind(44, [], [.unstash]),
         Keybind(46, [], [.minimize]),
         Keybind(4, [], [.hide]),
+    ] + defaultStripKeybinds
+
+    /// S strip · A/D focus · ⇧A/⇧D move · W width · ⇧W full width · ⇧C centre · ⇧S float.
+    public static let defaultStripKeybinds: [Keybind] = [
+        Keybind(1, [], [.stripToggle]),
+        Keybind(0, [], [.stripFocusLeft]),
+        Keybind(2, [], [.stripFocusRight]),
+        Keybind(0, .shift, [.stripMoveLeft]),
+        Keybind(2, .shift, [.stripMoveRight]),
+        Keybind(13, [], [.stripCycleWidth]),
+        Keybind(13, .shift, [.stripFullWidth]),
+        Keybind(8, .shift, [.stripCenter]),
+        Keybind(1, .shift, [.stripFloat]),
     ]
+
+    /// The first keybind for an action, for hints like "⌥S".
+    public func shortcut(for action: WindowAction) -> String? {
+        keybinds.first { $0.actions.first == .builtin(action) }?.shortcutLabel
+    }
 
     // Forgiving decoding: a missing or broken field falls back to its default
     // instead of throwing away the user's whole configuration.
@@ -371,7 +401,10 @@ public struct WindowmacSettings: Codable, Equatable, Sendable {
         case radialMenuEnabled, previewEnabled, radialTheme, previewTheme
         case padding, sizeStep, animateWindows, animationDuration, moveCursorWithWindow, hapticFeedback, excludedBundleIDs
         case stashPeek, stashRevealOnHover
+        case stripDefaultWidth, stripCenterFocused, stripAdoptNewWindows, stripShowBar, stripPeek
         case radialActions, keybinds, customLayouts
+        /// Present once the strip keybinds have been offered to a saved setup.
+        case stripKeybindsAdded
     }
 
     public init(from decoder: Decoder) throws {
@@ -396,6 +429,11 @@ public struct WindowmacSettings: Codable, Equatable, Sendable {
         stashPeek = c.value(.stashPeek, d.stashPeek)
         stashRevealOnHover = c.value(.stashRevealOnHover, d.stashRevealOnHover)
         customLayouts = c.value(.customLayouts, d.customLayouts)
+        stripDefaultWidth = StripLayout.clampWidth(c.value(.stripDefaultWidth, d.stripDefaultWidth))
+        stripCenterFocused = c.value(.stripCenterFocused, d.stripCenterFocused)
+        stripAdoptNewWindows = c.value(.stripAdoptNewWindows, d.stripAdoptNewWindows)
+        stripShowBar = c.value(.stripShowBar, d.stripShowBar)
+        stripPeek = c.value(.stripPeek, d.stripPeek)
 
         if let raw = try? c.decode([String: [String]].self, forKey: .radialActions) {
             var map: [RadialDirection: [ActionRef]] = [:]
@@ -410,6 +448,13 @@ public struct WindowmacSettings: Codable, Equatable, Sendable {
 
         if let list = try? c.decode([Failable<Keybind>].self, forKey: .keybinds) {
             keybinds = list.compactMap(\.value)
+            // Setups saved before Strip existed get its keys, unless the user already uses those keys.
+            if !c.contains(.stripKeybindsAdded) {
+                for k in Self.defaultStripKeybinds
+                where !keybinds.contains(where: { $0.keyCode == k.keyCode && $0.modifiers == k.modifiers }) {
+                    keybinds.append(k)
+                }
+            }
         } else {
             keybinds = d.keybinds
         }
@@ -434,6 +479,12 @@ public struct WindowmacSettings: Codable, Equatable, Sendable {
         try c.encode(excludedBundleIDs, forKey: .excludedBundleIDs)
         try c.encode(stashPeek, forKey: .stashPeek)
         try c.encode(stashRevealOnHover, forKey: .stashRevealOnHover)
+        try c.encode(stripDefaultWidth, forKey: .stripDefaultWidth)
+        try c.encode(stripCenterFocused, forKey: .stripCenterFocused)
+        try c.encode(stripAdoptNewWindows, forKey: .stripAdoptNewWindows)
+        try c.encode(stripShowBar, forKey: .stripShowBar)
+        try c.encode(stripPeek, forKey: .stripPeek)
+        try c.encode(true, forKey: .stripKeybindsAdded)
         var radial: [String: [String]] = [:]
         for (dir, list) in radialActions { radial[dir.rawValue] = list.map(\.stringValue) }
         try c.encode(radial, forKey: .radialActions)

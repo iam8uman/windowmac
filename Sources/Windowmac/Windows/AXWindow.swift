@@ -53,6 +53,9 @@ final class AXWindow {
     var isMovable: Bool { AX.isSettable(element, kAXPositionAttribute) }
     var isResizable: Bool { AX.isSettable(element, kAXSizeAttribute) }
     var isAlive: Bool { AX.string(element, kAXRoleAttribute) != nil }
+    var isMinimized: Bool { AX.bool(element, kAXMinimizedAttribute) == true }
+    /// A normal document window, not a dialog, sheet, palette or popover.
+    var isStandard: Bool { AX.string(element, kAXSubroleAttribute) == kAXStandardWindowSubrole }
 
     var isFullscreen: Bool { AX.bool(element, "AXFullScreen") == true }
     func setFullscreen(_ on: Bool) { AX.setBool(element, "AXFullScreen", on) }

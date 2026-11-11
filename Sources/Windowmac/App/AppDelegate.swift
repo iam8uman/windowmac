@@ -36,6 +36,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         WindowEngine.shared.animator.cancelAll()
         WindowEngine.shared.stash.unstashAll()
+        WindowEngine.shared.strips.dissolveAll()
     }
 
     /// Opening Windowmac again (Finder, Spotlight, Launchpad) shows Settings, since it has no Dock icon.
@@ -212,6 +213,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         actionsItem.submenu = actionsMenu
         menu.addItem(actionsItem)
+
+        let stripOn = AXWindow.frontmost().flatMap { WindowEngine.shared.strips.strip(containing: $0) } != nil
+        let strip = item(stripOn ? "Turn Off Strip on This Screen" : "Strip This Screen", #selector(runActionFromMenu(_:)))
+        strip.representedObject = ActionRef.builtin(.stripToggle).stringValue
+        strip.image = NSImage(systemSymbolName: "rectangle.split.3x1", accessibilityDescription: nil)
+        menu.addItem(strip)
 
         let pause = item(trigger.isPaused ? "Resume Windowmac" : "Pause Windowmac", #selector(togglePause))
         menu.addItem(pause)
