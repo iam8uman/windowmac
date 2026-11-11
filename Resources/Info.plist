@@ -3,19 +3,19 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key>
-    <string>Swoop</string>
+    <string>Windowmac</string>
     <key>CFBundleDisplayName</key>
-    <string>Swoop</string>
+    <string>Windowmac</string>
     <key>CFBundleIdentifier</key>
-    <string>com.iam8uman.swoop</string>
+    <string>com.iam8uman.windowmac</string>
     <key>CFBundleExecutable</key>
-    <string>Swoop</string>
+    <string>Windowmac</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.2</string>
+    <string>1.1.0</string>
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
@@ -28,7 +28,7 @@
     <true/>
     <key>NSHumanReadableCopyright</key>
     <string>© 2026 Suman Sharma. MIT License.</string>
-    <!-- RevenueCat: leave empty to ship Swoop free. Set a production public key (not test_)
+    <!-- RevenueCat: leave empty to ship Windowmac free. Set a production public key (not test_)
          and a Web Purchase Link to turn on the 14-day trial and lifetime license. -->
     <key>RevenueCatAPIKey</key>
     <string></string>
@@ -38,10 +38,10 @@
     <array>
         <dict>
             <key>CFBundleURLName</key>
-            <string>com.iam8uman.swoop</string>
+            <string>com.iam8uman.windowmac</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>swoop</string>
+                <string>windowmac</string>
             </array>
         </dict>
     </array>

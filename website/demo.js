@@ -1,8 +1,8 @@
-/* Swoop landing page: interactive radial-menu demo, layout catalogue, release info. */
+/* Windowmac landing page: interactive radial-menu demo, layout catalogue, release info. */
 (() => {
   "use strict";
 
-  const REPO = "iam8uman/swoop";
+  const REPO = "iam8uman/windowmac";
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // ---------- Layouts (same fractions as the app) ----------

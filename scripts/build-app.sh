@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds Swoop.app (universal: Apple silicon + Intel) into ./build.
+# Builds Windowmac.app (universal: Apple silicon + Intel) into ./build.
 #
 #   ./scripts/build-app.sh                 ad-hoc signed (fine for local use)
 #   VERSION=1.2.0 ./scripts/build-app.sh   stamps a version
@@ -12,19 +12,19 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
-VERSION="${VERSION:-1.0.0}"
+VERSION="${VERSION:-$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$ROOT/Resources/Info.plist")}"
 BUILD_NUMBER="${BUILD_NUMBER:-$(date +%Y%m%d%H%M)}"
-APP="$ROOT/build/Swoop.app"
+APP="$ROOT/build/Windowmac.app"
 ARCHS=(--arch arm64 --arch x86_64)
 
-echo "▸ Building Swoop $VERSION (universal)"
+echo "▸ Building Windowmac $VERSION (universal)"
 swift build -c release "${ARCHS[@]}"
 BIN_DIR="$(swift build -c release "${ARCHS[@]}" --show-bin-path)"
 
-echo "▸ Assembling Swoop.app"
+echo "▸ Assembling Windowmac.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$BIN_DIR/Swoop" "$APP/Contents/MacOS/Swoop"
+cp "$BIN_DIR/Windowmac" "$APP/Contents/MacOS/Windowmac"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" "$APP/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP/Contents/Info.plist"

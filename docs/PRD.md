@@ -1,23 +1,23 @@
-# Swoop: Product Requirements Document
+# Windowmac: Product Requirements Document
 
 | | |
 |---|---|
 | Owner | Suman Sharma ([@iam8uman](https://github.com/iam8uman)) |
-| Status | v1.0.1 shipped (October 2026) |
-| Repo | https://github.com/iam8uman/swoop |
-| Website | https://swoop-mac.vercel.app |
+| Status | v1.1.0: renamed from Swoop to Windowmac (November 2026) |
+| Repo | https://github.com/iam8uman/windowmac |
+| Website | https://windowmac.vercel.app |
 | License | MIT, free and open source |
 | Platform | macOS 13+ (Apple silicon and Intel) |
 
-This document explains what Swoop is, why it exists, how it is built and what comes next, so anyone (including future me) can pick it up quickly.
+This document explains what Windowmac is, why it exists, how it is built and what comes next, so anyone (including future me) can pick it up quickly.
 
 ---
 
 ## 1. Summary
 
-Swoop is a menu bar window manager for macOS. You hold a trigger key (Left ⌥ Option by default), flick the mouse toward where the focused window should go, and let go. A ring appears under the cursor, an outline previews where the window will land, and clicking while holding cycles through sizes (half → third → two thirds). The same actions are available as keyboard shortcuts while the trigger is held.
+Windowmac is a menu bar window manager for macOS. You hold a trigger key (Left ⌥ Option by default), flick the mouse toward where the focused window should go, and let go. A ring appears under the cursor, an outline previews where the window will land, and clicking while holding cycles through sizes (half → third → two thirds). The same actions are available as keyboard shortcuts while the trigger is held.
 
-It was built over the Dashain 2026 holiday as an open-source side project, inspired by radial window managers like Loop. Swoop is an independent implementation with no shared code.
+It was built over the Dashain 2026 holiday as an open-source side project, inspired by radial window managers like Loop. Windowmac is an independent implementation with no shared code.
 
 ## 2. Problem
 
@@ -68,7 +68,7 @@ Default ring:
 | Centre | Nothing (release without moving does nothing) |
 
 ### 5.2 Keyboard shortcuts (while the trigger is held)
-Arrows for halves and thirds, ↩ maximize, C centre, F fullscreen, T centre third, 1–4 quarters, [ ] previous and next screen, ⇧+arrows move, = − larger and smaller, , . / stash, Z undo, I initial frame, M minimize, H hide. Pressing the same key again cycles. Keys that aren't Swoop shortcuts pass straight through.
+Arrows for halves and thirds, ↩ maximize, C centre, F fullscreen, T centre third, 1–4 quarters, [ ] previous and next screen, ⇧+arrows move, = − larger and smaller, , . / stash, Z undo, I initial frame, M minimize, H hide. Pressing the same key again cycles. Keys that aren't Windowmac shortcuts pass straight through.
 
 ### 5.3 Full action list
 - **General:** maximize, almost maximize, fullscreen, centre, macOS centre, minimize, hide
@@ -82,28 +82,28 @@ Arrows for halves and thirds, ↩ maximize, C centre, F fullscreen, T centre thi
 General (launch at login, padding, step size, animation, cursor follows window, haptics, ignored apps, import/export/reset), Trigger (any combination of Fn, left/right ⌃⌥⌘⇧, hold delay, dead zone), Radial Menu (size, thickness, circle or rounded square, accent colour or custom colour, per-direction actions), Preview (padding, corners, border, fill, colour), Keybinds (recorder, conflicts, cycles), Layouts (custom fractions with a live thumbnail), Stash (sliver width, reveal on hover), About.
 
 ### 5.5 Automation
-`swoop://` links for every action, for example `swoop://action/right-half`, `swoop://screen/next`, `swoop://direction/top-left`, `swoop://custom/<name>`, `swoop://stash/left`, `swoop://undo`, `swoop://settings`. Running `Swoop --list` prints every command.
+`windowmac://` links for every action, for example `windowmac://action/right-half`, `windowmac://screen/next`, `windowmac://direction/top-left`, `windowmac://custom/<name>`, `windowmac://stash/left`, `windowmac://undo`, `windowmac://settings`. Running `Windowmac --list` prints every command.
 
 ### 5.6 Install and first run
-- **One-liner:** `curl -fsSL https://swoop-mac.vercel.app/install.sh | bash` downloads the latest release into Applications, clears the quarantine flag and opens it.
+- **One-liner:** `curl -fsSL https://windowmac.vercel.app/install.sh | bash` downloads the latest release into Applications, clears the quarantine flag and opens it.
 - **Download:** unzip, drag to Applications, then follow macOS's first-run flow: "Not Opened" → Done → System Settings → Privacy & Security → Open Anyway → confirm. The website shows each screen.
-- **Permission:** Accessibility only. Swoop polls for it and starts on its own once granted.
+- **Permission:** Accessibility only. Windowmac polls for it and starts on its own once granted.
 
 ## 6. Technical design
 
 ### 6.1 Stack
-Swift 5.9 Swift Package, AppKit and SwiftUI, no third-party dependencies. It runs as a menu bar app (`LSUIElement`). The bundle ID is `com.iam8uman.swoop`.
+Swift 5.9 Swift Package, AppKit and SwiftUI, no third-party dependencies. It runs as a menu bar app (`LSUIElement`). The bundle ID is `com.iam8uman.windowmac`.
 
 ### 6.2 Modules
 ```
-Sources/SwoopCore   Pure logic, no AppKit, unit-tested
+Sources/WindowmacCore   Pure logic, no AppKit, unit-tested
   WindowAction        All actions, titles, symbols, unit rects
   ActionGeometry      Target frames, padding, resize/move, screen transfer, ScreenPicker, StashGeometry
   Interaction         RadialDirection math, CycleTracker, FrameHistory (undo)
-  Settings            SwoopSettings, TriggerKey, Keybind, themes, forgiving Codable
-  Commands            swoop:// URL parser and command list
+  Settings            WindowmacSettings, TriggerKey, Keybind, themes, forgiving Codable
+  Commands            windowmac:// URL parser and command list
 
-Sources/Swoop       The app
+Sources/Windowmac       The app
   App/                main, AppDelegate (menu bar, permission, URL scheme), SettingsStore
   Windows/            AX helpers, AXWindow, Screens, FrameAnimator, WindowEngine, StashManager
   Trigger/            TriggerController (CGEventTap: modifiers, keys, mouse)
@@ -113,16 +113,16 @@ Sources/Swoop       The app
 
 ### 6.3 Key decisions
 - **Accessibility API** (`AXUIElement`) to read and set window frames. The private `_AXUIElementGetWindow` gives stable window IDs, a common approach shared by yabai, Rectangle and AeroSpace.
-- **CGEventTap** to detect the exact trigger key (left and right modifiers are distinct through device flag bits), track the mouse, and swallow only the keys and clicks Swoop handles.
+- **CGEventTap** to detect the exact trigger key (left and right modifiers are distinct through device flag bits), track the mouse, and swallow only the keys and clicks Windowmac handles.
 - **Screen-space geometry** throughout (top-left origin, like AX), converted to AppKit coordinates only for overlays.
 - **Animation:** a 120 Hz ease-out timer. If an app is slow to respond to AX calls, the window jumps straight to its final frame.
 - **Settings** are stored as JSON in UserDefaults. Decoding is forgiving: unknown or broken fields fall back to defaults instead of wiping the user's setup.
 - **Stash** refuses edges that touch another display, because the window would just appear there.
 
 ### 6.4 Build and release
-- `scripts/build-app.sh` builds a universal binary, assembles `Swoop.app`, makes the icon and ad-hoc signs it.
+- `scripts/build-app.sh` builds a universal binary, assembles `Windowmac.app`, makes the icon and ad-hoc signs it.
 - GitHub Actions on macOS 15 compiles, runs unit tests, builds the app and smoke-tests it (architectures, signature, `--version`, `--list`, and that it launches and stays up for 10 seconds). It then zips it.
-- **Releasing:** bump `CFBundleShortVersionString` in `Resources/Info.plist` and push to `main`. If that version has no release yet, CI publishes `v<version>` with `Swoop.zip` and a checksum.
+- **Releasing:** bump `CFBundleShortVersionString` in `Resources/Info.plist` and push to `main`. If that version has no release yet, CI publishes `v<version>` with `Windowmac.zip` and a checksum.
 - The website (`website/`, static HTML/CSS/JS) deploys to Vercel on every push to `main` (root `vercel.json` sets `outputDirectory: website`).
 
 ### 6.5 Website
@@ -141,7 +141,7 @@ A single static page in Ubuntu / Ubuntu Mono on an indigo and blue palette. The 
 
 ## 9. Known limitations
 - Not notarized. macOS can treat each update as a new app, so the Accessibility toggle may need flipping after updates.
-- While Left ⌥ is held, Swoop's shortcut keys override ⌥ shortcuts such as ⌥ + ← word jump. Users can switch to Right ⌥ or 🌐.
+- While Left ⌥ is held, Windowmac's shortcut keys override ⌥ shortcuts such as ⌥ + ← word jump. Users can switch to Right ⌥ or 🌐.
 - Native fullscreen windows exit fullscreen before moving.
 - Some apps enforce minimum sizes, so the final frame can differ slightly from the target.
 - Tested end to end on one Mac so far (Apple silicon, recent macOS).
@@ -149,7 +149,7 @@ A single static page in Ubuntu / Ubuntu Mono on an indigo and blue palette. The 
 ## 10. Roadmap
 **Next (1.1)**
 - Developer ID signing and notarization in CI (needs the $99/year Apple program), plus automatic updates through Sparkle.
-- Homebrew cask (`brew install --cask swoop`).
+- Homebrew cask (`brew install --cask windowmac`).
 - An onboarding window that walks through permission and the first flick.
 - Per-app default layouts.
 
@@ -168,3 +168,4 @@ A single static page in Ubuntu / Ubuntu Mono on an indigo and blue palette. The 
 | 2026-10-20 | Default trigger changed from Right ⌥ to **Left ⌥** (v1.0.1) |
 | 2026-10-20 | One-line installer and illustrated first-run guide added to the site |
 | 2026-10-20 | Website type set in Ubuntu, original blue palette kept |
+| 2026-11-11 | Renamed **Swoop → Windowmac** (v1.1.0): new bundle ID, `windowmac://` scheme, windowmac.vercel.app; settings migrate from Swoop |

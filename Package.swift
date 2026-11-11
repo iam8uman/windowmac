@@ -2,10 +2,10 @@
 import PackageDescription
 
 let package = Package(
-    name: "Swoop",
+    name: "Windowmac",
     platforms: [.macOS(.v13)],
     products: [
-        .executable(name: "Swoop", targets: ["Swoop"]),
+        .executable(name: "Windowmac", targets: ["Windowmac"]),
     ],
     dependencies: [
         // Purchases and the "swoop_pro" entitlement (14-day trial, then a one-time lifetime license).
@@ -15,17 +15,17 @@ let package = Package(
         // Pure logic: actions, geometry, radial math, cycles, settings, URL commands.
         // No AppKit, so it is fast to unit-test.
         .target(
-            name: "SwoopCore",
-            path: "Sources/SwoopCore"
+            name: "WindowmacCore",
+            path: "Sources/WindowmacCore"
         ),
         // The macOS app: Accessibility, trigger key, radial menu, preview, stash, settings UI.
         .executableTarget(
-            name: "Swoop",
+            name: "Windowmac",
             dependencies: [
-                "SwoopCore",
+                "WindowmacCore",
                 .product(name: "RevenueCat", package: "purchases-ios-spm"),
             ],
-            path: "Sources/Swoop",
+            path: "Sources/Windowmac",
             linkerSettings: [
                 .linkedFramework("AppKit"),
                 .linkedFramework("ApplicationServices"),
@@ -34,9 +34,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "SwoopCoreTests",
-            dependencies: ["SwoopCore"],
-            path: "Tests/SwoopCoreTests"
+            name: "WindowmacCoreTests",
+            dependencies: ["WindowmacCore"],
+            path: "Tests/WindowmacCoreTests"
         ),
     ]
 )
