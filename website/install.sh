@@ -48,17 +48,29 @@ if (( BYTES > 0 )); then
 else
   step "Downloading the latest Windowmac…"
 fi
-curl -fL --progress-bar "$BASE/$ZIP" -o "$TMP/$ZIP" || fail "Download failed. Check your connection and try again."
-ok "Downloaded"
+# Download the zip and its checksum together. If they disagree, the release files may be
+# mid-upload (the zip and .sha256 are replaced one at a time), so wait and fetch both again.
+ATTEMPTS=3
+for (( TRY = 1; TRY <= ATTEMPTS; TRY++ )); do
+  curl -fL --progress-bar "$BASE/$ZIP" -o "$TMP/$ZIP" || fail "Download failed. Check your connection and try again."
+  ok "Downloaded"
 
-if curl -fsSL "$BASE/$ZIP.sha256" -o "$TMP/$ZIP.sha256" 2>/dev/null; then
+  rm -f "$TMP/$ZIP.sha256"
+  if ! curl -fsSL "$BASE/$ZIP.sha256" -o "$TMP/$ZIP.sha256" 2>/dev/null; then
+    echo "  ${DIM}• No checksum published for this release, skipping the check${R}"
+    break
+  fi
   EXPECTED="$(awk '{print $1; exit}' "$TMP/$ZIP.sha256")"
   ACTUAL="$(shasum -a 256 "$TMP/$ZIP" | awk '{print $1}')"
-  [[ "$EXPECTED" == "$ACTUAL" ]] || fail "Checksum mismatch, so nothing was installed. Please try again."
-  ok "Checksum verified"
-else
-  echo "  ${DIM}• No checksum published for this release, skipping the check${R}"
-fi
+  if [[ "$EXPECTED" == "$ACTUAL" ]]; then
+    ok "Checksum verified"
+    break
+  fi
+  (( TRY < ATTEMPTS )) || fail "Checksum mismatch, so nothing was installed. Please try again in a few minutes."
+  echo "  ${DIM}• Checksum didn't match (the release may be updating). Retrying in 10 seconds…${R}"
+  sleep 10
+  step "Downloading again (attempt $(( TRY + 1 )) of $ATTEMPTS)…"
+done
 
 step "Installing…"
 ditto -x -k "$TMP/$ZIP" "$TMP/unzipped"
