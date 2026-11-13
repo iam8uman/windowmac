@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add("js");</script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-F4NBF6XKFE"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -24,92 +25,115 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Serif:ital@1&family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="top">
-    <a class="brand" href="#" aria-label="Windowmac home">
-      <img src="favicon.png" alt="" width="28" height="28">
-      <span>Windowmac</span>
-    </a>
-    <nav aria-label="Sections">
-      <a href="#how">How it works</a>
-      <a href="#strip">Strip</a>
-      <a href="#install">Install</a>
-      <a href="#layouts">Layouts</a>
-      <a href="#keys">Shortcuts</a>
-      <a href="#faq">FAQ</a>
-    </nav>
-    <a class="gh-star" href="https://github.com/iam8uman/windowmac" target="_blank" rel="noopener noreferrer" aria-label="Star Windowmac on GitHub">
-      <span class="gh-glow" aria-hidden="true"><span class="liquid"><i></i><i></i><i></i><i></i><i></i></span></span>
-      <span class="gh-body" aria-hidden="true"><span class="liquid"><i></i><i></i><i></i><i></i><i></i></span><span class="gh-shine"></span></span>
-      <span class="gh-label">
-        <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        <span class="gh-text">GitHub</span>
-        <span class="gh-count" data-stars hidden><svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M8 .25a.75.75 0 01.67.42l1.88 3.81 4.2.61a.75.75 0 01.42 1.28l-3.04 2.96.72 4.19a.75.75 0 01-1.09.79L8 12.33l-3.76 1.98a.75.75 0 01-1.09-.79l.72-4.19L.83 6.37a.75.75 0 01.42-1.28l4.2-.61L7.33.67A.75.75 0 018 .25z"/></svg><span></span></span>
-      </span>
-    </a>
-    <a class="button small" href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip" data-download>Download</a>
+    <div class="top-inner">
+      <a class="brand" href="#" aria-label="Windowmac home">
+        <img src="favicon.png" alt="" width="28" height="28">
+        <span>Windowmac</span>
+      </a>
+      <nav aria-label="Sections">
+        <span class="nav-pill" aria-hidden="true"></span>
+        <a href="#how">How it works</a>
+        <a href="#strip">Strip</a>
+        <a href="#layouts">Layouts</a>
+        <a href="#keys">Shortcuts</a>
+        <a href="#install">Install</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="gh-star" href="https://github.com/iam8uman/windowmac" target="_blank" rel="noopener noreferrer" aria-label="Star Windowmac on GitHub">
+        <span class="gh-glow" aria-hidden="true"><span class="liquid"><i></i><i></i><i></i><i></i><i></i></span></span>
+        <span class="gh-body" aria-hidden="true"><span class="liquid"><i></i><i></i><i></i><i></i><i></i></span><span class="gh-shine"></span></span>
+        <span class="gh-label">
+          <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span class="gh-text">GitHub</span>
+          <span class="gh-count" data-stars hidden><svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M8 .25a.75.75 0 01.67.42l1.88 3.81 4.2.61a.75.75 0 01.42 1.28l-3.04 2.96.72 4.19a.75.75 0 01-1.09.79L8 12.33l-3.76 1.98a.75.75 0 01-1.09-.79l.72-4.19L.83 6.37a.75.75 0 01.42-1.28l4.2-.61L7.33.67A.75.75 0 018 .25z"/></svg><span></span></span>
+        </span>
+      </a>
+      <a class="button small" href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip" data-download>Download</a>
+    </div>
   </header>
 
   <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
+    <!-- Hero: centred copy, a dashed arrow that follows the cursor to the download button, and the live demo. -->
+    <section class="hero" aria-labelledby="hero-title" data-arrow-zone>
+      <div class="hero-bg" aria-hidden="true">
+        <span class="aurora a1"></span><span class="aurora a2"></span><span class="aurora a3"></span>
+        <span class="dots"></span>
+      </div>
+
       <div class="hero-copy">
-        <h1 id="hero-title">Flick windows<br>into place.</h1>
+        <a class="eyebrow" href="#strip">
+          <span class="eyebrow-tag">New</span>
+          <span>Strip mode<span class="eyebrow-more">: scrolling columns per screen</span></span>
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <h1 id="hero-title">
+          <span class="line"><span>Flick windows</span></span>
+          <span class="line"><span><em>into place.</em></span></span>
+        </h1>
         <p class="lede">Hold Option, flick the mouse toward where a window should go, and let go. Windowmac is a free, open-source window manager for macOS that you can use without looking.</p>
         <div class="cta">
-          <a class="button" href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip" data-download>
+          <a class="button big" href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip" data-download data-arrow>
             <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             Download for Mac
           </a>
-          <a class="button ghost-button" href="#install">Install guide</a>
+          <a class="button ghost-button big" href="#install">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path d="m5 7 5 5-5 5M12 19h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Install with one line
+          </a>
         </div>
-        <p class="fine"><span data-version>Free and open source</span>. macOS 13+, Apple silicon and Intel.</p>
+        <p class="fine"><span data-version>Free and open source</span> · macOS 13+ · Apple silicon and Intel</p>
       </div>
 
-      <!-- The live demo: a tilted Mac you can actually use. -->
-      <div class="stage" id="demo">
-        <div class="display" tabindex="0" aria-label="Interactive demo of Windowmac. Hold the Option key or press and hold, then move the pointer toward where the window should go, and release.">
-          <div class="menubar" aria-hidden="true">
-            <span class="apple"></span><b>Notes</b><span>File</span><span>Edit</span><span>View</span><span>Window</span>
-            <span class="spacer"></span>
-            <span class="status-ring"></span><span class="clock">Tue 9:41</span>
-          </div>
-          <div class="desktop" aria-hidden="true">
-            <div class="win" data-app="browser" style="--x:6%;--y:7%;--w:52%;--h:62%">
-              <div class="bar"><i></i><i></i><i></i><span>windowmac.vercel.app</span></div>
-              <div class="body browser">
-                <div class="b-hero"></div><div class="b-line"></div><div class="b-line short"></div>
-                <div class="b-grid"><span></span><span></span><span></span></div>
-              </div>
+      <!-- The live demo: a Mac you can actually use. It flattens as it scrolls into view. -->
+      <div class="stage" id="demo" data-arrow-avoid>
+        <div class="bezel">
+          <div class="display" tabindex="0" aria-label="Interactive demo of Windowmac. Hold the Option key or press and hold, then move the pointer toward where the window should go, and release.">
+            <div class="menubar" aria-hidden="true">
+              <span class="apple"></span><b>Notes</b><span>File</span><span>Edit</span><span>View</span><span>Window</span>
+              <span class="spacer"></span>
+              <span class="status-ring"></span><span class="clock">Tue 9:41</span>
             </div>
-            <div class="win" data-app="terminal" style="--x:44%;--y:30%;--w:46%;--h:52%">
-              <div class="bar"><i></i><i></i><i></i><span>~/windowmac</span></div>
-              <pre class="body terminal">$ swift test
+            <div class="desktop" aria-hidden="true">
+              <div class="win" data-app="browser" style="--x:6%;--y:7%;--w:52%;--h:62%">
+                <div class="bar"><i></i><i></i><i></i><span>windowmac.vercel.app</span></div>
+                <div class="body browser">
+                  <div class="b-hero"></div><div class="b-line"></div><div class="b-line short"></div>
+                  <div class="b-grid"><span></span><span></span><span></span></div>
+                </div>
+              </div>
+              <div class="win" data-app="terminal" style="--x:44%;--y:30%;--w:46%;--h:52%">
+                <div class="bar"><i></i><i></i><i></i><span>~/windowmac</span></div>
+                <pre class="body terminal">$ swift test
 Executed 18 tests, 0 failures
 $ open -g "windowmac://action/
   right-half"
 $ <span class="caret"></span></pre>
-            </div>
-            <div class="win" data-app="notes" style="--x:22%;--y:18%;--w:40%;--h:58%">
-              <div class="bar"><i></i><i></i><i></i><span>Ideas</span></div>
-              <div class="body notes">
-                <p class="n-title">Launch checklist</p>
-                <p>☑ Ship v1.0</p><p>☑ Landing page</p><p>☐ Post on X</p><p>☐ Chiya</p>
               </div>
+              <div class="win" data-app="notes" style="--x:22%;--y:18%;--w:40%;--h:58%">
+                <div class="bar"><i></i><i></i><i></i><span>Ideas</span></div>
+                <div class="body notes">
+                  <p class="n-title">Launch checklist</p>
+                  <p>☑ Ship v1.0</p><p>☑ Landing page</p><p>☐ Post on X</p><p>☐ Chiya</p>
+                </div>
+              </div>
+              <div class="preview" hidden></div>
+              <div class="ring" hidden>
+                <svg viewBox="0 0 120 120" aria-hidden="true"></svg>
+                <div class="ring-label"><b></b><small></small></div>
+              </div>
+              <div class="ghost" hidden><svg viewBox="0 0 24 24"><path d="M5 2.5v17.2l4.4-4.2 2.9 6.6 3-1.3-2.9-6.5h6.1z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+              <div class="keycap-hint" hidden><kbd>⌥</kbd></div>
             </div>
-            <div class="preview" hidden></div>
-            <div class="ring" hidden>
-              <svg viewBox="0 0 120 120" aria-hidden="true"></svg>
-              <div class="ring-label"><b></b><small></small></div>
-            </div>
-            <div class="ghost" hidden><svg viewBox="0 0 24 24"><path d="M5 2.5v17.2l4.4-4.2 2.9 6.6 3-1.3-2.9-6.5h6.1z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
-            <div class="keycap-hint" hidden><kbd>⌥</kbd></div>
+            <div class="dock" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
           </div>
-          <div class="dock" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+          <span class="live-chip" aria-hidden="true"><i></i><b class="lc-auto">Live demo</b><b class="lc-you">You're driving</b></span>
         </div>
         <p class="demo-help">
           <span class="desk-only">Try it: hold <kbd>⌥ Option</kbd> and move your mouse, then let go. Click while holding to cycle.</span>
@@ -118,18 +142,72 @@ $ <span class="caret"></span></pre>
       </div>
     </section>
 
+    <!-- A moving strip of everything it can do. -->
+    <div class="marquee" aria-label="Layouts and features">
+      <div class="marquee-track">
+        <ul>
+          <li><i style="--l:0;--t:0;--w:.5;--h:1"></i>Halves</li>
+          <li><i style="--l:0;--t:0;--w:.333;--h:1"></i>Thirds</li>
+          <li><i style="--l:0;--t:0;--w:.666;--h:1"></i>Two thirds</li>
+          <li><i style="--l:.5;--t:0;--w:.5;--h:.5"></i>Quarters</li>
+          <li><i style="--l:0;--t:0;--w:1;--h:1"></i>Maximize</li>
+          <li><i style="--l:.25;--t:.2;--w:.5;--h:.6"></i>Centre</li>
+          <li><i style="--l:.05;--t:.05;--w:.9;--h:.9"></i>Almost maximize</li>
+          <li><i style="--l:.333;--t:0;--w:.333;--h:1"></i>Centre third</li>
+          <li><i style="--l:0;--t:0;--w:1;--h:.5"></i>Top half</li>
+          <li><i style="--l:.8;--t:.15;--w:.2;--h:.7"></i>Stash</li>
+          <li><i style="--l:0;--t:0;--w:.32;--h:1"></i><i style="--l:.34;--t:0;--w:.32;--h:1"></i><i style="--l:.68;--t:0;--w:.32;--h:1"></i>Strip</li>
+          <li><i style="--l:.5;--t:.5;--w:.5;--h:.5"></i>Custom layouts</li>
+        </ul>
+        <ul aria-hidden="true">
+          <li><i style="--l:0;--t:0;--w:.5;--h:1"></i>Halves</li>
+          <li><i style="--l:0;--t:0;--w:.333;--h:1"></i>Thirds</li>
+          <li><i style="--l:0;--t:0;--w:.666;--h:1"></i>Two thirds</li>
+          <li><i style="--l:.5;--t:0;--w:.5;--h:.5"></i>Quarters</li>
+          <li><i style="--l:0;--t:0;--w:1;--h:1"></i>Maximize</li>
+          <li><i style="--l:.25;--t:.2;--w:.5;--h:.6"></i>Centre</li>
+          <li><i style="--l:.05;--t:.05;--w:.9;--h:.9"></i>Almost maximize</li>
+          <li><i style="--l:.333;--t:0;--w:.333;--h:1"></i>Centre third</li>
+          <li><i style="--l:0;--t:0;--w:1;--h:.5"></i>Top half</li>
+          <li><i style="--l:.8;--t:.15;--w:.2;--h:.7"></i>Stash</li>
+          <li><i style="--l:0;--t:0;--w:.32;--h:1"></i><i style="--l:.34;--t:0;--w:.32;--h:1"></i><i style="--l:.68;--t:0;--w:.32;--h:1"></i>Strip</li>
+          <li><i style="--l:.5;--t:.5;--w:.5;--h:.5"></i>Custom layouts</li>
+        </ul>
+      </div>
+    </div>
+
     <section class="how" id="how" aria-labelledby="how-title">
-      <h2 id="how-title">One gesture. No targets to aim at.</h2>
+      <div class="section-head center" data-reveal>
+        <p class="kicker">How it works</p>
+        <h2 id="how-title">One gesture. <em>No targets to aim at.</em></h2>
+      </div>
       <ol class="steps">
-        <li>
+        <li class="step" data-reveal style="--d:0">
+          <div class="anim anim-hold" aria-hidden="true">
+            <span class="hold-ring"></span>
+            <kbd>⌥</kbd>
+          </div>
+          <span class="step-n">01</span>
           <h3>Hold</h3>
           <p>Hold Left ⌥ Option. A ring appears right under your cursor, so your eyes never leave your work.</p>
         </li>
-        <li>
+        <li class="step" data-reveal style="--d:1">
+          <div class="anim anim-flick" aria-hidden="true">
+            <svg class="mini-ring" viewBox="0 0 120 120"></svg>
+            <span class="flick-dot"></span>
+          </div>
+          <span class="step-n">02</span>
           <h3>Flick</h3>
           <p>Nudge the mouse toward where the window belongs. An outline shows exactly where it will land. Click to step through sizes: half, third, two thirds.</p>
         </li>
-        <li>
+        <li class="step" data-reveal style="--d:2">
+          <div class="anim anim-snap" aria-hidden="true">
+            <div class="mini-screen">
+              <span class="snap-preview"></span>
+              <span class="snap-win"><b></b></span>
+            </div>
+          </div>
+          <span class="step-n">03</span>
           <h3>Release</h3>
           <p>Let go and the window snaps into place. Esc or right-click cancels.</p>
         </li>
@@ -137,21 +215,26 @@ $ <span class="caret"></span></pre>
     </section>
 
     <section class="strip" id="strip" aria-labelledby="strip-title">
-      <div class="section-head">
-        <h2 id="strip-title">Lots of windows? Line them up on a strip.</h2>
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="kicker"><span class="kicker-new">New in 1.2</span> Strip</p>
+          <h2 id="strip-title">Lots of windows? <em>Line them up on a strip.</em></h2>
+        </div>
         <p>Hold ⌥ and press <kbd>S</kbd>. Every window on that screen becomes a column on one strip that scrolls sideways, wider than the screen if it needs to be. Move between columns with the keyboard or a swipe, and a bar at the bottom shows where you are. New windows join next to the one you're in.</p>
       </div>
 
-      <div class="strip-demo" id="strip-demo" tabindex="0" aria-label="Interactive demo of Strip. Hold Option and press A or D to move between windows, or use the buttons below.">
-        <div class="strip-screen">
-          <div class="menubar" aria-hidden="true">
-            <span class="apple"></span><b data-strip-app>Notes</b><span>File</span><span>Edit</span><span>View</span><span>Window</span>
-            <span class="spacer"></span>
-            <span class="status-ring"></span><span class="clock">Tue 9:41</span>
-          </div>
-          <div class="strip-desk" aria-hidden="true">
-            <div class="strip-track"></div>
-            <div class="strip-bar"><div class="strip-tiles"></div><div class="strip-hint"><kbd>⌥</kbd> held · <kbd>A</kbd><kbd>D</kbd> focus · scroll to slide</div></div>
+      <div class="strip-demo" id="strip-demo" tabindex="0" aria-label="Interactive demo of Strip. Hold Option and press A or D to move between windows, or use the buttons below." data-reveal>
+        <div class="bezel">
+          <div class="strip-screen">
+            <div class="menubar" aria-hidden="true">
+              <span class="apple"></span><b data-strip-app>Notes</b><span>File</span><span>Edit</span><span>View</span><span>Window</span>
+              <span class="spacer"></span>
+              <span class="status-ring"></span><span class="clock">Tue 9:41</span>
+            </div>
+            <div class="strip-desk" aria-hidden="true">
+              <div class="strip-track"></div>
+              <div class="strip-bar"><div class="strip-tiles"></div><div class="strip-hint"><kbd>⌥</kbd> held · <kbd>A</kbd><kbd>D</kbd> focus · scroll to slide</div></div>
+            </div>
           </div>
         </div>
         <div class="strip-legend" role="toolbar" aria-label="Strip actions">
@@ -171,30 +254,112 @@ $ <span class="caret"></span></pre>
       </div>
     </section>
 
+    <section class="layouts" id="layouts" aria-labelledby="layouts-title">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="kicker">Layouts</p>
+          <h2 id="layouts-title">Every layout, <em>one flick or keypress away.</em></h2>
+        </div>
+        <p>Put any of these on any direction of the ring or on any key, or make your own.</p>
+      </div>
+      <div class="catalogue" id="catalogue" data-reveal></div>
+      <ul class="extras">
+        <li data-reveal style="--d:0">
+          <span class="x-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="12" height="9" rx="1.5"/><rect x="10" y="10" width="12" height="9" rx="1.5"/><path d="M8 20h4"/></svg></span>
+          <b>Screens</b><span>Send a window to the next display. It keeps its layout and the cursor comes along.</span>
+        </li>
+        <li data-reveal style="--d:1">
+          <span class="x-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="6" height="14" rx="1.5"/><rect x="9" y="5" width="6" height="14" rx="1.5"/><rect x="16" y="5" width="6" height="14" rx="1.5"/></svg></span>
+          <b>Strip</b><span>Line up every window on a screen as scrolling columns. <a href="#strip">Try it above</a>.</span>
+        </li>
+        <li data-reveal style="--d:2">
+          <span class="x-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 4v16"/><rect x="13" y="7" width="10" height="10" rx="1.5"/><path d="M4 12h6m-3-3 3 3-3 3"/></svg></span>
+          <b>Stash</b><span>Tuck a window behind the screen edge. Push the cursor against the edge to slide it back.</span>
+        </li>
+        <li data-reveal style="--d:3">
+          <span class="x-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+          <b>Resize and nudge</b><span>Larger, smaller, grow or shrink any edge, move in any direction.</span>
+        </li>
+        <li data-reveal style="--d:4">
+          <span class="x-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span>
+          <b>Undo</b><span>Step back through a window's last positions.</span>
+        </li>
+        <li data-reveal style="--d:5">
+          <span class="x-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></span>
+          <b>Links for everything</b><span>Every action has a <code>windowmac://</code> link for scripts, Shortcuts and Raycast.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="keys" id="keys" aria-labelledby="keys-title">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="kicker">Shortcuts</p>
+          <h2 id="keys-title">Prefer the keyboard? <em>Hold ⌥ and tap.</em></h2>
+        </div>
+        <p>Press the same key again to cycle. Every key can be changed in Settings.</p>
+      </div>
+      <div class="key-panels">
+        <div class="panel" data-reveal style="--d:0">
+          <h3>Windows</h3>
+          <dl class="keylist">
+            <div><dt><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd></dt><dd>Halves, then thirds, then two thirds</dd></div>
+            <div><dt><kbd>↩</kbd></dt><dd>Maximize, then almost maximize</dd></div>
+            <div><dt><kbd>C</kbd></dt><dd>Centre</dd></div>
+            <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd></dt><dd>Quarters</dd></div>
+            <div><dt><kbd>[</kbd><kbd>]</kbd></dt><dd>Previous and next screen</dd></div>
+            <div><dt><kbd>=</kbd><kbd>−</kbd></dt><dd>Larger and smaller</dd></div>
+            <div><dt><kbd>,</kbd><kbd>.</kbd><kbd>/</kbd></dt><dd>Stash left, stash right, unstash</dd></div>
+            <div><dt><kbd>Z</kbd></dt><dd>Undo</dd></div>
+          </dl>
+        </div>
+        <div class="panel" data-reveal style="--d:1">
+          <h3>Strip</h3>
+          <dl class="keylist">
+            <div><dt><kbd>S</kbd></dt><dd>Strip this screen, or turn it off</dd></div>
+            <div><dt><kbd>A</kbd><kbd>D</kbd></dt><dd>Focus the column on the left or right</dd></div>
+            <div><dt><kbd>⇧A</kbd><kbd>⇧D</kbd></dt><dd>Move the column left or right</dd></div>
+            <div><dt><kbd>W</kbd><kbd>⇧W</kbd></dt><dd>Cycle width (⅓, ½, ⅔), full width</dd></div>
+            <div><dt><kbd>⇧C</kbd></dt><dd>Centre the column</dd></div>
+            <div><dt><kbd>⇧S</kbd></dt><dd>Float a window out of the strip, or back in</dd></div>
+            <div><dt><span class="scroll-key">scroll</span></dt><dd>Slide the strip with the wheel or a swipe</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
     <section class="install" id="install" aria-labelledby="install-title">
-      <div class="section-head">
-        <h2 id="install-title">Install in a minute</h2>
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="kicker">Install</p>
+          <h2 id="install-title">Up and running <em>in a minute.</em></h2>
+        </div>
         <p>The one-liner is the quickest. The download takes a few extra clicks the first time, and each one is shown below.</p>
       </div>
 
       <div class="install-ways">
-        <div class="way way-fast">
-          <h3>Quickest: one line in Terminal</h3>
-          <p>Paste this into Terminal and press Return. It puts the latest Windowmac in Applications and opens it, with no security popup.</p>
-          <div class="copy-line">
-            <code id="install-cmd">curl -fsSL https://windowmac.vercel.app/install.sh | bash</code>
-            <button type="button" class="copy" data-copy="#install-cmd">Copy</button>
+        <div class="way way-fast" data-reveal style="--d:0">
+          <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>Terminal</span></div>
+          <div class="way-body">
+            <h3>Quickest: one line in Terminal</h3>
+            <p>Paste this into Terminal and press Return. It puts the latest Windowmac in Applications and opens it, with no security popup.</p>
+            <div class="copy-line">
+              <span class="prompt" aria-hidden="true">$</span>
+              <code id="install-cmd">curl -fsSL https://windowmac.vercel.app/install.sh | bash</code>
+              <button type="button" class="copy" data-copy="#install-cmd">Copy</button>
+            </div>
+            <p class="fine">Want to check it first? <a href="install.sh">Read the script</a>, it's about 100 lines.</p>
           </div>
-          <p class="fine">Want to check it first? <a href="install.sh">Read the script</a>, it's about 100 lines.</p>
         </div>
-        <div class="way">
+        <div class="way way-zip" data-reveal style="--d:1">
+          <img src="icon.png" alt="" width="64" height="64">
           <h3>Or download the app</h3>
           <p><a href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip" data-download>Download Windowmac.zip</a>, unzip it and drag <b>Windowmac</b> into <b>Applications</b>. Then follow these steps the first time you open it.</p>
         </div>
       </div>
 
       <ol class="walkthrough">
-        <li>
+        <li data-reveal style="--d:0">
           <div class="shot" aria-hidden="true">
             <div class="mac-dialog">
               <div class="md-icon"></div>
@@ -207,7 +372,7 @@ $ <span class="caret"></span></pre>
           <h3>Click Done</h3>
           <p>macOS shows this the first time. It's normal for free apps outside the App Store. Click <b>Done</b>, not Move to Trash.</p>
         </li>
-        <li>
+        <li data-reveal style="--d:1">
           <div class="shot" aria-hidden="true">
             <div class="mac-pane">
               <small>Privacy &amp; Security</small>
@@ -217,7 +382,7 @@ $ <span class="caret"></span></pre>
           <h3>Open Anyway</h3>
           <p>Open <b>System Settings → Privacy &amp; Security</b>, scroll to the bottom and click <b>Open Anyway</b>. On macOS 13 or 14 you can right-click Windowmac and choose <b>Open</b> instead.</p>
         </li>
-        <li>
+        <li data-reveal style="--d:2">
           <div class="shot" aria-hidden="true">
             <div class="mac-dialog small">
               <div class="md-touch"></div>
@@ -228,7 +393,7 @@ $ <span class="caret"></span></pre>
           <h3>Confirm</h3>
           <p>Use your password or Touch ID, then click <b>Open Anyway</b> again. You only do this once.</p>
         </li>
-        <li>
+        <li data-reveal style="--d:3">
           <div class="shot" aria-hidden="true">
             <div class="mac-pane">
               <small>Accessibility</small>
@@ -238,7 +403,7 @@ $ <span class="caret"></span></pre>
           <h3>Allow Accessibility</h3>
           <p>When Windowmac asks, turn it on in <b>Privacy &amp; Security → Accessibility</b>. No restart needed.</p>
         </li>
-        <li>
+        <li data-reveal style="--d:4">
           <div class="shot" aria-hidden="true">
             <div class="flick-hint">
               <kbd>⌥</kbd>
@@ -250,92 +415,73 @@ $ <span class="caret"></span></pre>
         </li>
       </ol>
 
-      <p class="why-warning"><b>Why the warning?</b> Apple only skips that popup for apps in its $99-a-year developer program, which Windowmac hasn't joined yet. It doesn't mean anything was found. Every line of Windowmac is <a href="https://github.com/iam8uman/windowmac">on GitHub</a>, each release is built in public, it never goes online, and it asks for one permission: Accessibility.</p>
-    </section>
-
-    <section class="layouts" id="layouts" aria-labelledby="layouts-title">
-      <div class="section-head">
-        <h2 id="layouts-title">Every layout, one flick or keypress away</h2>
-        <p>Put any of these on any direction of the ring or on any key, or make your own.</p>
+      <div class="trust" data-reveal>
+        <ul class="facts">
+          <li><b>MIT</b><span>Free and open source</span></li>
+          <li><b>0</b><span>Network connections</span></li>
+          <li><b>1</b><span>Permission: Accessibility</span></li>
+          <li><b>13+</b><span>macOS, Apple silicon and Intel</span></li>
+        </ul>
+        <p class="why-warning"><b>Why the warning?</b> Apple only skips that popup for apps in its $99-a-year developer program, which Windowmac hasn't joined yet. It doesn't mean anything was found. Every line of Windowmac is <a href="https://github.com/iam8uman/windowmac">on GitHub</a>, each release is built in public, it never goes online, and it asks for one permission: Accessibility.</p>
       </div>
-      <div class="catalogue" id="catalogue"></div>
-      <ul class="extras">
-        <li><b>Screens.</b> Send a window to the next display. It keeps its layout and the cursor comes along.</li>
-        <li><b>Strip.</b> Line up every window on a screen as scrolling columns. <a href="#strip">Try it above</a>.</li>
-        <li><b>Stash.</b> Tuck a window behind the screen edge. Push the cursor against the edge to slide it back.</li>
-        <li><b>Resize and nudge.</b> Larger, smaller, grow or shrink any edge, move in any direction.</li>
-        <li><b>Undo.</b> Step back through a window's last positions.</li>
-      </ul>
-    </section>
-
-    <section class="keys" id="keys" aria-labelledby="keys-title">
-      <div class="section-head">
-        <h2 id="keys-title">Prefer the keyboard? Hold ⌥ and tap.</h2>
-        <p>Press the same key again to cycle. Every key can be changed in Settings.</p>
-      </div>
-      <dl class="keylist">
-        <div><dt><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd></dt><dd>Halves, then thirds, then two thirds</dd></div>
-        <div><dt><kbd>↩</kbd></dt><dd>Maximize, then almost maximize</dd></div>
-        <div><dt><kbd>C</kbd></dt><dd>Centre</dd></div>
-        <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd></dt><dd>Quarters</dd></div>
-        <div><dt><kbd>[</kbd><kbd>]</kbd></dt><dd>Previous and next screen</dd></div>
-        <div><dt><kbd>=</kbd><kbd>−</kbd></dt><dd>Larger and smaller</dd></div>
-        <div><dt><kbd>,</kbd><kbd>.</kbd><kbd>/</kbd></dt><dd>Stash left, stash right, unstash</dd></div>
-        <div><dt><kbd>Z</kbd></dt><dd>Undo</dd></div>
-      </dl>
-      <h3 class="keys-sub">Strip</h3>
-      <dl class="keylist">
-        <div><dt><kbd>S</kbd></dt><dd>Strip this screen, or turn it off</dd></div>
-        <div><dt><kbd>A</kbd><kbd>D</kbd></dt><dd>Focus the column on the left or right</dd></div>
-        <div><dt><kbd>⇧A</kbd><kbd>⇧D</kbd></dt><dd>Move the column left or right</dd></div>
-        <div><dt><kbd>W</kbd><kbd>⇧W</kbd></dt><dd>Cycle width (⅓, ½, ⅔), full width</dd></div>
-        <div><dt><kbd>⇧C</kbd></dt><dd>Centre the column</dd></div>
-        <div><dt><kbd>⇧S</kbd></dt><dd>Float a window out of the strip, or back in</dd></div>
-        <div><dt>scroll</dt><dd>Slide the strip with the wheel or a swipe</dd></div>
-      </dl>
     </section>
 
     <section class="faq" id="faq" aria-labelledby="faq-title">
-      <h2 id="faq-title">Questions</h2>
-      <details>
-        <summary>Is Windowmac really free?</summary>
-        <p>Yes. It's open source under the MIT license, with no account, no subscription and no tracking. Windowmac never connects to the internet.</p>
-      </details>
-      <details>
-        <summary>Why does it need Accessibility permission?</summary>
-        <p>macOS only lets apps move other apps' windows through Accessibility, so every window manager needs it. Windowmac uses it for that and to notice your Option key, nothing else.</p>
-      </details>
-      <details>
-        <summary>Will holding Option get in the way of typing?</summary>
-        <p>Keys that aren't Windowmac shortcuts type as normal, so ⌥ + E or ⌥ + U still make accents. While Option is held, Windowmac's own keys (arrows, C, Z and a few more) move windows instead, so ⌥ + ← won't jump a word. If you use that a lot, switch the trigger to Right ⌥ or the 🌐 key in Settings → Trigger.</p>
-      </details>
-      <details>
-        <summary>Can I change how it looks or which key triggers it?</summary>
-        <p>Yes. Settings lets you pick the trigger key, the ring's size, shape and colour (it follows your macOS accent colour by default), the gap between windows, animation speed, and apps Windowmac should ignore. You can also add your own layouts.</p>
-      </details>
-      <details>
-        <summary>Can I control it from scripts, Shortcuts or Raycast?</summary>
-        <p>Every action has a link, for example <code>open -g "windowmac://action/right-half"</code> or <code>windowmac://screen/next</code>. Run <code>/Applications/Windowmac.app/Contents/MacOS/Windowmac --list</code> to see them all.</p>
-      </details>
-      <details>
-        <summary>How do I update or uninstall it?</summary>
-        <p>To update, run the one-line installer again or replace the app with a new download. macOS asks for Accessibility again after each update, so just turn Windowmac back on. If it ever stops responding, choose <b>Fix Accessibility Permission…</b> from Windowmac's menu bar icon. To uninstall, quit Windowmac from its menu bar icon and move it to the Trash.</p>
-      </details>
+      <div class="faq-side" data-reveal>
+        <p class="kicker">FAQ</p>
+        <h2 id="faq-title">Questions, <em>answered.</em></h2>
+        <p>Something else? <a href="https://github.com/iam8uman/windowmac/issues" target="_blank" rel="noopener noreferrer">Open an issue on GitHub</a>.</p>
+      </div>
+      <div class="faq-list" data-reveal style="--d:1">
+        <details>
+          <summary>Is Windowmac really free?</summary>
+          <p>Yes. It's open source under the MIT license, with no account, no subscription and no tracking. Windowmac never connects to the internet.</p>
+        </details>
+        <details>
+          <summary>Why does it need Accessibility permission?</summary>
+          <p>macOS only lets apps move other apps' windows through Accessibility, so every window manager needs it. Windowmac uses it for that and to notice your Option key, nothing else.</p>
+        </details>
+        <details>
+          <summary>Will holding Option get in the way of typing?</summary>
+          <p>Keys that aren't Windowmac shortcuts type as normal, so ⌥ + E or ⌥ + U still make accents. While Option is held, Windowmac's own keys (arrows, C, Z and a few more) move windows instead, so ⌥ + ← won't jump a word. If you use that a lot, switch the trigger to Right ⌥ or the 🌐 key in Settings → Trigger.</p>
+        </details>
+        <details>
+          <summary>Can I change how it looks or which key triggers it?</summary>
+          <p>Yes. Settings lets you pick the trigger key, the ring's size, shape and colour (it follows your macOS accent colour by default), the gap between windows, animation speed, and apps Windowmac should ignore. You can also add your own layouts.</p>
+        </details>
+        <details>
+          <summary>Can I control it from scripts, Shortcuts or Raycast?</summary>
+          <p>Every action has a link, for example <code>open -g "windowmac://action/right-half"</code> or <code>windowmac://screen/next</code>. Run <code>/Applications/Windowmac.app/Contents/MacOS/Windowmac --list</code> to see them all.</p>
+        </details>
+        <details>
+          <summary>How do I update or uninstall it?</summary>
+          <p>To update, run the one-line installer again or replace the app with a new download. macOS asks for Accessibility again after each update, so just turn Windowmac back on. If it ever stops responding, choose <b>Fix Accessibility Permission…</b> from Windowmac's menu bar icon. To uninstall, quit Windowmac from its menu bar icon and move it to the Trash.</p>
+        </details>
+      </div>
     </section>
 
     <section class="final" aria-labelledby="final-title">
-      <img src="icon.png" alt="Windowmac app icon" width="112" height="112">
-      <h2 id="final-title">Stop dragging windows around.</h2>
-      <a class="button" href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip" data-download>Download for Mac</a>
-      <p class="fine">Free and open source. <a href="https://github.com/iam8uman/windowmac">Star it on GitHub</a> or tell me what to build next.</p>
+      <div class="final-card" data-arrow-zone data-reveal>
+        <div class="final-glow" aria-hidden="true"></div>
+        <img src="icon.png" alt="Windowmac app icon" width="104" height="104">
+        <h2 id="final-title">Stop dragging windows <em>around.</em></h2>
+        <p>Hold ⌥, flick, let go. That's the whole thing.</p>
+        <a class="button big" href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip" data-download data-arrow data-arrow-tone="light">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Download for Mac
+        </a>
+        <p class="fine">Free and open source. <a href="https://github.com/iam8uman/windowmac">Star it on GitHub</a> or tell me what to build next.</p>
+      </div>
     </section>
   </main>
 
   <footer class="foot">
+    <div class="brand foot-brand"><img src="favicon.png" alt="" width="22" height="22"><span>Windowmac</span></div>
     <p>Made in Nepal by <a href="https://github.com/iam8uman">Suman Sharma</a>. MIT license.</p>
     <p class="credit">Inspired by radial window managers like Loop. Independent code.</p>
   </footer>
 
   <script src="demo.js" defer></script>
+  <script src="hero.js" defer></script>
 </body>
 </html>
