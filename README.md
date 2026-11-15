@@ -8,9 +8,9 @@
 Hold Option, flick the mouse toward where a window should go, and let go.</p>
 
 <p align="center">
-  <a href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip"><b>Download for macOS</b></a> ·
+  <a href="#install"><b>Install</b></a> ·
   <a href="https://windowmac.vercel.app">Website</a> ·
-  <a href="https://windowmac.vercel.app/#install">Install guide</a><br>
+  <a href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip">Download .zip</a><br>
   macOS 13+ · Apple silicon &amp; Intel · Free &amp; open source (MIT)
 </p>
 
@@ -48,7 +48,7 @@ Hold Option, flick the mouse toward where a window should go, and let go.</p>
 curl -fsSL https://windowmac.vercel.app/install.sh | bash
 ```
 
-**Or download it:**
+**Or download the .zip:**
 
 1. [Download Windowmac.zip](https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip), unzip it, and drag **Windowmac** into **Applications**.
 2. Open it. macOS says *"Windowmac.app" Not Opened*. Click **Done**. (Windowmac isn't notarized by Apple yet.)

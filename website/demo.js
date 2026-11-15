@@ -80,20 +80,52 @@
   }
 
   // ---------- Copy buttons ----------
+  const track = (name, params) => { try { window.gtag && window.gtag("event", name, params); } catch {} };
+
+  async function copyFrom(el) {
+    const text = el.textContent.trim();
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const r = document.createRange();
+      r.selectNodeContents(el);
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      document.execCommand("copy");
+    }
+  }
+
+  function markCopied(btn, label, ms) {
+    clearTimeout(btn._reset);
+    btn.textContent = label;
+    btn.classList.add("done");
+    btn._reset = setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("done"); }, ms);
+  }
+
   document.querySelectorAll("[data-copy]").forEach((btn) => {
     btn.addEventListener("click", async () => {
-      const text = document.querySelector(btn.dataset.copy).textContent.trim();
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch {
-        const r = document.createRange();
-        r.selectNodeContents(document.querySelector(btn.dataset.copy));
-        const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
-        document.execCommand("copy");
-      }
-      btn.textContent = "Copied";
-      btn.classList.add("done");
-      setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("done"); }, 1800);
+      await copyFrom(document.querySelector(btn.dataset.copy));
+      markCopied(btn, "Copied", 1800);
+      track("install_copy", { location: btn.dataset.copy.slice(1) });
+    });
+  });
+
+  // ---------- Install buttons: copy the one-liner and go to it ----------
+  // The link itself points at #install, so without JavaScript it still scrolls to the command.
+  const installCmd = document.querySelector("#install-cmd");
+  const installLine = installCmd && installCmd.closest(".copy-line");
+  const installCopy = installLine && installLine.querySelector(".copy");
+  document.querySelectorAll("[data-install]").forEach((link) => {
+    link.addEventListener("click", async (e) => {
+      if (!installLine || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault();
+      await copyFrom(installCmd);
+      installLine.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      installLine.classList.remove("flash");
+      void installLine.offsetWidth; // restart the animation on repeat clicks
+      installLine.classList.add("flash");
+      markCopied(installCopy, "Copied ✓ Paste in Terminal", 4000);
+      installCopy.focus({ preventScroll: true });
+      track("install_click", { location: link.dataset.install });
     });
   });
 
