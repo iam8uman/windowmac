@@ -23,6 +23,11 @@ env:
   # publish releases. Notarize by hand, then set this back to "true".
   NOTARIZE_IN_CI: "false"
 
+# Only one build of main at a time, so two pushes can't notarize side by side.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: macos-15
@@ -142,6 +147,15 @@ jobs:
           set -euo pipefail
           KEY="$RUNNER_TEMP/notary.p8"
           echo "$NOTARY_KEY_P8_BASE64" | base64 --decode > "$KEY"
+          # One submission at a time: if Apple is still working on an earlier one,
+          # stop here rather than queue another copy behind it.
+          PENDING=$(xcrun notarytool history --key "$KEY" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID" --output-format json \
+            | /usr/bin/python3 -c 'import json,sys;print(" ".join(e["id"] for e in json.load(sys.stdin)["history"] if e["status"]=="In Progress"))')
+          if [[ -n "$PENDING" ]]; then
+            rm -f "$KEY"
+            echo "::error title=Notarization::Not submitting: Apple is still processing $PENDING. Re-run once it finishes."
+            exit 1
+          fi
           ditto -c -k --keepParent build/Windowmac.app "$RUNNER_TEMP/notarize.zip"
           xcrun notarytool submit "$RUNNER_TEMP/notarize.zip" \
             --key "$KEY" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID" \
