@@ -4,6 +4,14 @@ on:
   push:
     branches: [main]
     tags: ["v*"]
+    # Website and docs changes don't touch the app, so they shouldn't build, notarize
+    # or publish it. (Path filters don't apply to tag pushes; run the workflow by hand
+    # to release after a docs-only push.)
+    paths-ignore:
+      - "website/**"
+      - "docs/**"
+      - "**.md"
+      - "vercel.json"
   pull_request:
   workflow_dispatch:
 
@@ -132,7 +140,7 @@ jobs:
           ditto -c -k --keepParent build/Windowmac.app "$RUNNER_TEMP/notarize.zip"
           xcrun notarytool submit "$RUNNER_TEMP/notarize.zip" \
             --key "$KEY" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID" \
-            --wait --timeout 30m --output-format json | tee notary.json
+            --wait --timeout 2h --output-format json | tee notary.json
           rm -f "$KEY"
           STATUS=$(/usr/bin/python3 -c 'import json;print(json.load(open("notary.json"))["status"])')
           if [[ "$STATUS" != "Accepted" ]]; then
