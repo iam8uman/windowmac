@@ -2,48 +2,46 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CFBundleName</key>
-    <string>Windowmac</string>
-    <key>CFBundleDisplayName</key>
-    <string>Windowmac</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.iam8uman.windowmac</string>
-    <key>CFBundleExecutable</key>
-    <string>Windowmac</string>
-    <key>CFBundleIconFile</key>
-    <string>AppIcon</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>1.2.0</string>
-    <key>CFBundleVersion</key>
-    <string>1</string>
-    <key>LSMinimumSystemVersion</key>
-    <string>13.0</string>
-    <key>LSUIElement</key>
-    <true/>
-    <key>LSApplicationCategoryType</key>
-    <string>public.app-category.productivity</string>
-    <key>NSHighResolutionCapable</key>
-    <true/>
-    <key>NSHumanReadableCopyright</key>
-    <string>© 2026 Suman Sharma. MIT License.</string>
-    <!-- RevenueCat: leave empty to ship Windowmac free. Set a production public key (not test_)
-         and a Web Purchase Link to turn on the 14-day trial and lifetime license. -->
-    <key>RevenueCatAPIKey</key>
-    <string></string>
-    <key>RevenueCatWebPurchaseURL</key>
-    <string></string>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleURLName</key>
-            <string>com.iam8uman.windowmac</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>windowmac</string>
-            </array>
-        </dict>
-    </array>
+	<key>CFBundleDisplayName</key>
+	<string>Windowmac</string>
+	<key>CFBundleExecutable</key>
+	<string>Windowmac</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.iam8uman.windowmac</string>
+	<key>CFBundleName</key>
+	<string>Windowmac</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.2.1</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.iam8uman.windowmac</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>windowmac</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>13.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2026 Suman Sharma. MIT License.</string>
+	<key>RevenueCatAPIKey</key>
+	<string></string>
+	<key>RevenueCatWebPurchaseURL</key>
+	<string></string>
 </dict>
 </plist>

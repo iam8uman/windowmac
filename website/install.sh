@@ -87,6 +87,10 @@ pkill -x Windowmac 2>/dev/null || true
 pkill -x Swoop 2>/dev/null || true
 sleep 0.5
 
+team_of() { codesign -dv "$1" 2>&1 | awk -F= '/^TeamIdentifier=/{print $2}'; }
+OLD_TEAM="$( [[ -d "$DEST/$APP" ]] && team_of "$DEST/$APP" || true )"
+NEW_TEAM="$(team_of "$TMP/unzipped/$APP")"
+
 rm -rf "$DEST/$APP"
 ditto "$TMP/unzipped/$APP" "$DEST/$APP"
 
@@ -100,8 +104,12 @@ done
 # This is what skips the "Apple could not verify" popup.
 xattr -dr com.apple.quarantine "$DEST/$APP" 2>/dev/null || true
 
-# A new build needs a fresh Accessibility entry; the old one silently stops working.
-tccutil reset Accessibility "$BUNDLE_ID" >/dev/null 2>&1 || true
+# A Developer ID signed update keeps its Accessibility permission. Anything else
+# (ad-hoc builds, or the first switch to a signed build) needs a fresh entry,
+# because the old one silently stops working.
+if [[ -z "$NEW_TEAM" || "$NEW_TEAM" == "not set" || "$NEW_TEAM" != "$OLD_TEAM" ]]; then
+  tccutil reset Accessibility "$BUNDLE_ID" >/dev/null 2>&1 || true
+fi
 
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$DEST/$APP/Contents/Info.plist" 2>/dev/null || echo "")"
 ok "Installed Windowmac${VERSION:+ $VERSION} to $DEST/$APP"

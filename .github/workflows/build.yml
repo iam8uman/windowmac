@@ -55,7 +55,38 @@ jobs:
           fi
           echo "Version $VERSION"
 
+      # Signs with the Developer ID certificate when the secrets are set (main/tags only;
+      # forks and PRs don't get secrets and fall back to an ad-hoc signed build).
+      - name: Import the Developer ID certificate
+        id: signing
+        env:
+          P12_BASE64: ${{ secrets.DEVELOPER_ID_P12_BASE64 }}
+          P12_PASSWORD: ${{ secrets.DEVELOPER_ID_P12_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${P12_BASE64:-}" ]]; then
+            echo "No Developer ID secrets, building ad-hoc signed"
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          KC_PW="$(uuidgen)"
+          echo "$P12_BASE64" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$KC_PW" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KC_PW" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
+          security set-key-partition-list -S apple-tool:,apple: -k "$KC_PW" "$KEYCHAIN" >/dev/null
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          rm -f "$RUNNER_TEMP/cert.p12"
+          IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN" | awk '/Developer ID Application/ {print $2; exit}')
+          [[ -n "$IDENTITY" ]] || { echo "::error title=Signing::No 'Developer ID Application' identity in the .p12"; exit 1; }
+          echo "identity=$IDENTITY" >> "$GITHUB_OUTPUT"
+          echo "signed=true" >> "$GITHUB_OUTPUT"
+
       - name: Build Windowmac.app
+        env:
+          SIGN_IDENTITY: ${{ steps.signing.outputs.identity }}
         run: VERSION="${{ steps.version.outputs.version }}" BUILD_NUMBER="$GITHUB_RUN_NUMBER" ./scripts/build-app.sh
 
       - name: Smoke test the app
@@ -85,11 +116,55 @@ jobs:
             exit 1
           fi
 
+      # Apple scans the signed app and issues a ticket; stapling it to the app means
+      # Gatekeeper opens it with no warning, even offline.
+      - name: Notarize
+        id: notarize
+        if: steps.signing.outputs.signed == 'true' && steps.version.outputs.release == 'true'
+        env:
+          NOTARY_KEY_P8_BASE64: ${{ secrets.NOTARY_KEY_P8_BASE64 }}
+          NOTARY_KEY_ID: ${{ secrets.NOTARY_KEY_ID }}
+          NOTARY_ISSUER_ID: ${{ secrets.NOTARY_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          KEY="$RUNNER_TEMP/notary.p8"
+          echo "$NOTARY_KEY_P8_BASE64" | base64 --decode > "$KEY"
+          ditto -c -k --keepParent build/Windowmac.app "$RUNNER_TEMP/notarize.zip"
+          xcrun notarytool submit "$RUNNER_TEMP/notarize.zip" \
+            --key "$KEY" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID" \
+            --wait --timeout 30m --output-format json | tee notary.json
+          rm -f "$KEY"
+          STATUS=$(/usr/bin/python3 -c 'import json;print(json.load(open("notary.json"))["status"])')
+          if [[ "$STATUS" != "Accepted" ]]; then
+            ID=$(/usr/bin/python3 -c 'import json;print(json.load(open("notary.json"))["id"])')
+            echo "$NOTARY_KEY_P8_BASE64" | base64 --decode > "$KEY"
+            xcrun notarytool log "$ID" --key "$KEY" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID" || true
+            rm -f "$KEY"
+            echo "::error title=Notarization::Apple returned $STATUS"
+            exit 1
+          fi
+          xcrun stapler staple build/Windowmac.app
+          spctl --assess --type execute --verbose=2 build/Windowmac.app
+          echo "notarized=true" >> "$GITHUB_OUTPUT"
+
       - name: Zip
         run: |
           cd build
           ditto -c -k --sequesterRsrc --keepParent Windowmac.app Windowmac.zip
           shasum -a 256 Windowmac.zip | tee Windowmac.zip.sha256
+
+      - name: Release notes
+        if: steps.version.outputs.release == 'true'
+        run: |
+          {
+            echo '**Download `Windowmac.zip`**, unzip it and drag Windowmac into Applications. Works on macOS 13+ (Apple silicon and Intel).'
+            echo
+            if [[ "${{ steps.notarize.outputs.notarized }}" == "true" ]]; then
+              echo 'Signed with a Developer ID and notarized by Apple, so it opens like any other app. Allow Accessibility when asked, hold **Left ⌥ (Option)** and flick the mouse.'
+            else
+              echo "Windowmac isn't notarized yet, so the first time you open it macOS asks first. On macOS 15: System Settings → Privacy & Security → **Open Anyway**. On macOS 13–14: right-click Windowmac → **Open**. Then allow Accessibility when asked, hold **Left ⌥ (Option)** and flick the mouse."
+            fi
+          } > build/release-notes.md
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -109,7 +184,4 @@ jobs:
             build/Windowmac.zip
             build/Windowmac.zip.sha256
           generate_release_notes: true
-          body: |
-            **Download `Windowmac.zip`**, unzip it and drag Windowmac into Applications. Works on macOS 13+ (Apple silicon and Intel).
-
-            Windowmac isn't notarized yet, so the first time you open it macOS asks first. On macOS 15: System Settings → Privacy & Security → **Open Anyway**. On macOS 13–14: right-click Windowmac → **Open**. Then allow Accessibility when asked, hold **Left ⌥ (Option)** and flick the mouse.
+          body_path: build/release-notes.md
