@@ -28,12 +28,15 @@
     <true/>
     <key>NSHumanReadableCopyright</key>
     <string>© 2026 Suman Sharma. MIT License.</string>
-    <!-- RevenueCat: leave empty to ship Windowmac free. Set a production public key (not test_)
-         and a Web Purchase Link to turn on the 14-day trial and lifetime license. -->
-    <key>RevenueCatAPIKey</key>
+    <!-- Dodo Payments: leave DodoCheckoutURL empty to ship Windowmac free. Set it to the product's
+         checkout link (https://checkout.dodopayments.com/buy/pdt_...?quantity=1&redirect_url=https://windowmac.vercel.app/activate)
+         to turn on the 14-day trial and lifetime license. DodoEnvironment is "live" or "test". -->
+    <key>DodoCheckoutURL</key>
     <string></string>
-    <key>RevenueCatWebPurchaseURL</key>
-    <string></string>
+    <key>DodoEnvironment</key>
+    <string>live</string>
+    <key>DodoPrice</key>
+    <string>$9.99</string>
     <key>CFBundleURLTypes</key>
     <array>
         <dict>

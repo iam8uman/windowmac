@@ -2,9 +2,9 @@ import Foundation
 
 /// Where a copy of Windowmac stands: paid, in its free trial, or trial over.
 public enum LicenseStatus: Equatable, Sendable {
-    /// Licensing isn't set up in this build (no RevenueCat key): everything is free.
+    /// Licensing isn't set up in this build (no Dodo checkout URL): everything is free.
     case free
-    /// The swoop_pro entitlement is active.
+    /// A Dodo Payments license key is activated on this Mac.
     case licensed
     /// Inside the free trial, with whole days left (at least 1).
     case trial(daysLeft: Int)

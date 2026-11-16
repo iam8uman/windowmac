@@ -10,6 +10,8 @@ public enum WindowmacCommand: Equatable, Sendable {
     case direction(RadialDirection)
     case list
     case openSettings
+    /// Activate a Dodo Payments license key on this Mac (from the post-checkout page).
+    case activateLicense(String)
 }
 
 /// Parses `windowmac://` URLs.
@@ -20,6 +22,7 @@ public enum WindowmacCommand: Equatable, Sendable {
 ///     windowmac://custom/My%20Layout       windowmac://undo
 ///     windowmac://list/all                 windowmac://settings
 ///     windowmac://strip/toggle             windowmac://strip/right   (focus the next column)
+///     windowmac://activate?key=XXXX        (activate a license key)
 ///
 /// Names ignore case, spaces, dashes and underscores, so "Right Half", "right-half" and "rightHalf" all work.
 public enum CommandParser {
@@ -31,6 +34,13 @@ public enum CommandParser {
 
     public static func parse(_ url: URL, customLayouts: [CustomLayout] = []) -> WindowmacCommand? {
         guard url.scheme?.lowercased() == scheme else { return nil }
+        // License keys are case-sensitive, so they skip the normalizing below.
+        if normalize(url.host ?? "") == "activate" || normalize(url.host ?? "") == "license" {
+            let query = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+            let raw = query.first { ["key", "licensekey", "license_key"].contains($0.name.lowercased()) }?.value
+                ?? url.pathComponents.filter { $0 != "/" }.first
+            return LicenseKey.clean(raw ?? "").map { .activateLicense($0) }
+        }
         var parts: [String] = []
         if let host = url.host, !host.isEmpty { parts.append(host) }
         parts += url.pathComponents.filter { $0 != "/" && !$0.isEmpty }

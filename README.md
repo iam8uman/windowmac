@@ -124,12 +124,23 @@ Releases are automatic. Bump `CFBundleShortVersionString` in `Resources/Info.pli
 
 The product requirements, design decisions and roadmap are in [docs/PRD.md](docs/PRD.md).
 
-### Licensing (RevenueCat)
+### Licensing (Dodo Payments)
 
-Windowmac uses RevenueCat for a 14-day free trial and a one-time lifetime license (entitlement `swoop_pro`, product `swoop_lifetime`, offering `default`).
+Windowmac uses [Dodo Payments](https://dodopayments.com) license keys for a 14-day free trial and a one-time lifetime license. There is no server: the app calls Dodo's public `licenses/activate`, `validate` and `deactivate` endpoints directly, and no secret API key ships in the app.
 
-- **Debug builds** (`swift run`) use the RevenueCat **Test Store**, so purchases are simulated. `WINDOWMAC_TRIAL_EXPIRED=1 swift run` shows the "trial ended" screen immediately.
-- **Release builds** stay free until `RevenueCatAPIKey` (a production public key) and `RevenueCatWebPurchaseURL` (a RevenueCat Web Purchase Link) are set in `Resources/Info.plist`. Test Store keys are ignored in release builds, because RevenueCat crashes release builds that contain one.
+1. In Dodo, create a one-time product with **License Keys** turned on (activation limit, for example 2 Macs).
+2. Make its checkout link with `redirect_url=https://windowmac.vercel.app/activate`. That page shows the key and an **Activate in Windowmac** button (`windowmac://activate?key=…`). Dodo also emails the key.
+3. Put the link in `DodoCheckoutURL` in `Resources/Info.plist`. Release builds stay free while it is empty. `DodoEnvironment` is `live` or `test`, and `DodoPrice` is the label on the Buy button.
+
+- **Debug builds** use Dodo's test mode. The test-mode product is `pdt_0Ns4noth6a8TnQ0hmOlBm` (Windowmac Lifetime License, $9.99, license key with 2 activations). Try the whole flow with:
+
+  ```bash
+  WINDOWMAC_TRIAL_EXPIRED=1 \
+  WINDOWMAC_DODO_CHECKOUT_URL='https://test.checkout.dodopayments.com/buy/pdt_0Ns4noth6a8TnQ0hmOlBm?quantity=1&redirect_url=https%3A%2F%2Fwindowmac.vercel.app%2Factivate' \
+  swift run
+  ```
+- The key and this Mac's instance ID live in the Keychain. The app re-validates them about twice a day. Being offline never locks anyone out; only an explicit "not valid" from Dodo (refund, disabled key) does.
+- **Settings → License → Deactivate on This Mac** frees the slot so the key can move to another Mac.
 
 ### Project layout
 

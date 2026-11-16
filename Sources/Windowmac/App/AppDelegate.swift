@@ -110,6 +110,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             if let first = settings.actions(for: d).first { WindowEngine.shared.perform(first) }
         case .openSettings:
             openSettings()
+        case .activateLicense(let key):
+            LicenseManager.shared.showPaywall()
+            LicenseManager.shared.activate(key)
         case .list:
             let all = CommandParser.allCommands(customLayouts: settings.customLayouts).joined(separator: "\n")
             NSPasteboard.general.clearContents()

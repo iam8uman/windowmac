@@ -562,6 +562,7 @@ private struct StripTab: View {
 
 private struct LicenseTab: View {
     @ObservedObject private var license = LicenseManager.shared
+    @State private var keyInput = ""
 
     var body: some View {
         Form {
@@ -586,24 +587,41 @@ private struct LicenseTab: View {
                 }
             }
 
-            if license.licensingEnabled && license.status != .licensed {
+            if license.licensingEnabled {
                 Section {
-                    HStack {
-                        Button("Buy Windowmac (\(license.price))") { license.buy() }
-                            .buttonStyle(.borderedProminent)
-                            .disabled(license.isWorking)
-                        Button("Restore Purchase") { license.restore() }
-                            .disabled(license.isWorking)
-                        if license.isWorking { ProgressView().controlSize(.small) }
+                    if let key = license.activeKey {
+                        LabeledContent("License key", value: LicenseKey.masked(key))
+                        HStack {
+                            Button("Deactivate on This Mac") { license.deactivate() }
+                                .disabled(license.isWorking)
+                            if license.isWorking { ProgressView().controlSize(.small) }
+                        }
+                    } else {
+                        HStack {
+                            TextField("License key", text: $keyInput)
+                                .onSubmit { license.activate(keyInput) }
+                            Button("Activate") { license.activate(keyInput) }
+                                .disabled(license.isWorking || keyInput.trimmingCharacters(in: .whitespaces).isEmpty)
+                        }
+                        HStack {
+                            Button("Buy Windowmac (\(license.price))") { license.buy() }
+                                .buttonStyle(.borderedProminent)
+                                .disabled(license.isWorking)
+                            if license.isWorking { ProgressView().controlSize(.small) }
+                        }
                     }
                     if let message = license.message {
                         Text(message).font(.callout).foregroundStyle(.secondary)
                     }
+                } footer: {
+                    Text(license.activeKey == nil
+                         ? "Your key is in the receipt email from Dodo Payments."
+                         : "Deactivate to move your license to another Mac.")
                 }
             }
         }
         .formStyle(.grouped)
-        .onAppear { license.refresh() }
+        .onAppear { license.refresh(force: true) }
     }
 }
 

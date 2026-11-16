@@ -7,10 +7,6 @@ let package = Package(
     products: [
         .executable(name: "Windowmac", targets: ["Windowmac"]),
     ],
-    dependencies: [
-        // Purchases and the "swoop_pro" entitlement (14-day trial, then a one-time lifetime license).
-        .package(url: "https://github.com/RevenueCat/purchases-ios-spm.git", from: "5.0.0"),
-    ],
     targets: [
         // Pure logic: actions, geometry, radial math, cycles, settings, URL commands.
         // No AppKit, so it is fast to unit-test.
@@ -18,13 +14,11 @@ let package = Package(
             name: "WindowmacCore",
             path: "Sources/WindowmacCore"
         ),
-        // The macOS app: Accessibility, trigger key, radial menu, preview, stash, settings UI.
+        // The macOS app: Accessibility, trigger key, radial menu, preview, stash, settings UI,
+        // and the Dodo Payments license check (14-day trial, then a one-time lifetime license).
         .executableTarget(
             name: "Windowmac",
-            dependencies: [
-                "WindowmacCore",
-                .product(name: "RevenueCat", package: "purchases-ios-spm"),
-            ],
+            dependencies: ["WindowmacCore"],
             path: "Sources/Windowmac",
             linkerSettings: [
                 .linkedFramework("AppKit"),

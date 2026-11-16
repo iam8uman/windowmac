@@ -2,10 +2,11 @@ import AppKit
 import SwiftUI
 import WindowmacCore
 
-/// "Your free trial has ended" window with Buy and Restore.
+/// "Your free trial has ended" window with Buy and license key activation.
 struct PaywallView: View {
     @ObservedObject var manager: LicenseManager
     var onClose: () -> Void
+    @State private var keyInput = ""
 
     private var headline: String {
         switch manager.status {
@@ -54,12 +55,24 @@ struct PaywallView: View {
                 .controlSize(.large)
                 .disabled(manager.isWorking)
 
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Already bought it? Paste your license key:")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                    HStack {
+                        TextField("License key", text: $keyInput)
+                            .textFieldStyle(.roundedBorder)
+                            .onSubmit { manager.activate(keyInput) }
+                        Button("Activate") { manager.activate(keyInput) }
+                            .disabled(manager.isWorking || keyInput.trimmingCharacters(in: .whitespaces).isEmpty)
+                    }
+                }
+
                 HStack {
-                    Button("Restore Purchase") { manager.restore() }
                     Spacer()
                     Button(manager.status == .expired ? "Not Now" : "Close", action: onClose)
+                        .buttonStyle(.link)
                 }
-                .buttonStyle(.link)
             } else {
                 Button("Done", action: onClose)
                     .buttonStyle(.borderedProminent)

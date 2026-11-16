@@ -144,6 +144,21 @@ final class CommandTests: XCTestCase {
                        .action(.custom(custom.id)))
     }
 
+    func testActivateLicense() {
+        let key = "2b1F8e2d-c41e-4e8f-b2d3-d9fd61c38f43"
+        XCTAssertEqual(CommandParser.parse(URL(string: "windowmac://activate?key=\(key)")!), .activateLicense(key))
+        XCTAssertEqual(CommandParser.parse(URL(string: "windowmac://activate?license_key=\(key)")!), .activateLicense(key))
+        XCTAssertEqual(CommandParser.parse(URL(string: "windowmac://license/\(key)")!), .activateLicense(key))
+        XCTAssertNil(CommandParser.parse(URL(string: "windowmac://activate")!))
+    }
+
+    func testLicenseKeyCleaning() {
+        XCTAssertEqual(LicenseKey.clean("  \"ABCD-1234-efgh\"\n"), "ABCD-1234-efgh")
+        XCTAssertNil(LicenseKey.clean("short"))
+        XCTAssertNil(LicenseKey.clean("has a space in it"))
+        XCTAssertEqual(LicenseKey.masked("2b1f8e2d-c41e-4e8f-b2d3-d9fd61c38f43"), "2b1f…8f43")
+    }
+
     func testEveryListedCommandParses() {
         for s in CommandParser.allCommands() {
             XCTAssertNotNil(CommandParser.parse(URL(string: s)!), s)

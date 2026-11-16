@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Activate Windowmac</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { min-height: 100vh; display: grid; place-items: center; background: var(--canvas); margin: 0; padding: 16px; box-sizing: border-box; }
+    .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--card); padding: 36px 28px; max-width: 460px; width: 100%; text-align: center; box-sizing: border-box; }
+    .card img { width: 72px; height: 72px; }
+    h1 { font-family: var(--display); color: var(--ink); font-size: 1.8rem; margin: 12px 0 8px; }
+    p { color: var(--ink-soft); line-height: 1.5; margin: 0 0 16px; }
+    .key { font-family: var(--mono); font-size: 1rem; background: var(--canvas); border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 12px; word-break: break-all; color: var(--ink); margin-bottom: 12px; }
+    .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn { font: 500 1rem var(--font); border-radius: 999px; padding: 11px 20px; border: 1px solid var(--line-strong); background: var(--paper); color: var(--ink); cursor: pointer; text-decoration: none; }
+    .btn.primary { background: var(--orange); border-color: var(--orange); color: #fff; }
+    small { display: block; color: var(--muted); margin-top: 18px; line-height: 1.5; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img src="icon.png" alt="">
+    <div id="ok" hidden>
+      <h1>Thanks for buying Windowmac!</h1>
+      <p>Here's your license key. It's also in your receipt email.</p>
+      <div class="key" id="key"></div>
+      <div class="row">
+        <a class="btn primary" id="open" href="#">Activate in Windowmac</a>
+        <button class="btn" id="copy" type="button">Copy key</button>
+      </div>
+      <small>“Activate in Windowmac” opens the app and unlocks it. If nothing happens, copy the key and paste it in Windowmac → Settings → License.</small>
+    </div>
+    <div id="pending" hidden>
+      <h1>Payment received</h1>
+      <p>Your license key is on its way to your email. Paste it in Windowmac → Settings → License.</p>
+    </div>
+    <div id="failed" hidden>
+      <h1>Payment didn't go through</h1>
+      <p>You haven't been charged. You can try again from Windowmac's Buy button.</p>
+    </div>
+  </main>
+  <script>
+    const q = new URLSearchParams(location.search);
+    const status = (q.get("status") || "").toLowerCase();
+    // Dodo appends license_key; several keys come comma-separated. One Mac needs the first.
+    const key = (q.get("license_key") || "").split(",")[0].trim();
+    if (status === "failed" || status === "cancelled") {
+      document.getElementById("failed").hidden = false;
+    } else if (key) {
+      document.getElementById("ok").hidden = false;
+      document.getElementById("key").textContent = key;
+      document.getElementById("open").href = "windowmac://activate?key=" + encodeURIComponent(key);
+      const copy = document.getElementById("copy");
+      copy.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(key); copy.textContent = "Copied"; } catch { copy.textContent = "Select and copy above"; }
+      });
+    } else {
+      document.getElementById("pending").hidden = false;
+    }
+  </script>
+</body>
+</html>
