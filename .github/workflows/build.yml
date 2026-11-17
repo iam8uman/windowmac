@@ -19,9 +19,9 @@ permissions:
   contents: write
 
 env:
-  # Paused while Apple's first notarization is pending: CI doesn't notarize or
-  # publish releases. Notarize by hand, then set this back to "true".
-  NOTARIZE_IN_CI: "false"
+  # Notarize every release in CI (Apple accepted the first submissions on 2026-11-15).
+  # Set to "false" to pause notarizing and publishing releases.
+  NOTARIZE_IN_CI: "true"
 
 # Only one build of main at a time, so two pushes can't notarize side by side.
 concurrency:
