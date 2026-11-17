@@ -1,0 +1,6 @@
+{
+  "name": "windowmac-root",
+  "private": true,
+  "description": "Vercel reads the Node version from here; the website lives in website/.",
+  "engines": { "node": "22.x" }
+}
