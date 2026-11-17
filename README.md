@@ -9,7 +9,7 @@ Hold Option, flick the mouse toward where a window should go, and let go.</p>
 
 <p align="center">
   <a href="#install"><b>Install</b></a> ·
-  <a href="https://windowmac.vercel.app">Website</a> ·
+  <a href="https://www.windowmac.app">Website</a> ·
   <a href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip">Download .zip</a><br>
   macOS 13+ · Apple silicon &amp; Intel · Free &amp; open source (MIT)
 </p>
@@ -17,7 +17,7 @@ Hold Option, flick the mouse toward where a window should go, and let go.</p>
 <p align="center">
   <img src="docs/demo.gif" width="880" alt="Windowmac demo: holding Option shows a ring at the cursor; flicking toward a direction snaps the window to that half, third or quarter.">
 </p>
-<p align="center"><sub>Same demo as on the <a href="https://windowmac.vercel.app">website</a>, where you can try it yourself. <a href="docs/demo.mp4">MP4 version</a>.</sub></p>
+<p align="center"><sub>Same demo as on the <a href="https://www.windowmac.app">website</a>, where you can try it yourself. <a href="docs/demo.mp4">MP4 version</a>.</sub></p>
 
 ---
 
@@ -45,7 +45,7 @@ Hold Option, flick the mouse toward where a window should go, and let go.</p>
 **Quickest:** paste this in Terminal. It downloads the latest release, puts Windowmac in Applications and opens it, with no security popup:
 
 ```bash
-curl -fsSL https://windowmac.vercel.app/install.sh | bash
+curl -fsSL https://www.windowmac.app/install.sh | bash
 ```
 
 **Or download the .zip:**
@@ -56,7 +56,7 @@ curl -fsSL https://windowmac.vercel.app/install.sh | bash
 4. Allow **Accessibility** when asked (System Settings → Privacy & Security → Accessibility → Windowmac).
 5. Hold **Left ⌥ (Option)** and flick the mouse. 🎉
 
-The [website](https://windowmac.vercel.app/#install) shows each of these screens.
+The [website](https://www.windowmac.app/#install) shows each of these screens.
 
 ## Default controls
 

@@ -501,7 +501,7 @@
   const MAX = 9;
 
   const APPS = {
-    browser: { name: "Browser", title: "windowmac.vercel.app", glyph: "◎", icon: "linear-gradient(145deg,#5AC8FA,#0A84FF)",
+    browser: { name: "Browser", title: "windowmac.app", glyph: "◎", icon: "linear-gradient(145deg,#5AC8FA,#0A84FF)",
       body: '<div class="body browser"><div class="b-hero"></div><div class="b-line"></div><div class="b-line short"></div><div class="b-grid"><span></span><span></span><span></span></div></div>' },
     terminal: { name: "Terminal", title: "~/windowmac", glyph: "›_", icon: "linear-gradient(145deg,#3A3C66,#11122C)",
       body: '<pre class="body terminal">$ swift test\nExecuted 39 tests, 0 failures\n$ open -g "windowmac://strip/right"\n$ <span class="caret"></span></pre>' },

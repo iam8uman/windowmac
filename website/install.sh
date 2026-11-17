@@ -1,6 +1,6 @@
 #!/bin/bash
 # Windowmac installer: downloads the latest release from GitHub, checks it, and puts it in Applications.
-#   curl -fsSL https://windowmac.vercel.app/install.sh | bash
+#   curl -fsSL https://www.windowmac.app/install.sh | bash
 # Source: https://github.com/iam8uman/windowmac
 set -euo pipefail
 
