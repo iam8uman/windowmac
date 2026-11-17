@@ -42,7 +42,7 @@ Hold Option, flick the mouse toward where a window should go, and let go.</p>
 
 ## Install
 
-**Quickest:** paste this in Terminal. It downloads the latest release, puts Windowmac in Applications and opens it, with no security popup:
+**Quickest:** paste this in Terminal. It downloads the latest release, puts Windowmac in Applications and opens it:
 
 ```bash
 curl -fsSL https://www.windowmac.app/install.sh | bash
@@ -50,13 +50,11 @@ curl -fsSL https://www.windowmac.app/install.sh | bash
 
 **Or download the .zip:**
 
-1. [Download Windowmac.zip](https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip), unzip it, and drag **Windowmac** into **Applications**.
-2. Open it. macOS says *"Windowmac.app" Not Opened*. Click **Done**. (Windowmac isn't notarized by Apple yet.)
-3. Open **System Settings → Privacy & Security**, scroll down, and click **Open Anyway** next to Windowmac. Confirm with your password and click **Open Anyway** again. On macOS 13–14 you can instead right-click Windowmac → **Open**.
-4. Allow **Accessibility** when asked (System Settings → Privacy & Security → Accessibility → Windowmac).
-5. Hold **Left ⌥ (Option)** and flick the mouse. 🎉
+1. [Download Windowmac.zip](https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip), unzip it, drag **Windowmac** into **Applications** and open it. It's signed with a Developer ID and notarized by Apple, so it opens without a warning.
+2. Allow **Accessibility** when asked (System Settings → Privacy & Security → Accessibility → Windowmac).
+3. Hold **Left ⌥ (Option)** and flick the mouse. 🎉
 
-The [website](https://www.windowmac.app/#install) shows each of these screens.
+The [website](https://www.windowmac.app/#install) shows each step.
 
 ## Default controls
 

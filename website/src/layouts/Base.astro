@@ -31,6 +31,9 @@ const otherApps = APPS.filter((a) => a.key !== SITE.key);
 <html lang={SITE.lang}>
   <head>
     <meta charset="utf-8" />
+    <script is:inline define:vars={{ themeKey: `${SITE.key}-theme` }}>
+      try { var t = localStorage.getItem(themeKey); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -60,6 +63,7 @@ const otherApps = APPS.filter((a) => a.key !== SITE.key);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href={SITE.fontsHref} />
     {jsonLd.map((d) => <script is:inline type="application/ld+json" set:html={json(d)} />)}
+    {SITE.vercelInsights && <script is:inline defer src="/_vercel/insights/script.js" />}
     {
       SITE.gaId && (
         <>
@@ -97,7 +101,7 @@ const otherApps = APPS.filter((a) => a.key !== SITE.key);
           <ul>
             <li><a href="/">Home</a></li>
             <li><a href={SITE.installHref}>Install</a></li>
-            <li><a href={SITE.repoUrl}>Source on GitHub</a></li>
+            <li><a href={SITE.repoUrl}>{SITE.repoLabel}</a></li>
           </ul>
         </div>
         <div>

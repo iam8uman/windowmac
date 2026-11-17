@@ -22,6 +22,8 @@ export const SITE = {
   icon: '/icon.png',
   favicon: '/favicon.png',
   repoUrl: 'https://github.com/iam8uman/windowmac',
+  repoLabel: 'Source on GitHub',
+  vercelInsights: false as boolean,
   gaId: 'G-F4NBF6XKFE' as string | null,
   author: { name: 'Suman Sharma', url: 'https://github.com/iam8uman' },
   fontsHref:
@@ -35,7 +37,7 @@ export const SITE = {
     'Strip: hold Option and press S to line up every window on a screen as sideways-scrolling columns.',
     'Stash windows behind the screen edge; resize and nudge; undo.',
     'Every action has a windowmac:// link for scripts, Shortcuts and Raycast.',
-    'Needs only the Accessibility permission. Not on the Mac App Store; not yet notarized.',
+    'Needs only the Accessibility permission. Not on the Mac App Store; signed with a Developer ID and notarized by Apple (from version 1.2.1), so it opens without a Gatekeeper warning.',
   ],
 } as const;
 
