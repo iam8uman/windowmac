@@ -1,0 +1,123 @@
+---
+import '../styles/theme.css';
+import '../styles/kit.css';
+import { APPS, SITE } from '../data/site';
+import { absoluteUrl } from '../lib/content';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>[];
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
+  nav?: 'blog' | 'tools' | null;
+}
+
+const { title, description, path, ogType = 'website', jsonLd = [], publishedTime, modifiedTime, noindex = false, nav = null } =
+  Astro.props;
+const canonical = absoluteUrl(path);
+const ogImage = absoluteUrl(SITE.ogImage);
+const robots = noindex
+  ? 'noindex, follow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+const json = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
+const otherApps = APPS.filter((a) => a.key !== SITE.key);
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta name="author" content={SITE.author.name} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={SITE.favicon} type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM summary" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={SITE.ogLocale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href={SITE.fontsHref} />
+    {jsonLd.map((d) => <script is:inline type="application/ld+json" set:html={json(d)} />)}
+    {
+      SITE.gaId && (
+        <>
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${SITE.gaId}`} />
+          <script is:inline define:vars={{ gaId: SITE.gaId }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', gaId);
+          </script>
+        </>
+      )
+    }
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="k-top">
+      <div class="wrap">
+        <a class="k-brand" href="/"><img src={SITE.favicon} alt="" width="28" height="28" />{SITE.name}</a>
+        <nav class="k-nav" aria-label="Main">
+          <a href="/blog/" aria-current={nav === 'blog' ? 'page' : undefined}>Guides</a>
+          <a href="/tools/" aria-current={nav === 'tools' ? 'page' : undefined}>Free tools</a>
+          <a class="k-hide-sm" href="/#faq">FAQ</a>
+          <a class="k-btn" href={SITE.installHref}>Install free</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="k-foot">
+      <div class="wrap">
+        <div>
+          <h2>{SITE.name}</h2>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href={SITE.installHref}>Install</a></li>
+            <li><a href={SITE.repoUrl}>Source on GitHub</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Learn</h2>
+          <ul>
+            <li><a href="/blog/">All guides</a></li>
+            <li><a href="/tools/">Free tools and quizzes</a></li>
+            <li><a href="/llms.txt">llms.txt</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>More free Mac apps</h2>
+          <ul>
+            {otherApps.map((a) => <li><a href={a.url}>{a.name}</a></li>)}
+          </ul>
+        </div>
+        <div>
+          <p>Made in Nepal by <a href={SITE.author.url}>{SITE.author.name}</a>.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

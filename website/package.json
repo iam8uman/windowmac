@@ -1,0 +1,24 @@
+{
+  "name": "windowmac-website",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "lint:content": "node scripts/lint-content.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "build": "node scripts/lint-content.mjs && astro build && node scripts/check-links.mjs",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "7.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "6.0.3"
+  }
+}

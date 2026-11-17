@@ -1,0 +1,24 @@
+---
+import { SITE } from '../data/site';
+interface Props { heading?: string; text?: string }
+const { heading = `Try ${SITE.name}, free`, text = SITE.description } = Astro.props;
+---
+<section class="k-cta" aria-labelledby="cta-h">
+  <img src={SITE.icon} alt={`${SITE.name} app icon`} width="72" height="72" loading="lazy" />
+  <h2 id="cta-h">{heading}</h2>
+  <p>{text}</p>
+  <div class="k-cmd">
+    <code data-cmd>{SITE.installCommand}</code>
+    <button type="button" class="k-btn ghost" data-copy>Copy</button>
+  </div>
+  <a class="k-btn" href={SITE.installHref}>{SITE.ctaLabel}</a>
+</section>
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const code = btn.parentElement?.querySelector('[data-cmd]')?.textContent ?? '';
+      try { await navigator.clipboard.writeText(code); btn.textContent = 'Copied'; } catch { btn.textContent = 'Select and copy'; }
+      setTimeout(() => (btn.textContent = 'Copy'), 1800);
+    });
+  });
+</script>

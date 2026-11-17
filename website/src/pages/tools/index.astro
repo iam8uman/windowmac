@@ -1,0 +1,40 @@
+---
+import AppsCallout from '../../components/AppsCallout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { publishedQuizzes, quizPath } from '../../data/quizzes';
+import { SITE } from '../../data/site';
+import { publishedTools, toolPath } from '../../data/tools';
+import Base from '../../layouts/Base.astro';
+import { breadcrumbJsonLd, itemListJsonLd } from '../../lib/jsonld';
+
+const tools = publishedTools();
+const quizzes = publishedQuizzes();
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Free tools', path: '/tools/' }];
+const items = [
+  ...tools.map((t) => ({ name: t.name, path: toolPath(t.slug) })),
+  ...quizzes.map((q) => ({ name: q.name, path: quizPath(q.slug) })),
+];
+---
+<Base title={`Free Mac Tools and Quizzes | ${SITE.name}`}
+  description={`Free browser tools and quizzes from ${SITE.name}. Calculators, cheat sheets and quizzes for Mac users. Nothing to install, nothing uploaded.`}
+  path="/tools/" nav="tools" jsonLd={[breadcrumbJsonLd(crumbs), itemListJsonLd('Free tools', items)]}>
+  <div class="wrap">
+    <header class="k-head">
+      <Breadcrumbs crumbs={crumbs} />
+      <p class="k-kicker">Free tools</p>
+      <h1>Free tools for Mac users</h1>
+      <p class="k-lede">Calculators, cheat sheets and quizzes that run in your browser. Nothing to install and nothing leaves your device.</p>
+    </header>
+    <section class="k-section" aria-labelledby="tools-h">
+      <h2 id="tools-h">Tools</h2>
+      <div class="k-grid">{tools.map((t) => <a class="k-card" href={toolPath(t.slug)}><span class="k-tag">Tool</span><h3>{t.name}</h3><p>{t.card}</p></a>)}</div>
+    </section>
+    {quizzes.length > 0 && (
+      <section class="k-section" aria-labelledby="quiz-h">
+        <h2 id="quiz-h">Quizzes</h2>
+        <div class="k-grid">{quizzes.map((q) => <a class="k-card" href={quizPath(q.slug)}><span class="k-tag">Quiz</span><h3>{q.name}</h3><p>{q.card}</p></a>)}</div>
+      </section>
+    )}
+    <AppsCallout primary={SITE.key} />
+  </div>
+</Base>

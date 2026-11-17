@@ -1,0 +1,15 @@
+---
+interface Props { faq: { question: string; answer: string }[]; heading?: string }
+const { faq, heading = 'Frequently asked questions' } = Astro.props;
+---
+{faq.length > 0 && (
+  <section class="k-faq k-section" aria-labelledby="faq-h">
+    <h2 id="faq-h">{heading}</h2>
+    {faq.map((f, i) => (
+      <details open={i === 0}>
+        <summary>{f.question}</summary>
+        <p>{f.answer}</p>
+      </details>
+    ))}
+  </section>
+)}

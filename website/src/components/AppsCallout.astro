@@ -1,0 +1,21 @@
+---
+import type { AppKey } from '../data/site';
+import { appsFor } from '../lib/content';
+interface Props { primary: AppKey }
+const apps = appsFor(Astro.props.primary);
+---
+<aside class="k-apps" aria-labelledby="apps-h">
+  <h2 id="apps-h">Free Mac apps that help with this</h2>
+  <p>Three small, native utilities by the same developer. No account, no tracking.</p>
+  <ul>
+    {apps.map((a) => (
+      <li>
+        <a href={a.url}>
+          <img src={a.icon} alt="" width="44" height="44" loading="lazy" />
+          <span><b>{a.name}</b><span>{a.pitch}</span></span>
+          <em>Get it free →</em>
+        </a>
+      </li>
+    ))}
+  </ul>
+</aside>

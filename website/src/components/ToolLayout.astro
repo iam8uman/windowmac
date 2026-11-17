@@ -1,0 +1,51 @@
+---
+import AppsCallout from './AppsCallout.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import FaqList from './FaqList.astro';
+import InstallCta from './InstallCta.astro';
+import PostCard from './PostCard.astro';
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { getTool, toolPath } from '../data/tools';
+import { getPublishedPosts } from '../lib/content';
+import { breadcrumbJsonLd, faqJsonLd, webAppJsonLd } from '../lib/jsonld';
+
+interface Props { slug: string }
+const tool = getTool(Astro.props.slug);
+const path = toolPath(tool.slug);
+const posts = await getPublishedPosts();
+const related = tool.related.map((s) => posts.find((p) => p.data.slug === s)).filter((p) => p !== undefined);
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Free tools', path: '/tools/' },
+  { name: tool.name, path },
+];
+---
+<Base
+  title={tool.seoTitle}
+  description={tool.seoDescription}
+  path={path}
+  nav="tools"
+  noindex={tool.draft}
+  jsonLd={[webAppJsonLd({ name: tool.name, description: tool.seoDescription, path }), breadcrumbJsonLd(crumbs), faqJsonLd(tool.faq)]}
+>
+  <div class="narrow">
+    <header class="k-head">
+      <Breadcrumbs crumbs={crumbs} />
+      <p class="k-kicker">Free tool · runs in your browser</p>
+      <h1>{tool.name}</h1>
+      <p class="k-lede">{tool.intro}</p>
+    </header>
+    <div class="k-tool"><slot /></div>
+    <div class="k-prose"><slot name="explain" /></div>
+    <FaqList faq={tool.faq} />
+    {related.length > 0 && (
+      <section class="k-section">
+        <h2>Related guides</h2>
+        <div class="k-grid">{related.map((p) => <PostCard post={p} />)}</div>
+      </section>
+    )}
+    <AppsCallout primary={SITE.key} />
+    <InstallCta />
+  </div>
+</Base>

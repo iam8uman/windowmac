@@ -1,0 +1,80 @@
+---
+import ToolLayout from '../../components/ToolLayout.astro';
+const presets = [
+  ['MacBook Air 13" (default)', 1470, 956],
+  ['MacBook Air 15" (default)', 1710, 1112],
+  ['MacBook Pro 14" (default)', 1512, 982],
+  ['MacBook Pro 16" (default)', 1728, 1117],
+  ['24" iMac (default)', 2240, 1260],
+  ['Studio Display / 5K (default)', 2560, 1440],
+  ['4K monitor, looks like 1920×1080', 1920, 1080],
+  ['4K monitor, looks like 2560×1440', 2560, 1440],
+  ['1440p monitor', 2560, 1440],
+  ['Ultrawide 3440×1440', 3440, 1440],
+  ['Super ultrawide 5120×1440', 5120, 1440],
+] as const;
+---
+<ToolLayout slug="window-size-calculator">
+  <form data-calc onsubmit="return false">
+    <div class="k-field">
+      <label for="preset">Display</label>
+      <select id="preset">
+        {presets.map(([n, w, h]) => <option value={`${w}x${h}`}>{n}: {w}×{h}</option>)}
+        <option value="custom">Custom…</option>
+      </select>
+    </div>
+    <div class="k-row">
+      <div class="k-field"><label for="w">Width (points)</label><input id="w" type="number" min="640" max="8000" value="1470" /></div>
+      <div class="k-field"><label for="h">Height (points)</label><input id="h" type="number" min="480" max="5000" value="956" /></div>
+      <div class="k-field"><label for="mb">Menu bar</label><input id="mb" type="number" min="0" max="60" value="37" /></div>
+      <div class="k-field"><label for="dock">Dock (if always shown)</label><input id="dock" type="number" min="0" max="200" value="0" /></div>
+      <div class="k-field"><label for="gap">Gap between windows</label><input id="gap" type="number" min="0" max="64" value="0" /></div>
+    </div>
+  </form>
+  <div class="k-out k-prose" aria-live="polite">
+    <p data-usable></p>
+    <table>
+      <thead><tr><th>Layout</th><th>Width × height</th><th>Position (x, y)</th></tr></thead>
+      <tbody data-rows></tbody>
+    </table>
+  </div>
+  <div slot="explain">
+    <h2>How the sizes are worked out</h2>
+    <p>macOS places windows in points, not pixels. The usable area is the display height minus the menu bar and, if it is always visible, the Dock. Windowmac shrinks that area by half the gap on every side, divides it into the layout, then shrinks each window by half the gap again. The result is the same gap between two windows as at the screen edge, and every third is exactly the same width.</p>
+    <p>Positions are measured from the top-left corner of the usable area. To find your display's size in points, open <strong>System Settings → Displays</strong> and read the resolution it says the display "looks like".</p>
+  </div>
+</ToolLayout>
+<script>
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const preset = $<HTMLSelectElement>('preset');
+  const inputs = ['w', 'h', 'mb', 'dock', 'gap'].map((id) => $<HTMLInputElement>(id));
+  const [w, h, mb, dock, gap] = inputs as [HTMLInputElement, HTMLInputElement, HTMLInputElement, HTMLInputElement, HTMLInputElement];
+  const rows = document.querySelector<HTMLElement>('[data-rows]')!;
+  const usable = document.querySelector<HTMLElement>('[data-usable]')!;
+  const layouts: [string, number, number, number, number][] = [
+    ['Left half', 0, 0, 1 / 2, 1], ['Right half', 1 / 2, 0, 1 / 2, 1],
+    ['Top half', 0, 0, 1, 1 / 2], ['Bottom half', 0, 1 / 2, 1, 1 / 2],
+    ['Left third', 0, 0, 1 / 3, 1], ['Centre third', 1 / 3, 0, 1 / 3, 1], ['Right third', 2 / 3, 0, 1 / 3, 1],
+    ['Left two thirds', 0, 0, 2 / 3, 1], ['Right two thirds', 1 / 3, 0, 2 / 3, 1],
+    ['Top-left quarter', 0, 0, 1 / 2, 1 / 2], ['Top-right quarter', 1 / 2, 0, 1 / 2, 1 / 2],
+    ['Bottom-left quarter', 0, 1 / 2, 1 / 2, 1 / 2], ['Bottom-right quarter', 1 / 2, 1 / 2, 1 / 2, 1 / 2],
+    ['Maximise', 0, 0, 1, 1],
+  ];
+  function calc() {
+    const W = +w.value || 0, H = (+h.value || 0) - (+mb.value || 0) - (+dock.value || 0), g = +gap.value || 0;
+    usable.textContent = `Usable area: ${W} × ${H} points.`;
+    rows.innerHTML = layouts.map(([name, fx, fy, fw, fh]) => {
+      // Same as Windowmac's ActionGeometry: inset the area by half the gap, divide, inset each tile by half the gap.
+      const half = g / 2, aw = W - g, ah = H - g;
+      const l = half + aw * fx + half, t = half + ah * fy + half;
+      const r = half + aw * (fx + fw) - half, b = half + ah * (fy + fh) - half;
+      return `<tr><td>${name}</td><td>${Math.round(r - l)} × ${Math.round(b - t)}</td><td>${Math.round(l)}, ${Math.round(t)}</td></tr>`;
+    }).join('');
+  }
+  preset.addEventListener('change', () => {
+    if (preset.value !== 'custom') { const [pw, ph] = preset.value.split('x'); w.value = pw!; h.value = ph!; }
+    calc();
+  });
+  inputs.forEach((i) => i.addEventListener('input', () => { preset.value = 'custom'; calc(); }));
+  calc();
+</script>

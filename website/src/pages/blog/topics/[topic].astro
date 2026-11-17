@@ -1,0 +1,37 @@
+---
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import InstallCta from '../../../components/InstallCta.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { SITE, TOPICS } from '../../../data/site';
+import Base from '../../../layouts/Base.astro';
+import { getPublishedPosts, topicPath } from '../../../lib/content';
+import { breadcrumbJsonLd, itemListJsonLd } from '../../../lib/jsonld';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return Object.keys(TOPICS)
+    .filter((key) => posts.some((p) => p.data.tags.includes(key)))
+    .map((topic) => ({ params: { topic } }));
+}
+const { topic } = Astro.params;
+const info = TOPICS[topic!]!;
+const all = await getPublishedPosts();
+const posts = all.filter((p) => p.data.tags.includes(topic!));
+const liveTopics = Object.entries(TOPICS).filter(([k]) => all.some((p) => p.data.tags.includes(k)));
+const path = topicPath(topic!);
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Guides', path: '/blog/' }, { name: info.label, path }];
+---
+<Base title={`${info.label}: Mac Guides | ${SITE.name}`} description={info.description} path={path} nav="blog"
+  jsonLd={[breadcrumbJsonLd(crumbs), itemListJsonLd(info.label, posts.map((p) => ({ name: p.data.title, path: `/blog/${p.data.slug}/` })))]}>
+  <div class="wrap">
+    <header class="k-head">
+      <Breadcrumbs crumbs={crumbs} />
+      <p class="k-kicker">Topic</p>
+      <h1>{info.label}</h1>
+      <p class="k-lede">{info.description}</p>
+      <ul class="k-chips">{liveTopics.map(([k, t]) => <li><a href={topicPath(k)} aria-current={k === topic ? 'page' : undefined}>{t.label}</a></li>)}</ul>
+    </header>
+    <div class="k-grid">{posts.map((p) => <PostCard post={p} />)}</div>
+    <InstallCta />
+  </div>
+</Base>

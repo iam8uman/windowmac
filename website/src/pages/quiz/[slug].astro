@@ -1,0 +1,86 @@
+---
+import AppsCallout from '../../components/AppsCallout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqList from '../../components/FaqList.astro';
+import InstallCta from '../../components/InstallCta.astro';
+import { publishedQuizzes, quizPath, type Quiz } from '../../data/quizzes';
+import { SITE } from '../../data/site';
+import Base from '../../layouts/Base.astro';
+import { breadcrumbJsonLd, faqJsonLd, webAppJsonLd } from '../../lib/jsonld';
+
+export function getStaticPaths() {
+  return publishedQuizzes().map((quiz) => ({ params: { slug: quiz.slug }, props: { quiz } }));
+}
+const { quiz } = Astro.props as { quiz: Quiz };
+const path = quizPath(quiz.slug);
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Free tools', path: '/tools/' }, { name: quiz.name, path }];
+const data = { questions: quiz.questions, outcomes: quiz.outcomes };
+---
+<Base title={quiz.seoTitle} description={quiz.seoDescription} path={path} nav="tools"
+  jsonLd={[webAppJsonLd({ name: quiz.name, description: quiz.seoDescription, path }), breadcrumbJsonLd(crumbs), faqJsonLd(quiz.faq)]}>
+  <div class="narrow">
+    <header class="k-head">
+      <Breadcrumbs crumbs={crumbs} />
+      <p class="k-kicker">Free quiz · {quiz.questions.length} questions</p>
+      <h1>{quiz.name}</h1>
+      <p class="k-lede">{quiz.intro}</p>
+    </header>
+    <div class="k-tool" data-quiz>
+      <div class="k-progress" aria-hidden="true"><i></i></div>
+      <div data-stage>
+        <p class="k-quiz-q">{quiz.questions[0]!.question}</p>
+        <div class="k-quiz-opts">{quiz.questions[0]!.options.map((o) => <button type="button" disabled>{o.label}</button>)}</div>
+      </div>
+      <noscript><p>This quiz needs JavaScript. The possible results are listed below.</p></noscript>
+    </div>
+    <section class="k-section k-prose" aria-labelledby="outcomes-h">
+      <h2 id="outcomes-h">The possible results</h2>
+      <ul>{quiz.outcomes.map((o) => <li><strong>{o.name}:</strong> {o.what}</li>)}</ul>
+    </section>
+    <FaqList faq={quiz.faq} />
+    <AppsCallout primary={SITE.key} />
+    <InstallCta />
+  </div>
+  <script is:inline type="application/json" id="quiz-data" set:html={JSON.stringify(data).replace(/</g, '\\u003c')} />
+</Base>
+<script>
+  type Q = { question: string; options: { label: string; to: Record<string, number> }[] };
+  type O = { id: string; name: string; what: string; href: string; hrefLabel: string };
+  const root = document.querySelector<HTMLElement>('[data-quiz]')!;
+  const stage = root.querySelector<HTMLElement>('[data-stage]')!;
+  const bar = root.querySelector<HTMLElement>('.k-progress i')!;
+  const { questions, outcomes } = JSON.parse(document.getElementById('quiz-data')!.textContent!) as { questions: Q[]; outcomes: O[] };
+  let step = 0;
+  let scores: Record<string, number> = {};
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  function show() {
+    bar.style.width = `${(step / questions.length) * 100}%`;
+    if (step >= questions.length) return result();
+    const q = questions[step]!;
+    stage.innerHTML = `<p class="k-quiz-q">${step + 1}. ${esc(q.question)}</p><div class="k-quiz-opts">${q.options
+      .map((o, i) => `<button type="button" data-i="${i}">${esc(o.label)}</button>`)
+      .join('')}</div>`;
+    stage.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
+      b.addEventListener('click', () => {
+        const opt = q.options[Number(b.dataset.i)]!;
+        for (const [k, v] of Object.entries(opt.to)) scores[k] = (scores[k] ?? 0) + v;
+        step++;
+        show();
+      }),
+    );
+    stage.querySelector('button')?.focus({ preventScroll: true });
+  }
+
+  function result() {
+    const ranked = [...outcomes].sort((a, b) => (scores[b.id] ?? 0) - (scores[a.id] ?? 0));
+    const [top, next] = ranked;
+    stage.innerHTML = `<div class="k-result" aria-live="polite"><p class="k-kicker">Your result</p><h2>${esc(top!.name)}</h2><p>${esc(top!.what)}</p>
+      <p><a class="k-btn" href="${top!.href}">${esc(top!.hrefLabel)}</a></p>
+      ${next ? `<p><strong>Close second:</strong> ${esc(next.name)}.</p>` : ''}
+      <p><button type="button" class="k-btn ghost" data-again>Take it again</button></p></div>`;
+    stage.querySelector('[data-again]')!.addEventListener('click', () => { step = 0; scores = {}; show(); });
+    if ('gtag' in window) (window as any).gtag('event', 'quiz_complete', { quiz: location.pathname, result: top!.id });
+  }
+  show();
+</script>

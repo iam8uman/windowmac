@@ -1,0 +1,12 @@
+---
+import type { Post } from '../lib/content';
+import { postPath } from '../lib/content';
+interface Props { post: Post }
+const { post } = Astro.props;
+const label: Record<string, string> = { 'how-to': 'How-to', alternative: 'Alternative', comparison: 'Comparison', roundup: 'Roundup', explainer: 'Explainer', troubleshooting: 'Fix' };
+---
+<a class="k-card" href={postPath(post.data.slug)}>
+  <span class="k-tag">{label[post.data.type]}</span>
+  <h3>{post.data.title}</h3>
+  <p>{post.data.description}</p>
+</a>

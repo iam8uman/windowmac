@@ -1,0 +1,37 @@
+---
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import InstallCta from '../../components/InstallCta.astro';
+import PostCard from '../../components/PostCard.astro';
+import { SITE, TOPICS } from '../../data/site';
+import Base from '../../layouts/Base.astro';
+import { getPublishedPosts, topicPath } from '../../lib/content';
+import { breadcrumbJsonLd, itemListJsonLd } from '../../lib/jsonld';
+
+const posts = await getPublishedPosts();
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Guides', path: '/blog/' }];
+const topics = Object.entries(TOPICS)
+  .map(([key, t]) => ({ key, ...t, posts: posts.filter((p) => p.data.tags.includes(key)) }))
+  .filter((t) => t.posts.length > 0);
+const title = `Mac Guides and How-tos | ${SITE.name}`;
+const description = `Practical Mac guides from ${SITE.name}: step-by-step how-tos, shortcuts, fixes and honest app comparisons, updated for macOS in 2027.`;
+---
+<Base title={title} description={description} path="/blog/" nav="blog"
+  jsonLd={[breadcrumbJsonLd(crumbs), itemListJsonLd('Guides', posts.map((p) => ({ name: p.data.title, path: `/blog/${p.data.slug}/` })))]}>
+  <div class="wrap">
+    <header class="k-head">
+      <Breadcrumbs crumbs={crumbs} />
+      <p class="k-kicker">Guides</p>
+      <h1>Mac guides that get to the point</h1>
+      <p class="k-lede">Step-by-step answers, keyboard shortcuts, fixes and honest comparisons. Each one starts with the answer.</p>
+      <ul class="k-chips">{topics.map((t) => <li><a href={topicPath(t.key)}>{t.label} ({t.posts.length})</a></li>)}</ul>
+    </header>
+    {topics.map((t) => (
+      <section class="k-section" aria-labelledby={`t-${t.key}`}>
+        <h2 id={`t-${t.key}`}><a href={topicPath(t.key)} style="color:inherit;text-decoration:none">{t.label}</a></h2>
+        <div class="k-grid">{t.posts.slice(0, 6).map((p) => <PostCard post={p} />)}</div>
+        {t.posts.length > 6 && <p><a href={topicPath(t.key)}>All {t.posts.length} {t.label.toLowerCase()} →</a></p>}
+      </section>
+    ))}
+    <InstallCta />
+  </div>
+</Base>

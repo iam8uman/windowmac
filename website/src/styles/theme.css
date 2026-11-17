@@ -1,0 +1,37 @@
+/* Windowmac theme for the content kit: same palette and type as the landing page. */
+:root {
+  --k-bg: #EEF0F7;
+  --k-paper: #FFFFFF;
+  --k-sunk: #E3E6F2;
+  --k-ink: #14153A;
+  --k-soft: #4E5180;
+  --k-muted: #6A6D98;
+  --k-line: rgba(20, 21, 58, .10);
+  --k-line-strong: rgba(20, 21, 58, .18);
+  --k-accent: #0A84FF;
+  --k-accent-deep: #0060D6;
+  --k-accent-ink: #FFFFFF;
+  --k-accent-soft: rgba(10, 132, 255, .10);
+  --k-display: "Bricolage Grotesque", "Ubuntu", ui-sans-serif, system-ui, sans-serif;
+  --k-font: "Ubuntu", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --k-mono: "Ubuntu Mono", ui-monospace, Menlo, monospace;
+  --k-radius: 14px;
+  --k-card: 22px;
+  --k-shadow: 0 1px 2px rgba(20,21,58,.05), 0 24px 48px -32px rgba(20,21,58,.35);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --k-bg: #0E0F24;
+    --k-paper: #17183A;
+    --k-sunk: #202250;
+    --k-ink: #EEF0FF;
+    --k-soft: #B8BBE6;
+    --k-muted: #9093C4;
+    --k-line: rgba(238, 240, 255, .10);
+    --k-line-strong: rgba(238, 240, 255, .20);
+    --k-accent: #3D9BFF;
+    --k-accent-deep: #8CC4FF;
+    --k-accent-soft: rgba(61, 155, 255, .16);
+    --k-shadow: 0 24px 48px -32px rgba(0,0,0,.6);
+  }
+}

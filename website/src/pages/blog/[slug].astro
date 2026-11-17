@@ -1,0 +1,93 @@
+---
+import { render } from 'astro:content';
+import AppsCallout from '../../components/AppsCallout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqList from '../../components/FaqList.astro';
+import InstallCta from '../../components/InstallCta.astro';
+import PostCard from '../../components/PostCard.astro';
+import { QUIZZES, quizPath } from '../../data/quizzes';
+import { SITE, TOPICS } from '../../data/site';
+import { TOOLS, toolPath } from '../../data/tools';
+import Base from '../../layouts/Base.astro';
+import { formatDate, getPublishedPosts, postPath, readingMinutes, relatedPosts, topicPath } from '../../lib/content';
+import { articleJsonLd, breadcrumbJsonLd, faqJsonLd } from '../../lib/jsonld';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ params: { slug: post.data.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const d = post.data;
+const { Content } = await render(post);
+const all = await getPublishedPosts();
+const related = relatedPosts(post, all);
+const path = postPath(d.slug);
+const firstTopic = d.tags[0]!;
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Guides', path: '/blog/' },
+  { name: TOPICS[firstTopic]!.label, path: topicPath(firstTopic) },
+  { name: d.title, path },
+];
+
+// A featured tool or quiz on this site: "tools/<slug>" or "quiz/<slug>".
+let feature: { name: string; card: string; href: string } | undefined;
+if (d.feature) {
+  const [kind, slug] = d.feature.split('/');
+  const hit = kind === 'quiz' ? QUIZZES.find((q) => q.slug === slug && !q.draft) : TOOLS.find((t) => t.slug === slug && !t.draft);
+  if (!hit) throw new Error(`${d.slug}: unknown feature ${d.feature}`);
+  feature = { name: hit.name, card: hit.card, href: kind === 'quiz' ? quizPath(hit.slug) : toolPath(hit.slug) };
+}
+const updated = d.updatedAt && d.updatedAt.getTime() !== d.publishedAt.getTime() ? d.updatedAt : undefined;
+---
+<Base
+  title={d.seoTitle}
+  description={d.seoDescription}
+  path={path}
+  ogType="article"
+  nav="blog"
+  publishedTime={d.publishedAt.toISOString()}
+  modifiedTime={(d.updatedAt ?? d.publishedAt).toISOString()}
+  jsonLd={[
+    articleJsonLd({ title: d.title, description: d.description, path, publishedAt: d.publishedAt, updatedAt: d.updatedAt, type: d.type }),
+    breadcrumbJsonLd(crumbs),
+    faqJsonLd(d.faq),
+  ]}
+>
+  <article class="narrow k-article">
+    <header class="k-head">
+      <Breadcrumbs crumbs={crumbs} />
+      <h1>{d.title}</h1>
+      <p class="k-lede">{d.description}</p>
+      <p class="k-meta">
+        <span>By <a href={SITE.author.url} rel="author">{SITE.author.name}</a></span>
+        <span>{updated ? `Updated ${formatDate(updated)}` : formatDate(d.publishedAt)}</span>
+        <span>{readingMinutes(post.body ?? '')} min read</span>
+      </p>
+    </header>
+    <div class="k-prose"><Content /></div>
+    {feature && (
+      <a class="k-card" href={feature.href} style="margin:28px 0">
+        <span class="k-tag">Free tool</span>
+        <h3>{feature.name}</h3>
+        <p>{feature.card}</p>
+      </a>
+    )}
+    <FaqList faq={d.faq} />
+    <AppsCallout primary={d.primaryApp} />
+    {d.sources.length > 0 && (
+      <section class="k-section k-prose">
+        <h2 style="font-size:20px;margin-top:0">Sources</h2>
+        <ul>{d.sources.map((s) => <li><a href={s.url} rel="nofollow noopener">{s.title}</a></li>)}</ul>
+      </section>
+    )}
+    {related.length > 0 && (
+      <section class="k-section">
+        <h2>Keep reading</h2>
+        <div class="k-grid">{related.map((p) => <PostCard post={p} />)}</div>
+      </section>
+    )}
+    <InstallCta />
+  </article>
+</Base>
