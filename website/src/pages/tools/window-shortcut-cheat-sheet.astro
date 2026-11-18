@@ -1,0 +1,131 @@
+---
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+<ToolLayout slug="window-shortcut-cheat-sheet">
+  <form data-sheet-form onsubmit="return false">
+    <div class="k-row">
+      <div class="k-field">
+        <label for="os">Your macOS version</label>
+        <select id="os">
+          <option value="15">macOS Sequoia 15 or later (incl. Tahoe 26, macOS 27)</option>
+          <option value="13">macOS Ventura 13 or Sonoma 14</option>
+        </select>
+      </div>
+      <div class="k-field">
+        <label for="title">Sheet title</label>
+        <input id="title" type="text" maxlength="60" value="My Mac window shortcuts" />
+      </div>
+    </div>
+    <fieldset class="cs-groups">
+      <legend class="k-label">Include these groups</legend>
+      <label><input type="checkbox" value="tiling" checked /> macOS window tiling</label>
+      <label><input type="checkbox" value="apps" checked /> Windows and apps</label>
+      <label><input type="checkbox" value="mission" checked /> Mission Control and Spaces</label>
+      <label><input type="checkbox" value="windowmac" checked /> Windowmac (hold Option)</label>
+      <label><input type="checkbox" value="strip" /> Windowmac Strip</label>
+    </fieldset>
+    <p><button type="button" class="k-btn" data-print>Print or save as PDF</button></p>
+  </form>
+  <div class="k-out" aria-live="polite">
+    <p data-count class="k-label"></p>
+    <div id="cs-sheet" class="cs-sheet k-prose"></div>
+  </div>
+  <div slot="explain">
+    <h2>Where these shortcuts come from</h2>
+    <p>The macOS shortcuts are taken from Apple’s Mac keyboard shortcuts list and its window tiling shortcuts page. The tiling shortcuts (the ones starting with <kbd>Fn</kbd>-<kbd>Control</kbd>) came with macOS Sequoia 15, so they are hidden if you pick an older version. Shortcuts that use the Mission Control key also work with <kbd>Control</kbd>-<kbd>Up Arrow</kbd>.</p>
+    <p>The Windowmac shortcuts are its defaults. Each one works while you hold the trigger key (Left Option unless you changed it), and every key can be changed in Windowmac’s Settings. Pressing the same arrow key again cycles from a half to a third to two thirds.</p>
+  </div>
+</ToolLayout>
+<style>
+  .cs-groups { border: 0; padding: 0; margin: 0 0 14px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .cs-groups legend { margin-bottom: 8px; }
+  .cs-groups label { display: inline-flex; gap: 6px; align-items: center; font-size: 15px; }
+  .cs-sheet :global(h3) { margin: 18px 0 6px; font-size: 17px; }
+  .cs-sheet :global(table) { width: 100%; }
+  @media print {
+    :global(body *) { visibility: hidden; }
+    :global(#cs-sheet), :global(#cs-sheet *) { visibility: visible; }
+    :global(#cs-sheet) { position: absolute; inset: 0 auto auto 0; width: 100%; color: #000; }
+  }
+</style>
+<script>
+  type Row = [group: string, keys: string, does: string, minOs?: number];
+  const ROWS: Row[] = [
+    ['tiling', '{Fn}-{Control}-{←} / {→}', 'Left half / right half', 15],
+    ['tiling', '{Fn}-{Control}-{↑} / {↓}', 'Top half / bottom half', 15],
+    ['tiling', '{Fn}-{Control}-{F}', 'Fill the desktop (not full screen)', 15],
+    ['tiling', '{Fn}-{Control}-{C}', 'Centre the window', 15],
+    ['tiling', '{Fn}-{Control}-{R}', 'Return to the size before tiling', 15],
+    ['tiling', '{Fn}-{Control}-{Shift}-{←}', 'Front window left, next window right', 15],
+    ['tiling', '{Fn}-{Control}-{Shift}-{↑}', 'Front window top, next window bottom', 15],
+    ['tiling', '{Fn}-{Control}-{Option}-{Shift}-{←}', 'Front window left, two more in the right quarters', 15],
+    ['apps', '{Command}-{Tab}', 'Switch to the last app you used', 13],
+    ['apps', '{Command}-{`} (grave accent)', 'Next window of the same app', 13],
+    ['apps', '{Shift}-{Command}-{`}', 'Previous window of the same app', 13],
+    ['apps', '{Command}-{H}', 'Hide the front app', 13],
+    ['apps', '{Option}-{Command}-{H}', 'Hide every other app', 13],
+    ['apps', '{Command}-{M}', 'Minimise the front window', 13],
+    ['apps', '{Option}-{Command}-{M}', 'Minimise all windows of the front app', 13],
+    ['apps', '{Command}-{W}', 'Close the front window', 13],
+    ['apps', '{Option}-{Command}-{W}', 'Close all windows of the app', 13],
+    ['apps', '{Command}-{Q}', 'Quit the app', 13],
+    ['apps', '{Control}-{Command}-{F}', 'Enter or leave full screen (if the app supports it)', 13],
+    ['mission', '{Control}-{↑}', 'Open Mission Control', 13],
+    ['mission', '{Control}-{↓}', 'All windows of the front app (App Exposé)', 13],
+    ['mission', '{Control}-{←} / {→}', 'Previous / next desktop space', 13],
+    ['mission', '{Command}-{Mission Control} or {Fn}-{F11}', 'Show the desktop', 13],
+    ['mission', '{Option}-{Command}-{D}', 'Show or hide the Dock', 13],
+    ['windowmac', '{Option} + move the mouse, release', 'Snap toward that direction', 13],
+    ['windowmac', '{Option} + {←} {→} {↑} {↓}', 'Halves, press again for thirds, then two thirds', 13],
+    ['windowmac', '{Option} + {Return}', 'Maximise, again for almost maximise', 13],
+    ['windowmac', '{Option} + {C}', 'Centre', 13],
+    ['windowmac', '{Option} + {1} {2} {3} {4}', 'Quarters', 13],
+    ['windowmac', '{Option} + {[} or {]}', 'Previous / next screen, layout kept', 13],
+    ['windowmac', '{Option} + {=} or {-}', 'Larger / smaller', 13],
+    ['windowmac', '{Option} + {,} {.} {/}', 'Stash left / stash right / unstash', 13],
+    ['windowmac', '{Option} + {Z}', 'Undo the last move', 13],
+    ['strip', '{Option} + {S}', 'Strip this screen (again to turn it off)', 13],
+    ['strip', '{Option} + {A} / {D}', 'Focus the column on the left / right', 13],
+    ['strip', '{Option} + {Shift}-{A} / {Shift}-{D}', 'Move the column left / right', 13],
+    ['strip', '{Option} + {W} / {Shift}-{W}', 'Cycle column width / full width', 13],
+    ['strip', '{Option} + {Shift}-{C}', 'Centre the column', 13],
+  ];
+  const NAMES: Record<string, string> = {
+    tiling: 'macOS window tiling',
+    apps: 'Windows and apps',
+    mission: 'Mission Control and Spaces',
+    windowmac: 'Windowmac',
+    strip: 'Windowmac Strip',
+  };
+  const os = document.getElementById('os') as HTMLSelectElement;
+  const title = document.getElementById('title') as HTMLInputElement;
+  const boxes = [...document.querySelectorAll<HTMLInputElement>('.cs-groups input')];
+  const sheet = document.getElementById('cs-sheet')!;
+  const count = document.querySelector<HTMLElement>('[data-count]')!;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+  const kbd = (keys: string) => esc(keys).replace(/\{([^}]+)\}/g, '<kbd>$1</kbd>');
+
+  function build() {
+    const v = Number(os.value);
+    const groups = boxes.filter((b) => b.checked).map((b) => b.value);
+    let n = 0;
+    let html = `<h2>${esc(title.value || 'Mac window shortcuts')}</h2>`;
+    for (const g of groups) {
+      const rows = ROWS.filter((r) => r[0] === g && (r[3] ?? 13) <= v);
+      if (!rows.length) {
+        html += `<h3>${NAMES[g]}</h3><p>Not available on this macOS version. A window manager adds keyboard snapping.</p>`;
+        continue;
+      }
+      n += rows.length;
+      html += `<h3>${NAMES[g]}</h3><table><thead><tr><th scope="col">Keys</th><th scope="col">Does</th></tr></thead><tbody>${rows
+        .map((r) => `<tr><td>${kbd(r[1])}</td><td>${esc(r[2])}</td></tr>`)
+        .join('')}</tbody></table>`;
+    }
+    if (!groups.length) html += '<p>Tick at least one group above.</p>';
+    sheet.innerHTML = html;
+    count.textContent = `${n} shortcuts on your sheet.`;
+  }
+  [os, title, ...boxes].forEach((el) => el.addEventListener('input', build));
+  document.querySelector('[data-print]')!.addEventListener('click', () => window.print());
+  build();
+</script>

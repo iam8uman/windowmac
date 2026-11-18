@@ -1,0 +1,123 @@
+---
+import ToolLayout from '../../components/ToolLayout.astro';
+const presets = [
+  ['29" 21:9, 2560×1080', 2560, 1080, 29],
+  ['34" 21:9, 3440×1440', 3440, 1440, 34],
+  ['38" 24:10, 3840×1600', 3840, 1600, 38],
+  ['40" 21:9 5K2K, looks like 2560×1080', 2560, 1080, 40],
+  ['45" 21:9, 3440×1440', 3440, 1440, 45],
+  ['49" 32:9, 5120×1440', 5120, 1440, 49],
+  ['57" 32:9, looks like 3840×1080', 3840, 1080, 57],
+] as const;
+const patterns = [
+  ['1:1', 'Halves'],
+  ['1:1:1', 'Thirds'],
+  ['2:1', 'Two thirds + one third'],
+  ['1:2:1', 'Wide centre, two sides'],
+  ['1:1:1:1', 'Four columns'],
+  ['3:2', 'Three fifths + two fifths'],
+] as const;
+---
+<ToolLayout slug="ultrawide-split-calculator">
+  <form onsubmit="return false">
+    <div class="k-field">
+      <label for="uw-preset">Monitor</label>
+      <select id="uw-preset">
+        {presets.map(([n, w, h, d]) => <option value={`${w}x${h}x${d}`}>{n}</option>)}
+        <option value="custom">Custom…</option>
+      </select>
+    </div>
+    <div class="k-row">
+      <div class="k-field"><label for="uw-w">Width (points)</label><input id="uw-w" type="number" min="800" max="10000" value="3440" /></div>
+      <div class="k-field"><label for="uw-h">Height (points)</label><input id="uw-h" type="number" min="400" max="5000" value="1440" /></div>
+      <div class="k-field"><label for="uw-d">Diagonal (inches)</label><input id="uw-d" type="number" min="10" max="100" step="0.1" value="34" /></div>
+      <div class="k-field"><label for="uw-gap">Gap between windows</label><input id="uw-gap" type="number" min="0" max="64" value="0" /></div>
+    </div>
+    <div class="k-row">
+      <div class="k-field">
+        <label for="uw-pat">Column pattern</label>
+        <select id="uw-pat">
+          {patterns.map(([v, n]) => <option value={v} selected={v === '1:1:1'}>{v}: {n}</option>)}
+          <option value="custom">Custom ratio…</option>
+        </select>
+      </div>
+      <div class="k-field"><label for="uw-ratio">Custom ratio (e.g. 1:3:1)</label><input id="uw-ratio" type="text" value="1:3:1" inputmode="numeric" /></div>
+      <div class="k-field">
+        <label for="uw-unit">Units</label>
+        <select id="uw-unit"><option value="cm">Centimetres</option><option value="in">Inches</option></select>
+      </div>
+    </div>
+  </form>
+  <div class="k-out k-prose" aria-live="polite">
+    <div class="uw-preview" data-preview aria-hidden="true"></div>
+    <p data-summary></p>
+    <table>
+      <thead><tr><th scope="col">Column</th><th scope="col">Width × height (points)</th><th scope="col">Physical width</th><th scope="col">About as wide as</th></tr></thead>
+      <tbody data-rows></tbody>
+    </table>
+  </div>
+  <div slot="explain">
+    <h2>How the columns are worked out</h2>
+    <p>The physical width and height come from the diagonal and the aspect ratio: width = diagonal × W ÷ √(W² + H²). Each column gets its share of the width after the gaps are taken out, the same way window managers that support gaps divide the screen.</p>
+    <p>The last column gives the diagonal of a 16:9 screen with the same width as the column. A third of a 34-inch 3440 by 1440 ultrawide, for example, is about 26.5 cm wide, as wide as a 12-inch 16:9 screen, but it is much taller, so it holds more lines of text. Height is not reduced for the menu bar here because it is the same for every column; use the <a href="/tools/window-size-calculator/">window size calculator</a> for exact heights.</p>
+  </div>
+</ToolLayout>
+<style>
+  .uw-preview { display: flex; gap: 4px; height: 72px; margin: 0 0 14px; padding: 4px; border-radius: 10px; background: var(--k-sunk); }
+  .uw-preview :global(span) { display: grid; place-items: center; border-radius: 6px; background: var(--k-accent-soft); border: 1px solid var(--k-accent); font: 600 13px var(--k-font); color: var(--k-ink); min-width: 0; overflow: hidden; }
+</style>
+<script>
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const preset = $<HTMLSelectElement>('uw-preset');
+  const w = $<HTMLInputElement>('uw-w'), h = $<HTMLInputElement>('uw-h'), d = $<HTMLInputElement>('uw-d'), gap = $<HTMLInputElement>('uw-gap');
+  const pat = $<HTMLSelectElement>('uw-pat'), ratio = $<HTMLInputElement>('uw-ratio'), unit = $<HTMLSelectElement>('uw-unit');
+  const rows = document.querySelector<HTMLElement>('[data-rows]')!;
+  const summary = document.querySelector<HTMLElement>('[data-summary]')!;
+  const preview = document.querySelector<HTMLElement>('[data-preview]')!;
+
+  function parts(): number[] {
+    const src = pat.value === 'custom' ? ratio.value : pat.value;
+    const p = src.split(/[:\s,/]+/).map(Number).filter((n) => n > 0 && Number.isFinite(n));
+    return p.length ? p.slice(0, 8) : [1];
+  }
+
+  function calc() {
+    const W = Math.max(+w.value || 0, 1), H = Math.max(+h.value || 0, 1), D = Math.max(+d.value || 0, 1), g = Math.max(+gap.value || 0, 0);
+    const diagPts = Math.hypot(W, H);
+    const physW = (D * W) / diagPts, physH = (D * H) / diagPts; // inches
+    const ptsPerInch = W / physW;
+    const p = parts();
+    const total = p.reduce((a, b) => a + b, 0);
+    const usable = W - g * (p.length + 1);
+    const toUnit = (inches: number) => (unit.value === 'cm' ? `${(inches * 2.54).toFixed(1)} cm` : `${inches.toFixed(1)} in`);
+    let x = g;
+    const cols = p.map((share, i) => {
+      const cw = (usable * share) / total;
+      const col = { i, cw, x };
+      x += cw + g;
+      return col;
+    });
+    rows.innerHTML = cols
+      .map(({ i, cw }) => {
+        const inches = cw / ptsPerInch;
+        // A 16:9 screen of the same physical height has width = height * 16/9. Find the diagonal of a 16:9 screen this wide.
+        const eqDiag = Math.hypot(inches, (inches * 9) / 16);
+        return `<tr><td>${i + 1}</td><td>${Math.round(cw)} × ${Math.round(H - 2 * g)}</td><td>${toUnit(inches)}</td><td>a ${eqDiag.toFixed(1)}-inch 16:9 screen</td></tr>`;
+      })
+      .join('');
+    preview.innerHTML = cols.map(({ i, cw }) => `<span style="flex:${cw}">${i + 1}</span>`).join('');
+    summary.textContent = `Screen: ${toUnit(physW)} wide and ${toUnit(physH)} tall, ${ptsPerInch.toFixed(0)} points per inch. ${p.length} columns in the ratio ${p.join(':')}.`;
+  }
+
+  preset.addEventListener('change', () => {
+    if (preset.value !== 'custom') {
+      const [pw, ph, pd] = preset.value.split('x');
+      w.value = pw!; h.value = ph!; d.value = pd!;
+    }
+    calc();
+  });
+  [w, h, d].forEach((i) => i.addEventListener('input', () => { preset.value = 'custom'; calc(); }));
+  ratio.addEventListener('input', () => { pat.value = 'custom'; calc(); });
+  [gap, pat, unit].forEach((i) => i.addEventListener('input', calc));
+  calc();
+</script>

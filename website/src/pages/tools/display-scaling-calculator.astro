@@ -1,0 +1,96 @@
+---
+import ToolLayout from '../../components/ToolLayout.astro';
+const presets = [
+  ['24" 1080p monitor', 1920, 1080, 24],
+  ['27" 1440p monitor', 2560, 1440, 27],
+  ['27" 4K monitor', 3840, 2160, 27],
+  ['32" 4K monitor', 3840, 2160, 32],
+  ['27" 5K (Studio Display)', 5120, 2880, 27],
+  ['32" 6K monitor', 6016, 3384, 32],
+  ['34" ultrawide 3440×1440', 3440, 1440, 34],
+  ['13.6" MacBook Air', 2560, 1664, 13.6],
+  ['14.2" MacBook Pro', 3024, 1964, 14.2],
+] as const;
+---
+<ToolLayout slug="display-scaling-calculator">
+  <form onsubmit="return false">
+    <div class="k-field">
+      <label for="ds-preset">Display</label>
+      <select id="ds-preset">
+        {presets.map(([n, w, h, d], i) => <option value={`${w}x${h}x${d}`} selected={i === 2}>{n}</option>)}
+        <option value="custom">Custom…</option>
+      </select>
+    </div>
+    <div class="k-row">
+      <div class="k-field"><label for="ds-w">Panel width (pixels)</label><input id="ds-w" type="number" min="640" max="16000" value="3840" /></div>
+      <div class="k-field"><label for="ds-h">Panel height (pixels)</label><input id="ds-h" type="number" min="480" max="10000" value="2160" /></div>
+      <div class="k-field"><label for="ds-d">Diagonal (inches)</label><input id="ds-d" type="number" min="5" max="120" step="0.1" value="27" /></div>
+      <div class="k-field"><label for="ds-lw">Try a looks-like width (optional)</label><input id="ds-lw" type="number" min="0" max="16000" placeholder="e.g. 2560" /></div>
+    </div>
+  </form>
+  <div class="k-out k-prose" aria-live="polite">
+    <p data-ppi></p>
+    <table>
+      <thead><tr><th scope="col">Looks like</th><th scope="col">Points per inch</th><th scope="col">Text size vs MacBook Air</th><th scope="col">Drawn at</th><th scope="col">Notes</th></tr></thead>
+      <tbody data-rows></tbody>
+    </table>
+  </div>
+  <div slot="explain">
+    <h2>How to read the results</h2>
+    <p><strong>PPI</strong> (pixels per inch) is the panel’s physical sharpness: the diagonal resolution divided by the diagonal size. <strong>Looks like</strong> is the desktop size macOS uses for laying out windows and text, in points. The more points per inch, the smaller everything looks.</p>
+    <p>The "text size" column compares each option with a 13.6-inch MacBook Air at its default looks-like size of 1470 by 956, worked out from Apple’s published panel size and resolution. 100% means text is physically the same size; 120% means about a fifth larger.</p>
+    <p>In scaled (HiDPI) modes, macOS draws the desktop at twice the looks-like size and resizes that image to the panel. When twice the looks-like size equals the panel resolution exactly, no resizing is needed, which is the sharpest case. The looks-like sizes listed are examples; the exact list in <strong>System Settings → Displays</strong> depends on the display.</p>
+  </div>
+</ToolLayout>
+<script>
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const preset = $<HTMLSelectElement>('ds-preset');
+  const w = $<HTMLInputElement>('ds-w'), h = $<HTMLInputElement>('ds-h'), d = $<HTMLInputElement>('ds-d'), lw = $<HTMLInputElement>('ds-lw');
+  const rows = document.querySelector<HTMLElement>('[data-rows]')!;
+  const ppiOut = document.querySelector<HTMLElement>('[data-ppi]')!;
+  // Reference: 13.6" MacBook Air, 2560x1664 panel, default looks like 1470x956.
+  const REF_PTS_PER_INCH = 1470 / ((13.6 * 2560) / Math.hypot(2560, 1664));
+
+  function calc() {
+    const W = Math.max(+w.value || 0, 1), H = Math.max(+h.value || 0, 1), D = Math.max(+d.value || 0, 1);
+    const ppi = Math.hypot(W, H) / D;
+    const physW = (D * W) / Math.hypot(W, H);
+    const physH = (D * H) / Math.hypot(W, H);
+    ppiOut.textContent = `${ppi.toFixed(0)} pixels per inch. The screen is ${(physW * 2.54).toFixed(1)} by ${(physH * 2.54).toFixed(1)} cm (${physW.toFixed(1)} by ${physH.toFixed(1)} inches).`;
+    const even = (n: number) => Math.round(n / 2) * 2;
+    const widths = new Set<number>();
+    for (const f of [2, 1.75, 1.6, 1.5, 1.33, 1.25, 1.125, 1]) {
+      const lwv = even(W / f);
+      if (lwv >= 1024 || f === 1) widths.add(lwv);
+    }
+    const custom = +lw.value;
+    if (custom >= 640) widths.add(even(custom));
+    const list = [...widths].sort((a, b) => a - b);
+    rows.innerHTML = list
+      .map((lwv) => {
+        const lhv = Math.round((lwv * H) / W);
+        const ptsPerInch = lwv / physW;
+        const text = (REF_PTS_PER_INCH / ptsPerInch) * 100;
+        const native = lwv === W;
+        const drawnW = native ? W : lwv * 2, drawnH = native ? H : lhv * 2;
+        const notes: string[] = [];
+        if (native) notes.push('Native, no scaling');
+        else if (drawnW === W) notes.push('Exact 2x, sharpest scaled mode');
+        else if (drawnW > W) notes.push('Scaled down to fit the panel');
+        else notes.push('Scaled up: softer text');
+        if (lwv === even(custom)) notes.push('Your choice');
+        return `<tr><td>${lwv} × ${lhv}</td><td>${ptsPerInch.toFixed(0)}</td><td>${text.toFixed(0)}%</td><td>${drawnW} × ${drawnH}</td><td>${notes.join('. ')}</td></tr>`;
+      })
+      .join('');
+  }
+  preset.addEventListener('change', () => {
+    if (preset.value !== 'custom') {
+      const [pw, ph, pd] = preset.value.split('x');
+      w.value = pw!; h.value = ph!; d.value = pd!;
+    }
+    calc();
+  });
+  [w, h, d].forEach((i) => i.addEventListener('input', () => { preset.value = 'custom'; calc(); }));
+  lw.addEventListener('input', calc);
+  calc();
+</script>

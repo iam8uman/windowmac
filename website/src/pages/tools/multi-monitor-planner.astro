@@ -1,0 +1,115 @@
+---
+import ToolLayout from '../../components/ToolLayout.astro';
+const defaults = [
+  { name: 'MacBook Pro 14"', d: 14.2, pw: 3024, ph: 1964, lw: 1512, lh: 982, on: true },
+  { name: '27" 4K monitor', d: 27, pw: 3840, ph: 2160, lw: 2560, lh: 1440, on: true },
+  { name: '24" 1080p monitor', d: 24, pw: 1920, ph: 1080, lw: 1920, lh: 1080, on: false },
+];
+---
+<ToolLayout slug="multi-monitor-planner">
+  <form onsubmit="return false" class="mm-form">
+    <p class="k-label">List your displays from left to right as they sit on your desk.</p>
+    {defaults.map((x, i) => (
+      <fieldset class="mm-disp" data-disp={i}>
+        <legend>
+          <label><input type="checkbox" data-k="on" checked={x.on} disabled={i < 2} /> Display {i + 1}</label>
+        </legend>
+        <div class="k-row">
+          <div class="k-field"><label for={`mm-name-${i}`}>Name</label><input id={`mm-name-${i}`} type="text" data-k="name" value={x.name} maxlength="40" /></div>
+          <div class="k-field"><label for={`mm-d-${i}`}>Diagonal (inches)</label><input id={`mm-d-${i}`} type="number" data-k="d" min="5" max="120" step="0.1" value={x.d} /></div>
+          <div class="k-field"><label for={`mm-pw-${i}`}>Panel width (pixels)</label><input id={`mm-pw-${i}`} type="number" data-k="pw" min="640" max="16000" value={x.pw} /></div>
+          <div class="k-field"><label for={`mm-ph-${i}`}>Panel height (pixels)</label><input id={`mm-ph-${i}`} type="number" data-k="ph" min="480" max="16000" value={x.ph} /></div>
+          <div class="k-field"><label for={`mm-lw-${i}`}>Looks like width</label><input id={`mm-lw-${i}`} type="number" data-k="lw" min="640" max="16000" value={x.lw} /></div>
+          <div class="k-field"><label for={`mm-lh-${i}`}>Looks like height</label><input id={`mm-lh-${i}`} type="number" data-k="lh" min="400" max="16000" value={x.lh} /></div>
+        </div>
+      </fieldset>
+    ))}
+  </form>
+  <div class="k-out k-prose" aria-live="polite">
+    <h3>On your desk (to scale, centres level)</h3>
+    <div class="mm-canvas" data-phys aria-hidden="true"></div>
+    <h3>How macOS sees them (points, centres aligned)</h3>
+    <div class="mm-canvas" data-pts aria-hidden="true"></div>
+    <table>
+      <thead><tr><th scope="col">Display</th><th scope="col">Physical size</th><th scope="col">PPI</th><th scope="col">Points per inch</th><th scope="col">Pointer speed</th></tr></thead>
+      <tbody data-rows></tbody>
+    </table>
+    <div data-tips></div>
+  </div>
+  <div slot="explain">
+    <h2>Why there are two drawings</h2>
+    <p>Your desk works in centimetres, but macOS arranges displays in points, the units of the "looks like" resolution. A display with fewer points per inch shows everything larger, so it appears smaller in the Arrange view than it looks on your desk. The pointer moves the same number of points on every display, which is why it can seem to speed up or slow down as it crosses.</p>
+    <p>The tips under the table tell you how far to drag each display in <strong>System Settings → Displays → Arrange</strong> so the edges line up. In Arrange, the display with the menu bar is the main display; drag the menu bar to another display to change it.</p>
+  </div>
+</ToolLayout>
+<style>
+  .mm-disp { border: 1px solid var(--k-line); border-radius: 14px; padding: 10px 14px 0; margin: 0 0 12px; }
+  .mm-disp legend { padding: 0 6px; font-weight: 600; }
+  .mm-disp legend label { display: inline-flex; gap: 6px; align-items: center; }
+  .mm-canvas { position: relative; height: 180px; margin: 6px 0 18px; border-radius: 12px; background: var(--k-sunk); overflow: hidden; }
+  .mm-canvas :global(div) { position: absolute; border: 2px solid var(--k-accent); background: var(--k-accent-soft); border-radius: 6px; display: grid; place-items: center; text-align: center; font: 600 12px/1.2 var(--k-font); color: var(--k-ink); padding: 2px; overflow: hidden; }
+</style>
+<script>
+  type D = { name: string; d: number; pw: number; ph: number; lw: number; lh: number };
+  const sets = [...document.querySelectorAll<HTMLFieldSetElement>('[data-disp]')];
+  const phys = document.querySelector<HTMLElement>('[data-phys]')!;
+  const pts = document.querySelector<HTMLElement>('[data-pts]')!;
+  const rows = document.querySelector<HTMLElement>('[data-rows]')!;
+  const tips = document.querySelector<HTMLElement>('[data-tips]')!;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  function read(): D[] {
+    return sets
+      .filter((f) => f.querySelector<HTMLInputElement>('[data-k="on"]')!.checked)
+      .map((f) => {
+        const v = (k: string) => f.querySelector<HTMLInputElement>(`[data-k="${k}"]`)!.value;
+        const n = (k: string) => Math.max(+v(k) || 0, 1);
+        return { name: v('name') || 'Display', d: n('d'), pw: n('pw'), ph: n('ph'), lw: n('lw'), lh: n('lh') };
+      });
+  }
+
+  function draw(el: HTMLElement, boxes: { w: number; h: number; label: string }[], gap: number) {
+    const totalW = boxes.reduce((a, b) => a + b.w, 0) + gap * (boxes.length - 1);
+    const maxH = Math.max(...boxes.map((b) => b.h));
+    const scale = Math.min((el.clientWidth - 16) / totalW, (el.clientHeight - 16) / maxH);
+    let x = (el.clientWidth - totalW * scale) / 2;
+    el.innerHTML = boxes
+      .map((b) => {
+        const top = (el.clientHeight - b.h * scale) / 2;
+        const html = `<div style="left:${x}px;top:${top}px;width:${b.w * scale}px;height:${b.h * scale}px">${esc(b.label)}</div>`;
+        x += (b.w + gap) * scale;
+        return html;
+      })
+      .join('');
+  }
+
+  function calc() {
+    const ds = read();
+    const info = ds.map((d) => {
+      const diag = Math.hypot(d.pw, d.ph);
+      const wIn = (d.d * d.pw) / diag, hIn = (d.d * d.ph) / diag;
+      return { ...d, wIn, hIn, ppi: diag / d.d, ptsIn: d.lw / wIn };
+    });
+    draw(phys, info.map((d) => ({ w: d.wIn, h: d.hIn, label: d.name })), 1.5);
+    draw(pts, info.map((d) => ({ w: d.lw, h: d.lh, label: `${d.lw}×${d.lh}` })), 0);
+    const ref = info[0]!.ptsIn;
+    rows.innerHTML = info
+      .map((d) => `<tr><td>${esc(d.name)}</td><td>${(d.wIn * 2.54).toFixed(1)} × ${(d.hIn * 2.54).toFixed(1)} cm</td><td>${d.ppi.toFixed(0)}</td><td>${d.ptsIn.toFixed(0)}</td><td>${((ref / d.ptsIn) * 100).toFixed(0)}% of display 1</td></tr>`)
+      .join('');
+    const out: string[] = [];
+    for (let i = 0; i < info.length - 1; i++) {
+      const a = info[i]!, b = info[i + 1]!;
+      const offset = Math.round((a.lh - b.lh) / 2);
+      const shared = Math.min(a.lh, b.lh);
+      const speed = a.ptsIn / b.ptsIn;
+      let line = `<li><strong>${esc(a.name)} → ${esc(b.name)}:</strong> in Arrange, place ${esc(b.name)} to the right with its top edge ${Math.abs(offset)} points ${offset >= 0 ? 'below' : 'above'} the top of ${esc(a.name)} to line up their centres. The shared edge is ${shared} points tall, so windows and the pointer cross only along that stretch.`;
+      if (Math.abs(speed - 1) > 0.15) line += ` The pointer will look ${speed > 1 ? 'faster' : 'slower'} on ${esc(b.name)} (about ${speed.toFixed(1)} times the physical speed).`;
+      out.push(line + '</li>');
+    }
+    tips.innerHTML = out.length ? `<h3>Arrange tips</h3><ul>${out.join('')}</ul>` : '';
+  }
+
+  sets.forEach((f) => f.addEventListener('input', calc));
+  window.addEventListener('resize', calc);
+  calc();
+</script>

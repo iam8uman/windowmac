@@ -1,0 +1,103 @@
+slug,title,target_query,type,tags,primary_app,wave,feature,status
+window-size-calculator,Window Size Calculator,mac window size calculator,tool,,windowmac,1,,published
+window-shortcut-cheat-sheet,Mac Window Shortcut Cheat Sheet Builder,mac window shortcuts cheat sheet printable,tool,,windowmac,1,,published
+ultrawide-split-calculator,Ultrawide Split Calculator,ultrawide monitor split screen calculator,tool,,windowmac,1,,published
+display-scaling-calculator,Mac Display Scaling and PPI Calculator,mac scaled resolution calculator looks like,tool,,windowmac,1,,published
+shortcut-trainer,Mac Window Shortcut Trainer,practice mac keyboard shortcuts,tool,,windowmac,1,,published
+multi-monitor-planner,Multi-Monitor Arrangement Planner,plan dual monitor setup size,tool,,windowmac,1,,published
+which-mac-window-manager,Which Mac Window Manager Fits You?,which window manager for mac quiz,quiz,,windowmac,1,,published
+tiler-or-floater,Are You a Tiler or a Floater?,tiling vs floating windows quiz,quiz,,windowmac,1,,published
+multi-monitor-setup,Which Multi-Monitor Setup Suits You?,best monitor setup for mac quiz,quiz,,windowmac,1,,published
+mac-multitasking-style,What Is Your Mac Multitasking Style?,mac multitasking style quiz,quiz,,windowmac,1,,published
+how-to-split-screen-on-mac,"How to Split Screen on a Mac: 4 Ways, From Built-in to One Flick",how to split screen on mac,how-to,how-to|macos-features|keyboard-shortcuts,windowmac,1,tools/window-size-calculator,published
+how-to-snap-windows-on-mac,How to Snap Windows on a Mac,snap windows mac,how-to,how-to|macos-features,windowmac,1,quiz/which-mac-window-manager,published
+macos-window-tiling-shortcuts,macOS Window Tiling Shortcuts Explained,macos window tiling keyboard shortcuts,explainer,keyboard-shortcuts|macos-features,windowmac,1,tools/window-shortcut-cheat-sheet,published
+mac-window-keyboard-shortcuts,Every Mac Keyboard Shortcut for Windows and Apps,mac keyboard shortcuts for windows,explainer,keyboard-shortcuts|productivity,windowmac,1,tools/shortcut-trainer,published
+move-window-to-another-monitor-mac,How to Move a Window to Another Monitor on a Mac,move window to other monitor mac,how-to,multiple-monitors|how-to|keyboard-shortcuts,windowmac,1,tools/multi-monitor-planner,published
+maximize-window-mac-without-full-screen,How to Maximize a Window on a Mac Without Going Full Screen,maximize window mac without full screen,how-to,how-to|macos-features,windowmac,1,tools/window-size-calculator,published
+exit-full-screen-mac,How to Exit Full Screen on a Mac,exit full screen mac,how-to,how-to|macos-features|keyboard-shortcuts,windowmac,1,quiz/mac-multitasking-style,published
+resize-window-mac-keyboard,How to Resize and Move a Window With the Keyboard on a Mac,resize window mac keyboard,how-to,keyboard-shortcuts|how-to,windowmac,1,tools/shortcut-trainer,published
+stage-manager-mac,"Stage Manager on Mac: How It Works, How to Turn It Off",stage manager mac,explainer,macos-features|how-to,windowmac,1,quiz/mac-multitasking-style,published
+mission-control-mac,How to Use Mission Control on a Mac,mission control mac,how-to,macos-features|keyboard-shortcuts,windowmac,1,quiz/mac-multitasking-style,published
+multiple-desktops-mac,How to Use Multiple Desktops (Spaces) on a Mac,multiple desktops mac,how-to,macos-features|how-to,windowmac,1,quiz/mac-multitasking-style,published
+windows-snap-on-mac,How to Get Windows-Style Snap on a Mac,windows snap on mac,how-to,how-to|alternatives,windowmac,1,quiz/which-mac-window-manager,published
+ultrawide-monitor-mac-layouts,Best Window Layouts for an Ultrawide Monitor on a Mac,ultrawide monitor mac window layout,how-to,multiple-monitors|productivity,windowmac,1,tools/ultrawide-split-calculator,published
+window-off-screen-mac,How to Get a Window Back When It Is Off-Screen on a Mac,mac window off screen,troubleshooting,troubleshooting|multiple-monitors,windowmac,1,tools/multi-monitor-planner,published
+rectangle-alternatives,Rectangle Alternatives for Mac: 7 Options Compared,rectangle alternatives mac,alternative,alternatives,windowmac,1,quiz/which-mac-window-manager,published
+magnet-vs-rectangle,Magnet vs Rectangle: Which Mac Window Manager Should You Use?,magnet vs rectangle,comparison,alternatives,windowmac,1,quiz/which-mac-window-manager,published
+yabai-vs-aerospace,yabai vs AeroSpace: Which Mac Tiling Window Manager?,yabai vs aerospace,comparison,alternatives,windowmac,1,quiz/tiler-or-floater,published
+windowmac-vs-loop,Windowmac vs Loop: Two Radial Window Managers Compared,windowmac vs loop,comparison,alternatives,windowmac,1,quiz/which-mac-window-manager,published
+macos-tiling-vs-rectangle,Do You Still Need Rectangle Now macOS Has Window Tiling?,macos tiling vs rectangle,comparison,alternatives|macos-features,windowmac,1,tools/window-shortcut-cheat-sheet,published
+best-window-managers-mac-2027,Best Window Managers for Mac in 2027,best window manager mac 2027,roundup,best-apps-2027|alternatives,windowmac,1,quiz/which-mac-window-manager,published
+center-window-mac,How to Center a Window on a Mac,center window mac,how-to,how-to|keyboard-shortcuts,windowmac,2,tools/window-size-calculator,draft
+arrange-three-or-four-windows-mac,How to Arrange Three or Four Windows on a Mac,arrange 3 windows mac,how-to,how-to|macos-features,windowmac,2,tools/window-size-calculator,draft
+snap-window-thirds-mac,How to Snap a Window to a Third of the Screen on a Mac,mac window thirds,how-to,how-to|multiple-monitors,windowmac,2,tools/ultrawide-split-calculator,draft
+show-desktop-mac,How to Show the Desktop on a Mac,show desktop mac,how-to,macos-features|keyboard-shortcuts,windowmac,2,tools/shortcut-trainer,draft
+hot-corners-mac,How to Set Up Hot Corners on a Mac,hot corners mac,how-to,macos-features|productivity,windowmac,2,quiz/mac-multitasking-style,draft
+hide-minimize-close-mac,"Hide vs Minimize vs Close on a Mac: What Each One Does",hide vs minimize mac,explainer,macos-features|keyboard-shortcuts,windowmac,2,tools/shortcut-trainer,draft
+switch-windows-same-app-mac,How to Switch Between Windows of the Same App on a Mac,switch between windows same app mac,how-to,keyboard-shortcuts|how-to,windowmac,2,tools/shortcut-trainer,draft
+mac-window-management-for-windows-users,Mac Window Management for Windows Users,mac window management for windows users,explainer,how-to|keyboard-shortcuts,windowmac,2,tools/window-shortcut-cheat-sheet,draft
+vertical-monitor-mac,How to Set Up a Vertical Monitor on a Mac,vertical monitor mac,how-to,multiple-monitors|how-to,windowmac,2,tools/multi-monitor-planner,draft
+macbook-external-monitor-setup,How to Set Up a MacBook With an External Monitor,macbook external monitor setup,how-to,multiple-monitors|productivity,windowmac,2,quiz/multi-monitor-setup,draft
+arrange-displays-mac,How to Arrange Displays on a Mac,arrange displays mac,how-to,multiple-monitors|how-to,windowmac,2,tools/multi-monitor-planner,draft
+4k-monitor-scaling-mac,Which Scaled Resolution Should You Use for a 4K Monitor on a Mac?,best resolution 4k monitor mac,explainer,multiple-monitors|macos-features,windowmac,2,tools/display-scaling-calculator,draft
+window-too-big-for-screen-mac,How to Fix a Window That Is Too Big for the Screen on a Mac,mac window too big for screen,troubleshooting,troubleshooting|how-to,windowmac,2,tools/window-size-calculator,draft
+cant-resize-window-mac,Why Can't I Resize a Window on My Mac?,cant resize window mac,troubleshooting,troubleshooting,windowmac,2,tools/window-size-calculator,draft
+windows-open-on-wrong-monitor-mac,How to Stop Windows Opening on the Wrong Monitor on a Mac,mac windows open on wrong monitor,troubleshooting,troubleshooting|multiple-monitors,windowmac,2,tools/multi-monitor-planner,draft
+window-tiling-not-working-mac,Mac Window Tiling Not Working? How to Fix It,mac window tiling not working,troubleshooting,troubleshooting|macos-features,windowmac,2,tools/window-shortcut-cheat-sheet,draft
+window-manager-not-working-mac,Window Manager Stopped Working on Your Mac? Fix the Accessibility Permission,window manager not working mac accessibility,troubleshooting,troubleshooting,windowmac,2,quiz/which-mac-window-manager,draft
+green-button-mac,What Does the Green Button Do on a Mac?,green button mac,explainer,macos-features|how-to,windowmac,2,quiz/mac-multitasking-style,draft
+auto-hide-dock-mac,How to Auto-Hide the Dock on a Mac for More Screen Space,hide dock mac,how-to,macos-features|productivity,windowmac,2,tools/window-size-calculator,draft
+auto-hide-menu-bar-mac,How to Auto-Hide the Menu Bar on a Mac,hide menu bar mac,how-to,macos-features|how-to,windowmac,2,tools/window-size-calculator,draft
+windowmac-url-scheme-automation,"Automate Window Layouts on a Mac With Shortcuts, Raycast and URLs",automate window layout mac shortcuts,how-to,productivity|keyboard-shortcuts,windowmac,2,tools/window-shortcut-cheat-sheet,draft
+scrolling-window-manager-mac,What Is a Scrolling Window Manager? Strip on Mac Explained,scrolling tiling window manager mac,explainer,productivity|alternatives,windowmac,2,quiz/tiler-or-floater,draft
+free-magnet-alternative,Free Alternatives to Magnet for Mac,free magnet alternative,alternative,alternatives,windowmac,2,quiz/which-mac-window-manager,draft
+spectacle-replacement-mac,Spectacle Is Discontinued: What to Use Instead,spectacle replacement mac,alternative,alternatives,windowmac,2,tools/window-shortcut-cheat-sheet,draft
+rectangle-vs-rectangle-pro,Rectangle vs Rectangle Pro: Is the Upgrade Worth It?,rectangle vs rectangle pro,comparison,alternatives,windowmac,2,quiz/which-mac-window-manager,draft
+raycast-window-management-vs-rectangle,Raycast Window Management vs Rectangle,raycast window management vs rectangle,comparison,alternatives|keyboard-shortcuts,windowmac,2,tools/window-shortcut-cheat-sheet,draft
+free-window-manager-mac,The Best Free Window Managers for Mac,free window manager mac,roundup,alternatives,windowmac,2,quiz/which-mac-window-manager,draft
+best-tiling-window-manager-mac,Best Tiling Window Managers for Mac,tiling window manager mac,roundup,alternatives|productivity,windowmac,2,quiz/tiler-or-floater,draft
+tiling-vs-snapping-window-manager,Tiling vs Snapping Window Managers on Mac: What Is the Difference?,tiling vs snapping window manager,explainer,alternatives|productivity,windowmac,2,quiz/tiler-or-floater,draft
+do-i-need-a-window-manager-mac,Do You Need a Window Manager on Your Mac?,do i need a window manager mac,explainer,productivity|macos-features,windowmac,2,quiz/which-mac-window-manager,draft
+snap-windows-older-macos,How to Snap Windows on macOS Ventura and Sonoma,snap windows macos sonoma,how-to,how-to|alternatives,windowmac,2,quiz/which-mac-window-manager,draft
+macos-27-window-management,What Changed for Windows and Displays in macOS 27,macos 27 window management,explainer,macos-features|multiple-monitors,windowmac,2,quiz/mac-multitasking-style,draft
+best-free-mac-apps-2027,Best Free Mac Apps in 2027,best free mac apps 2027,roundup,best-apps-2027|productivity,windowmac,2,quiz/mac-multitasking-style,draft
+mac-setup-for-developers-2027,Mac Setup for Developers in 2027: Windows and Workflow,mac setup for developers 2027,roundup,best-apps-2027|productivity,windowmac,2,quiz/tiler-or-floater,draft
+save-window-layouts-mac,How to Save and Restore Window Layouts on a Mac,save window layout mac,how-to,productivity|alternatives,windowmac,2,quiz/which-mac-window-manager,draft
+app-expose-mac,What Is App Exposé on a Mac and How Do You Use It?,app expose mac,explainer,macos-features|keyboard-shortcuts,windowmac,3,quiz/mac-multitasking-style,draft
+command-tab-app-switcher-mac,Command-Tab on a Mac: App Switcher Tips,command tab mac,explainer,keyboard-shortcuts|productivity,windowmac,3,tools/shortcut-trainer,draft
+open-app-on-specific-desktop-mac,How to Make an App Always Open on a Specific Desktop on a Mac,open app on specific desktop mac,how-to,macos-features|how-to,windowmac,3,quiz/mac-multitasking-style,draft
+split-view-second-monitor-mac,How to Use Split View on a Second Monitor on a Mac,split view second monitor mac,how-to,multiple-monitors|macos-features,windowmac,3,tools/multi-monitor-planner,draft
+split-view-not-working-mac,Split View Not Working on Your Mac? How to Fix It,split view not working mac,troubleshooting,troubleshooting|macos-features,windowmac,3,quiz/mac-multitasking-style,draft
+stage-manager-vs-window-manager,Stage Manager vs a Window Manager: Which Should You Use?,stage manager vs window manager,comparison,macos-features|alternatives,windowmac,3,quiz/mac-multitasking-style,draft
+mac-multitasking-features-compared,"Split View vs Stage Manager vs Spaces vs Tiling: Mac Multitasking Compared",split view vs stage manager,comparison,macos-features|productivity,windowmac,3,quiz/mac-multitasking-style,draft
+windows-rearrange-after-sleep-mac,Why Do My Mac Windows Rearrange After Sleep?,mac windows rearrange after sleep external monitor,troubleshooting,troubleshooting|multiple-monitors,windowmac,3,tools/multi-monitor-planner,draft
+app-open-no-window-mac,App Is Open but No Window Shows on Your Mac? Where to Look,app open but no window mac,troubleshooting,troubleshooting|macos-features,windowmac,3,tools/shortcut-trainer,draft
+option-key-window-tricks-mac,Option Key Tricks for Windows on a Mac,option key tricks mac,explainer,keyboard-shortcuts|macos-features,windowmac,3,tools/shortcut-trainer,draft
+minimize-all-windows-mac,How to Minimize All Windows on a Mac,minimize all windows mac,how-to,keyboard-shortcuts|how-to,windowmac,3,tools/shortcut-trainer,draft
+trackpad-gestures-window-management-mac,Trackpad Gestures for Managing Windows on a Mac,mac trackpad gestures windows,explainer,macos-features|productivity,windowmac,3,quiz/mac-multitasking-style,draft
+disable-window-tiling-mac,How to Stop Windows Snapping on a Mac,turn off window tiling mac,how-to,macos-features|troubleshooting,windowmac,3,quiz/tiler-or-floater,draft
+window-gaps-mac,How to Add Gaps Between Windows on a Mac,gaps between windows mac,how-to,productivity|macos-features,windowmac,3,tools/window-size-calculator,draft
+stash-windows-mac,How to Tuck a Window Behind the Screen Edge on a Mac,hide window at screen edge mac,how-to,productivity|alternatives,windowmac,3,quiz/which-mac-window-manager,draft
+coding-window-layout-mac,Best Window Layouts for Coding on a Mac,coding window layout mac,how-to,productivity|multiple-monitors,windowmac,3,tools/ultrawide-split-calculator,draft
+macbook-air-multitasking,How to Multitask on a Small MacBook Screen,multitasking macbook air small screen,how-to,productivity|how-to,windowmac,3,tools/window-size-calculator,draft
+too-many-windows-mac,Too Many Windows Open on Your Mac? How to Get Organised,too many windows open mac,how-to,productivity|macos-features,windowmac,3,quiz/mac-multitasking-style,draft
+picture-in-picture-mac,How to Use Picture in Picture on a Mac,picture in picture mac,how-to,macos-features|how-to,windowmac,3,quiz/mac-multitasking-style,draft
+moom-vs-magnet,Moom vs Magnet: Which Paid Mac Window Manager?,moom vs magnet,comparison,alternatives,windowmac,3,quiz/which-mac-window-manager,draft
+bettersnaptool-vs-magnet,BetterSnapTool vs Magnet: Which Is Better?,bettersnaptool vs magnet,comparison,alternatives,windowmac,3,quiz/which-mac-window-manager,draft
+amethyst-vs-yabai,Amethyst vs yabai: Which Tiling Window Manager Fits You?,amethyst vs yabai,comparison,alternatives,windowmac,3,quiz/tiler-or-floater,draft
+divvy-alternatives,Divvy Alternatives for Mac,divvy alternative mac,alternative,alternatives,windowmac,3,tools/window-size-calculator,draft
+gesture-window-manager-mac,Gesture Window Managers for Mac: Mouse and Trackpad Options,gesture window manager mac,roundup,alternatives|productivity,windowmac,3,quiz/which-mac-window-manager,draft
+loop-alternatives,Loop Alternatives for Mac,loop window manager alternative,alternative,alternatives,windowmac,3,quiz/which-mac-window-manager,draft
+best-menu-bar-apps-mac-2027,Best Menu Bar Apps for Mac in 2027,best menu bar apps mac 2027,roundup,best-apps-2027|productivity,windowmac,3,,draft
+best-mac-productivity-apps-2027,Best Mac Productivity Apps in 2027,best mac productivity apps 2027,roundup,best-apps-2027|productivity,windowmac,3,quiz/mac-multitasking-style,draft
+best-open-source-mac-apps-2027,Best Open-Source Mac Apps in 2027,best open source mac apps 2027,roundup,best-apps-2027|alternatives,windowmac,3,,draft
+external-monitor-not-detected-mac,External Monitor Not Detected on Your Mac? What to Try,external monitor not detected mac,troubleshooting,troubleshooting|multiple-monitors,windowmac,4,quiz/multi-monitor-setup,draft
+three-monitors-mac,How to Set Up Three Monitors on a Mac,three monitors mac,how-to,multiple-monitors|how-to,windowmac,4,tools/multi-monitor-planner,draft
+dock-menu-bar-second-monitor-mac,How to Show the Dock and Menu Bar on a Second Monitor,dock on second monitor mac,how-to,multiple-monitors|macos-features,windowmac,4,quiz/multi-monitor-setup,draft
+writing-focus-layout-mac,A Distraction-Free Writing Setup on a Mac,distraction free writing mac setup,how-to,productivity,windowmac,4,tools/window-size-calculator,draft
+merge-windows-into-tabs-mac,How to Merge Windows Into Tabs on a Mac,merge windows into tabs mac,how-to,macos-features|how-to,windowmac,4,quiz/mac-multitasking-style,draft
+caps-lock-window-manager-trigger,Use Caps Lock or Another Key to Trigger Window Snapping on a Mac,caps lock window manager mac,how-to,keyboard-shortcuts|productivity,windowmac,4,tools/shortcut-trainer,draft
+ipad-second-display-windows,How to Move Windows to an iPad Used as a Second Display,move window to ipad sidecar,how-to,multiple-monitors|how-to,windowmac,4,quiz/multi-monitor-setup,draft
+best-mac-apps-ultrawide-monitor-2027,Best Mac Apps for Ultrawide Monitors in 2027,best mac apps ultrawide monitor 2027,roundup,best-apps-2027|multiple-monitors,windowmac,4,tools/ultrawide-split-calculator,draft
+stop-apps-reopening-windows-mac,How to Stop Mac Apps Reopening Old Windows,stop mac reopening windows,how-to,troubleshooting|macos-features,windowmac,4,quiz/mac-multitasking-style,draft

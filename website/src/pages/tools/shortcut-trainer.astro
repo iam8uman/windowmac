@@ -1,0 +1,134 @@
+---
+import ToolLayout from '../../components/ToolLayout.astro';
+---
+<ToolLayout slug="shortcut-trainer">
+  <div class="k-row">
+    <div class="k-field">
+      <label for="tr-set">Shortcut set</label>
+      <select id="tr-set">
+        <option value="apps">Windows and apps (any macOS)</option>
+        <option value="tiling">macOS window tiling (Sequoia 15 or later)</option>
+        <option value="mission">Mission Control and Spaces</option>
+        <option value="windowmac">Windowmac (hold Option)</option>
+        <option value="all">Everything</option>
+      </select>
+    </div>
+    <div class="k-field"><span class="k-label">&nbsp;</span><button type="button" class="k-btn" data-start>Start a round</button></div>
+  </div>
+  <div class="tr-stage" data-stage aria-live="polite">
+    <p>Choose a set and press <strong>Start a round</strong>. Each question shows an action; pick the shortcut that does it.</p>
+  </div>
+  <div slot="explain">
+    <h2>How the trainer works</h2>
+    <p>Each round asks about every shortcut in the set once, in random order, with three wrong answers taken from the same set. Get one wrong and it returns two or three questions later, so the round ends only when you have answered each shortcut correctly. Your score counts first-try answers.</p>
+    <p>The macOS shortcuts come from Apple’s keyboard shortcut and window tiling pages. On keyboards with a globe key, <kbd>Fn</kbd> is the globe key. The Windowmac shortcuts are its defaults while you hold the trigger key, which is Left Option unless you change it.</p>
+  </div>
+</ToolLayout>
+<style>
+  .tr-stage { margin-top: 8px; }
+  .tr-stage :global(.tr-q) { font: 600 20px/1.3 var(--k-display); margin: 6px 0 14px; }
+  .tr-stage :global(.tr-opts) { display: grid; gap: 10px; }
+  .tr-stage :global(.tr-opts button) { text-align: left; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--k-line-strong); background: var(--k-paper); color: var(--k-ink); font: 500 16px var(--k-font); cursor: pointer; }
+  .tr-stage :global(.tr-opts button:hover) { background: var(--k-sunk); }
+  .tr-stage :global(.tr-opts button[data-state="right"]) { border-color: #1a9c55; background: rgba(26, 156, 85, .12); }
+  .tr-stage :global(.tr-opts button[data-state="wrong"]) { border-color: #d64545; background: rgba(214, 69, 69, .12); }
+  .tr-stage :global(.tr-meta) { font-size: 14px; color: var(--k-muted); }
+</style>
+<script>
+  type Card = { set: string; does: string; keys: string };
+  const CARDS: Card[] = [
+    { set: 'apps', does: 'Switch to the app you used last', keys: '{Command}-{Tab}' },
+    { set: 'apps', does: 'Go to the next window of the same app', keys: '{Command}-{`}' },
+    { set: 'apps', does: 'Hide the front app', keys: '{Command}-{H}' },
+    { set: 'apps', does: 'Hide every app except the front one', keys: '{Option}-{Command}-{H}' },
+    { set: 'apps', does: 'Minimise the front window', keys: '{Command}-{M}' },
+    { set: 'apps', does: 'Minimise every window of the front app', keys: '{Option}-{Command}-{M}' },
+    { set: 'apps', does: 'Close the front window', keys: '{Command}-{W}' },
+    { set: 'apps', does: 'Close every window of the app', keys: '{Option}-{Command}-{W}' },
+    { set: 'apps', does: 'Quit the app', keys: '{Command}-{Q}' },
+    { set: 'apps', does: 'Enter or leave full screen', keys: '{Control}-{Command}-{F}' },
+    { set: 'apps', does: 'Force quit an app', keys: '{Option}-{Command}-{Esc}' },
+    { set: 'tiling', does: 'Move the window to the left half', keys: '{Fn}-{Control}-{←}' },
+    { set: 'tiling', does: 'Move the window to the top half', keys: '{Fn}-{Control}-{↑}' },
+    { set: 'tiling', does: 'Fill the desktop without going full screen', keys: '{Fn}-{Control}-{F}' },
+    { set: 'tiling', does: 'Centre the window', keys: '{Fn}-{Control}-{C}' },
+    { set: 'tiling', does: 'Return the window to its size before tiling', keys: '{Fn}-{Control}-{R}' },
+    { set: 'tiling', does: 'Put the front window left and the next one right', keys: '{Fn}-{Control}-{Shift}-{←}' },
+    { set: 'tiling', does: 'Put the front window on top and the next one below', keys: '{Fn}-{Control}-{Shift}-{↑}' },
+    { set: 'tiling', does: 'Front window left, two more in the right quarters', keys: '{Fn}-{Control}-{Option}-{Shift}-{←}' },
+    { set: 'mission', does: 'Open Mission Control', keys: '{Control}-{↑}' },
+    { set: 'mission', does: 'Show all windows of the front app', keys: '{Control}-{↓}' },
+    { set: 'mission', does: 'Move to the desktop space on the right', keys: '{Control}-{→}' },
+    { set: 'mission', does: 'Show the desktop', keys: '{Command}-{Mission Control}' },
+    { set: 'mission', does: 'Show or hide the Dock', keys: '{Option}-{Command}-{D}' },
+    { set: 'mission', does: 'Open Mission Control settings', keys: '{Option}-{Mission Control}' },
+    { set: 'windowmac', does: 'Right half, then right third, then two thirds', keys: '{Option} + {→}' },
+    { set: 'windowmac', does: 'Maximise, then almost maximise', keys: '{Option} + {Return}' },
+    { set: 'windowmac', does: 'Centre the window', keys: '{Option} + {C}' },
+    { set: 'windowmac', does: 'Top-left quarter', keys: '{Option} + {1}' },
+    { set: 'windowmac', does: 'Send the window to the next screen', keys: '{Option} + {]}' },
+    { set: 'windowmac', does: 'Make the window larger', keys: '{Option} + {=}' },
+    { set: 'windowmac', does: 'Undo the last move', keys: '{Option} + {Z}' },
+    { set: 'windowmac', does: 'Stash the window behind the right edge', keys: '{Option} + {.}' },
+    { set: 'windowmac', does: 'Line up every window on the screen as a strip', keys: '{Option} + {S}' },
+  ];
+  const stage = document.querySelector<HTMLElement>('[data-stage]')!;
+  const setSel = document.getElementById('tr-set') as HTMLSelectElement;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+  const kbd = (k: string) => esc(k).replace(/\{([^}]+)\}/g, '<kbd>$1</kbd>');
+  const shuffle = <T,>(a: T[]) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j]!, a[i]!]; } return a; };
+
+  let pool: Card[] = [], queue: Card[] = [], missed = new Set<Card>(), firstTry = 0, asked = 0, total = 0;
+
+  function start() {
+    pool = CARDS.filter((c) => setSel.value === 'all' || c.set === setSel.value);
+    queue = shuffle([...pool]);
+    missed = new Set(); firstTry = 0; asked = 0; total = pool.length;
+    next();
+  }
+
+  function next() {
+    const card = queue.shift();
+    if (!card) return finish();
+    asked++;
+    const wrong = shuffle(pool.filter((c) => c !== card && c.keys !== card.keys)).slice(0, 3);
+    const opts = shuffle([card, ...wrong]);
+    const done = Math.max(0, total - queue.length - 1);
+    stage.innerHTML = `<p class="tr-meta">Learned ${done} of ${total}</p><p class="tr-q">${esc(card.does)}</p>
+      <div class="tr-opts" role="group" aria-label="Choose the shortcut">${opts.map((o, i) => `<button type="button" data-i="${i}">${kbd(o.keys)}</button>`).join('')}</div><p data-fb class="tr-meta"></p>`;
+    const buttons = [...stage.querySelectorAll<HTMLButtonElement>('.tr-opts button')];
+    buttons.forEach((b) => b.addEventListener('click', () => {
+      const pick = opts[Number(b.dataset.i)]!;
+      buttons.forEach((x) => (x.disabled = true));
+      const fb = stage.querySelector<HTMLElement>('[data-fb]')!;
+      const right = buttons[opts.indexOf(card)]!;
+      right.dataset.state = 'right';
+      if (pick === card) {
+        if (!missed.has(card)) firstTry++;
+        fb.innerHTML = 'Correct.';
+      } else {
+        b.dataset.state = 'wrong';
+        missed.add(card);
+        queue.splice(Math.min(2 + Math.floor(Math.random() * 2), queue.length), 0, card);
+        fb.innerHTML = `Not quite. It is ${kbd(card.keys)}. It will come back shortly.`;
+      }
+      fb.insertAdjacentHTML('beforeend', ' <button type="button" class="k-btn" data-next>Next</button>');
+      const nb = fb.querySelector<HTMLButtonElement>('[data-next]')!;
+      nb.addEventListener('click', next);
+      nb.focus({ preventScroll: true });
+    }));
+    buttons[0]?.focus({ preventScroll: true });
+  }
+
+  function finish() {
+    const list = [...missed];
+    stage.innerHTML = `<div class="k-result"><p class="k-kicker">Round complete</p><h2>${firstTry} of ${total} right first time</h2>
+      ${list.length ? `<p>Practise these:</p><ul>${list.map((c) => `<li>${esc(c.does)}: ${kbd(c.keys)}</li>`).join('')}</ul>` : '<p>No misses. Try another set.</p>'}
+      <p><button type="button" class="k-btn" data-again>Go again</button></p></div>`;
+    stage.querySelector<HTMLButtonElement>('[data-again]')!.addEventListener('click', start);
+    stage.querySelector<HTMLElement>('h2')!.setAttribute('tabindex', '-1');
+    stage.querySelector<HTMLElement>('h2')!.focus({ preventScroll: true });
+  }
+
+  document.querySelector('[data-start]')!.addEventListener('click', start);
+</script>
