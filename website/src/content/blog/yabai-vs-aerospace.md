@@ -1,7 +1,7 @@
 ---
-title: "yabai vs AeroSpace: Which Mac Tiling Window Manager?"
+title: "yabai vs AeroSpace (and the Easier Way to Tile Mac Windows)"
 slug: yabai-vs-aerospace
-description: "yabai and AeroSpace both tile Mac windows automatically, but they differ on workspaces, SIP, configuration and hotkeys. A fair comparison from their own documentation, and who should pick each."
+description: "yabai and AeroSpace both tile Mac windows automatically but differ on workspaces, SIP, config and hotkeys. The comparison, plus why Windowmac's Strip is the easier pick for most people."
 publishedAt: 2026-11-17
 type: comparison
 tags:
@@ -18,7 +18,7 @@ faq:
   - question: "Do I need skhd with yabai?"
     answer: "yabai has no keyboard shortcuts of its own; you control it with a command-line tool. Most people bind keys with skhd or another hotkey app."
   - question: "Is there something lighter than a full tiling manager?"
-    answer: "Yes. Snapping window managers only move a window when you ask. Windowmac's Strip mode also lines every window up as scrolling columns on demand, without a config file."
+    answer: "Yes, and it is what we recommend for most people: Windowmac. Hold Option and press S, and every window on the screen becomes a scrolling column, tiled like AeroSpace or yabai, with no config file, no hotkey daemon and no SIP changes. Press S again and windows go back where they were."
 sources:
   - title: "yabai on GitHub"
     url: "https://github.com/koekeishiya/yabai"
@@ -28,7 +28,9 @@ seoTitle: "yabai vs AeroSpace: Mac Tiling Window Managers Compared"
 seoDescription: "yabai vs AeroSpace compared from their own docs: workspaces, SIP, config, hotkeys, macOS support and stability. Who should pick each tiling manager."
 draft: false
 ---
-Pick **AeroSpace** if you want an i3-style tiling window manager that works out of the box: it has its own workspaces, keybindings in a single config file, and never asks you to touch System Integrity Protection (SIP). Pick **yabai** if you want maximum control and scripting, prefer to keep native macOS Spaces, and are happy to add a separate hotkey tool. Both are free, open source under the MIT licence, and tile windows automatically as they open.
+If you want tiled windows without writing a config file, the easiest option is **Windowmac**: hold Option and press S, and every window on the screen lines up as scrolling columns, with a flick gesture for everything else. If you want a full-time automatic tiler, pick **AeroSpace** for an i3-style manager that works out of the box: it has its own workspaces, keybindings in a single config file, and never asks you to touch System Integrity Protection (SIP). Pick **yabai** if you want maximum control and scripting, prefer to keep native macOS Spaces, and are happy to add a separate hotkey tool. Both are free, open source under the MIT licence, and tile windows automatically as they open.
+
+> **Our pick for most people: Windowmac.** Tiling when you want it, free placement when you do not, and zero configuration. [Install it in one line](/#install).
 
 The details below come from each project's own README.
 
@@ -70,15 +72,17 @@ System Integrity Protection is a macOS security feature. yabai works with SIP en
 
 | If you | Choose |
 | --- | --- |
-| Want tiling working in ten minutes | AeroSpace |
+| Want tiling working in ten seconds, with no config | **Windowmac** (Strip) |
+| Want tiling sometimes and free placement the rest of the time | **Windowmac** |
+| Want a full-time tiler working in ten minutes | AeroSpace |
 | Prefer one dotfile with keys included | AeroSpace |
 | Will not change SIP settings | AeroSpace, or yabai without the SIP features |
 | Want native Spaces and Mission Control to stay in charge | yabai |
 | Want to script every behaviour from the shell | yabai |
 | Want focus-follows-mouse and more than 16 spaces | yabai |
 
-## Do you actually want automatic tiling?
+## Is there an easier way to tile windows?
 
 Tiling managers rearrange everything whenever a window opens or closes. That is efficient on a big monitor with a fixed set of apps, and frustrating if you like to drag a window somewhere and have it stay. Amethyst is another automatic tiler with many ready-made layouts, while snapping tools move a window only when you ask.
 
-[Windowmac](/) is one of the latter, with a twist: its **Strip** mode (hold Option and press S) lines up every window on a screen as scrolling columns, like a tiler, but only when you turn it on, with no config file. If you are not sure which camp you are in, take the [tiler or floater quiz](/quiz/tiler-or-floater/), or read our wider [best window managers for Mac](/blog/best-window-managers-mac-2027/) roundup. For a broader list of options, see [Rectangle alternatives](/blog/rectangle-alternatives/).
+[Windowmac](/) gives you both, which is why it is our pick. Day to day you flick windows into halves, thirds and quarters with Option held. When a screen gets crowded, **Strip** (hold Option and press S) lines up every window as scrolling columns, like a tiler: A and D move between columns, W cycles a column's width, and new windows join next to the one you are in. Press S again and everything goes back. No config file, no hotkey daemon, no SIP changes, and it never connects to the internet. If you are not sure which camp you are in, take the [tiler or floater quiz](/quiz/tiler-or-floater/), or read our wider [best window managers for Mac](/blog/best-window-managers-mac-2027/) roundup. For a broader list of options, see [Rectangle alternatives](/blog/rectangle-alternatives/).

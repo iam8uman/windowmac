@@ -157,6 +157,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Serif:ital@1&family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="foot-term.css?v=1">
   <script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -576,6 +577,20 @@ $ <span class="caret"></span></pre>
   </main>
 
   <footer class="foot">
+<section class="ft" aria-labelledby="ft-title">
+  <div class="ft-band">
+    <div class="ft-copy">
+      <p class="ft-eyebrow"><span class="ft-dot" aria-hidden="true"></span>Install from Terminal</p>
+      <h2 class="ft-title" id="ft-title">One line. <em>About ten seconds.</em></h2>
+      <p class="ft-sub">Paste this into Terminal. It downloads the latest Windowmac from GitHub, checks it and puts it in Applications. Rather click? <a href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip">Download the .zip</a>.</p>
+      <div class="ft-cmd"><code>curl -fsSL https://www.windowmac.app/install.sh | bash</code><button type="button" class="ft-copy-btn" data-ft-copy="curl -fsSL https://www.windowmac.app/install.sh | bash">Copy</button></div>
+    </div>
+    <figure class="ft-term" data-ft-term aria-label="What the Windowmac installer prints">
+      <div class="ft-bar"><i></i><i></i><i></i><span>zsh — ~</span><button type="button" class="ft-replay" data-ft-replay>Replay</button></div>
+      <pre class="ft-screen" aria-hidden="true"><span class="ft-l ft-in"><span class="ft-ps">~ %</span> <span class="ft-typed" data-text="curl -fsSL https://www.windowmac.app/install.sh | bash">curl -fsSL https://www.windowmac.app/install.sh | bash</span></span><span class="ft-l"> </span><span class="ft-l ft-ban" style="--c:#0A84FF;--cols:79">  ██╗    ██╗██╗███╗   ██╗██████╗  ██████╗ ██╗    ██╗███╗   ███╗ █████╗  ██████╗</span><span class="ft-l ft-ban" style="--c:#2D82FB;--cols:79">  ██║    ██║██║████╗  ██║██╔══██╗██╔═══██╗██║    ██║████╗ ████║██╔══██╗██╔════╝</span><span class="ft-l ft-ban" style="--c:#4A80F8;--cols:79">  ██║ █╗ ██║██║██╔██╗ ██║██║  ██║██║   ██║██║ █╗ ██║██╔████╔██║███████║██║</span><span class="ft-l ft-ban" style="--c:#5F7EF6;--cols:79">  ██║███╗██║██║██║╚██╗██║██║  ██║██║   ██║██║███╗██║██║╚██╔╝██║██╔══██║██║</span><span class="ft-l ft-ban" style="--c:#717CF5;--cols:79">  ╚███╔███╔╝██║██║ ╚████║██████╔╝╚██████╔╝╚███╔███╔╝██║ ╚═╝ ██║██║  ██║╚██████╗</span><span class="ft-l ft-ban" style="--c:#7D7BF4;--cols:79">   ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝╚═════╝  ╚═════╝  ╚══╝╚══╝ ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝</span><span class="ft-l"> </span><span class="ft-l ft-dim">  Flick windows into place on your Mac</span><span class="ft-l"> </span><span class="ft-l">  <b class="ft-step">→</b> Downloading the latest Windowmac…</span><span class="ft-l ft-progress"><span class="ft-prog">########################################</span> <span class="ft-pct">100.0%</span></span><span class="ft-l">  <b class="ft-ok">✓</b> Downloaded</span><span class="ft-l">  <b class="ft-ok">✓</b> Checksum verified</span><span class="ft-l">  <b class="ft-step">→</b> Installing…</span><span class="ft-l">  <b class="ft-ok">✓</b> Installed Windowmac to /Applications/Windowmac.app</span><span class="ft-l"> </span><span class="ft-l">  Hold <b class="ft-b">Left ⌥ (Option)</b> and flick your mouse. Enjoy!</span><span class="ft-l"> </span><span class="ft-l ft-in"><span class="ft-ps">~ %</span> <span class="ft-caret"></span></span></pre>
+    </figure>
+  </div>
+</section>
     <div class="foot-grid">
       <div class="foot-brand-col">
         <a class="brand foot-brand" href="#"><img src="favicon.png" alt="" width="26" height="26"><span>Windowmac</span></a>
@@ -609,6 +624,7 @@ $ <span class="caret"></span></pre>
         </ul>
       </div>
     </div>
+    <div class="ft-mark-wrap" aria-hidden="true"><p class="ft-mark">Windowmac</p></div>
     <div class="foot-base">
       <p>Made with ♥ in Nepal by <a href="https://github.com/iam8uman">Suman Sharma</a>. MIT license.</p>
       <p class="credit">Inspired by radial window managers like Loop. Independent code.</p>
@@ -618,5 +634,6 @@ $ <span class="caret"></span></pre>
 
   <script src="demo.js" defer></script>
   <script src="hero.js" defer></script>
+  <script src="foot-term.js?v=1" defer></script>
 </body>
 </html>

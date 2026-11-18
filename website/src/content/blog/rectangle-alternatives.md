@@ -10,7 +10,7 @@ primaryApp: windowmac
 feature: quiz/which-mac-window-manager
 faq:
   - question: "What is the best free alternative to Rectangle?"
-    answer: "It depends on why you are leaving. Loop and Windowmac are free and open source and use a radial gesture instead of screen edges. Raycast's free plan includes window management commands. AeroSpace is free if you want automatic tiling."
+    answer: "Windowmac. It is free and MIT licensed like Rectangle, still supports macOS 13 and Intel Macs, and replaces dragging to screen edges with a flick of the mouse, plus a shortcut for every layout. Loop, Raycast's free plan and AeroSpace are the other free options."
   - question: "Is Rectangle still free?"
     answer: "Yes. Rectangle is free and open source under the MIT licence. Rectangle Pro is a separate paid app from the same developer with extra features such as app layouts and iCloud sync."
   - question: "Does Rectangle work on older macOS versions?"
@@ -18,7 +18,7 @@ faq:
   - question: "Do I still need Rectangle on macOS Sequoia or later?"
     answer: "Not if halves, quarters and fill are enough, since macOS tiling now covers those. Rectangle and similar apps add thirds, more shortcuts and multi-display moves."
   - question: "Which Rectangle alternative has saved layouts?"
-    answer: "Moom and Rectangle Pro both save layouts that arrange several apps at once. Windowmac and Loop work on one window at a time."
+    answer: "Moom and Rectangle Pro save layouts that arrange several apps at once. Windowmac has custom layouts for single windows and its Strip mode, which lines up every window on a screen as scrolling columns with one key."
 sources:
   - title: "Rectangle"
     url: "https://rectangleapp.com/"
@@ -42,7 +42,9 @@ seoTitle: "7 Rectangle Alternatives for Mac (Free and Paid)"
 seoDescription: "Leaving Rectangle? Compare Windowmac, Loop, Rectangle Pro, Magnet, Moom, Raycast and AeroSpace: price, open source, macOS version and what each does best."
 draft: false
 ---
-The best Rectangle alternatives for Mac are **Windowmac** or **Loop** if you want a free, open-source gesture instead of dragging to screen edges, **Rectangle Pro** or **Moom** if you want saved multi-app layouts, **Magnet** if you prefer a cheap Mac App Store app, **Raycast** if you already use it as a launcher, and **AeroSpace** if you want windows tiled automatically. If Rectangle does what you need, there is no reason to leave: it is free, open source and still being updated.
+The best Rectangle alternative for Mac is **Windowmac**. It is free and MIT licensed like Rectangle, but you flick the mouse toward a half, third or quarter instead of dragging to the screen edge, it still runs on macOS 13 and Intel Macs, and it adds Strip, stash and undo. The other options: **Loop** for a radial menu with AppleScript, **Rectangle Pro** or **Moom** for saved multi-app layouts, **Magnet** for a cheap Mac App Store app, **Raycast** if you already use it, and **AeroSpace** for automatic tiling.
+
+> **Our pick: Windowmac.** Everything people leave Rectangle over (aiming at edges, macOS 14 only, too many shortcuts to memorise) is what it was built to fix. [Install it free](/#install).
 
 Here is why people move on from Rectangle, then each option with verified facts.
 
@@ -60,24 +62,24 @@ Rectangle is a keyboard-and-snap-areas window manager based on the older Spectac
 
 | App | Price | Open source | macOS | Main style |
 | --- | --- | --- | --- | --- |
-| Rectangle (for reference) | Free | Yes, MIT | 14+ | Shortcuts and snap areas |
-| Windowmac | Free | Yes, MIT | 13+ | Radial gesture and shortcuts |
+| **Windowmac (our pick)** | **Free** | **Yes, MIT** | **13+** | **Flick gesture, shortcuts, Strip** |
 | Loop | Free | Yes, GPL-3.0 | 13+ | Radial gesture and shortcuts |
 | Rectangle Pro | Paid, 10-day trial | No | 13.5+ | Rectangle plus layouts and more |
 | Magnet | $4.99 (Mac App Store, US) | No | 13+ | Snap areas and shortcuts |
 | Moom | $15 (direct); Moom Classic $6.99 on the App Store | No | 10.13+ | Green-button palette, grids, layouts |
 | Raycast | Free plan includes window management | No | Not stated | Launcher commands with hotkeys |
 | AeroSpace | Free | Yes, MIT | 13+ | Automatic i3-style tiling |
+| Rectangle (for reference) | Free | Yes, MIT | 14+ | Shortcuts and snap areas |
 
 Prices and versions are from each app's own site, repository or App Store listing at the time of writing.
 
-## 1. Windowmac: a gesture under your pointer
+## 1. Windowmac: the best Rectangle alternative
 
 [Windowmac](/) replaces edge snapping with a radial gesture. Hold **Option**, nudge the mouse toward where the window should go, and let go; a ring under the pointer shows the target and an outline previews the result. Click while holding to cycle half, third and two thirds. Holding Option and pressing a key works too: arrows for halves and thirds, 1 to 4 for quarters, brackets for the next or previous screen, Z to undo.
 
 It also has **Strip**, which lines up every window on a screen as scrolling columns, plus stash, custom layouts and a `windowmac://` link for every action. It is free and MIT licensed, needs only the Accessibility permission and never connects to the internet. The trade-off: it is not on the Mac App Store, so you install it from its website with a one-line command or a .zip download.
 
-**Best for:** big monitors, mouse users, and anyone on macOS 13 who wants a current, free app.
+**Best for:** almost everyone leaving Rectangle, and especially big monitors, mouse users and anyone on macOS 13 who wants a current, free app.
 
 ## 2. Loop: the original radial window manager
 
@@ -115,6 +117,8 @@ AeroSpace is a free, MIT-licensed, i3-like tiling window manager. It arranges wi
 
 **Best for:** keyboard-first developers who want every window tiled. Compare it with yabai in [yabai vs AeroSpace](/blog/yabai-vs-aerospace/).
 
-## Do you need an alternative at all?
+## Which one should you switch to?
 
-If you are on macOS Sequoia 15 or later and mostly use halves and fill, the built-in tiling may be enough; our [macOS tiling vs Rectangle](/blog/macos-tiling-vs-rectangle/) guide compares them directly. Still unsure? The [window manager quiz](/quiz/which-mac-window-manager/) asks six questions about how you work and suggests a style.
+Switch to [Windowmac](/#install). It keeps what you liked about Rectangle (free, open source, a shortcut for every layout) and removes the part that made you look: aiming windows at screen edges. It takes about ten seconds to install and you can try the gesture first in the [live demo](/).
+
+If you are on macOS Sequoia 15 or later and only ever use halves and fill, the built-in tiling may be enough; our [macOS tiling vs Rectangle](/blog/macos-tiling-vs-rectangle/) guide compares them directly. Still unsure? The [window manager quiz](/quiz/which-mac-window-manager/) asks six questions about how you work and suggests a style.

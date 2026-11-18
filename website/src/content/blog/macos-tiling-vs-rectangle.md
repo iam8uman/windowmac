@@ -11,7 +11,7 @@ primaryApp: windowmac
 feature: tools/window-shortcut-cheat-sheet
 faq:
   - question: "Is macOS tiling as good as Rectangle?"
-    answer: "For halves, quarters, fill and centre, yes. Rectangle still adds thirds and smaller fractions, more keyboard actions, moving windows between displays and URL automation."
+    answer: "For halves, quarters, fill and centre, yes. Rectangle adds thirds, more shortcuts and display moves. If you are adding an app anyway, Windowmac is our pick: free and open source, with thirds, display moves and undo, and you flick toward the target instead of dragging to an edge."
   - question: "Can I use macOS tiling and Rectangle at the same time?"
     answer: "You can, but both respond to dragging a window to the screen edge. If you keep Rectangle, consider turning off the macOS switches for dragging windows to tile in Desktop & Dock settings, or turning off Rectangle's snap areas."
   - question: "Does macOS tiling have thirds?"
@@ -35,7 +35,7 @@ seoTitle: "macOS Tiling vs Rectangle: Do You Still Need It?"
 seoDescription: "macOS tiling now snaps windows to halves and quarters. Compare it with Rectangle feature by feature to decide whether to keep a window manager."
 draft: false
 ---
-You no longer need Rectangle if you only use halves, quarters, fill and centre: macOS Sequoia 15 and later do all of those with edge snapping, the green button menu and **Fn-Control** shortcuts. Keep Rectangle, or another window manager, if you use **thirds**, move windows **between displays** from the keyboard, want shortcuts for every layout, or automate window moves. Built-in tiling has none of those.
+You no longer need Rectangle if you only use halves, quarters, fill and centre: macOS Sequoia 15 and later do all of those with edge snapping, the green button menu and **Fn-Control** shortcuts. If you use **thirds**, move windows **between displays**, want shortcuts for every layout or automate window moves, you still need an app, and the best one to add is **Windowmac**: free, open source and a flick away, with no screen edge to aim for. Rectangle also covers those gaps but keeps the edge dragging.
 
 Here is the comparison layout by layout, so you can decide in a few minutes.
 
@@ -99,17 +99,18 @@ Yes, with one adjustment. Both macOS and Rectangle respond when you drag a windo
 
 The Fn-Control shortcuts and Rectangle's own shortcuts use different keys, so both sets can stay on.
 
-## What if you want something different from both?
+## What is better than both?
 
-Both macOS tiling and Rectangle ask you to drag to an edge or remember a shortcut. A radial window manager puts the targets under your pointer instead. [Windowmac](/) is free and open source: hold **Option**, flick toward where the window should go, and let go. It has thirds, quarters, next-screen moves and undo, works on macOS 13 or later, and its shortcuts only work while Option is held, so they never clash with Fn-Control. Its Strip mode also lines up every window on a screen as scrolling columns.
+Both macOS tiling and Rectangle ask you to drag to an edge or remember a shortcut. [Windowmac](/) puts the targets under your pointer instead, which is why it is our pick over both. It is free and open source: hold **Option**, flick toward where the window should go, and let go. It has thirds, quarters, next-screen moves and undo, works on macOS 13 or later, and its shortcuts only work while Option is held, so they never clash with Fn-Control. Its Strip mode also lines up every window on a screen as scrolling columns, something neither built-in tiling nor Rectangle offers. [Install it in one line](/#install).
 
 ## So which should you use?
 
 | You | Use |
 | --- | --- |
-| Use halves and fill on one screen | macOS tiling |
-| Need thirds or multi-display moves | Rectangle or another window manager |
-| Want to stop aiming at screen edges | A radial manager such as Windowmac |
+| Want the fastest way to place any window | **Windowmac** |
+| Need thirds or multi-display moves | **Windowmac** (or Rectangle) |
+| Want to stop aiming at screen edges | **Windowmac** |
+| Only ever use halves and fill on one screen | macOS tiling |
 | Want saved multi-app layouts | See [Rectangle alternatives](/blog/rectangle-alternatives/) |
 
 Whichever you choose, the [cheat sheet builder](/tools/window-shortcut-cheat-sheet/) prints the shortcuts for built-in tiling and Windowmac side by side. For the full list of built-in keys, read [macOS window tiling shortcuts explained](/blog/macos-window-tiling-shortcuts/).

@@ -60,6 +60,7 @@ const json = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href={SITE.fontsHref} />
+    <link rel="stylesheet" href="/foot-term.css?v=1" />
     {jsonLd.map((d) => <script is:inline type="application/ld+json" set:html={json(d)} />)}
     {
       SITE.gaId && (
@@ -110,22 +111,18 @@ const json = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
     </main>
     <footer class="k-foot">
       <div class="wrap">
-        <section class="k-foot-cta" aria-label={`Get ${SITE.name}`}>
-          <div class="k-foot-cta-copy">
-            <p class="k-foot-eyebrow">Free · Open source · No account</p>
-            <p class="k-foot-title">Every window, <em>right where you flick it.</em></p>
-            <p class="k-foot-hint">Hold <kbd>⌥</kbd> and flick toward a half, third or quarter. Let go. Done.</p>
-            <div class="k-foot-actions">
-              <a class="k-btn" href={SITE.installHref}>{SITE.ctaLabel}</a>
-              <a class="k-btn ghost" href={SITE.repoUrl}>★ Star on GitHub</a>
+<section class="ft" aria-labelledby="ft-title">
+          <div class="ft-band">
+            <div class="ft-copy">
+              <p class="ft-eyebrow"><span class="ft-dot" aria-hidden="true"></span>Install from Terminal</p>
+              <h2 class="ft-title" id="ft-title">One line. <em>About ten seconds.</em></h2>
+              <p class="ft-sub">Paste this into Terminal. It downloads the latest Windowmac from GitHub, checks it and puts it in Applications. Rather click? <a href="https://github.com/iam8uman/windowmac/releases/latest/download/Windowmac.zip">Download the .zip</a>.</p>
+              <div class="ft-cmd"><code>curl -fsSL https://www.windowmac.app/install.sh | bash</code><button type="button" class="ft-copy-btn" data-ft-copy="curl -fsSL https://www.windowmac.app/install.sh | bash">Copy</button></div>
             </div>
-          </div>
-          <div class="k-foot-demo" aria-hidden="true">
-            <div class="k-foot-screen">
-              <span class="k-foot-bar"><i></i><i></i><i></i></span>
-              <span class="k-foot-pane"></span>
-              <span class="k-foot-cursor"></span>
-            </div>
+            <figure class="ft-term" data-ft-term aria-label="What the Windowmac installer prints">
+              <div class="ft-bar"><i></i><i></i><i></i><span>zsh — ~</span><button type="button" class="ft-replay" data-ft-replay>Replay</button></div>
+              <pre class="ft-screen" aria-hidden="true"><span class="ft-l ft-in"><span class="ft-ps">~ %</span> <span class="ft-typed" data-text="curl -fsSL https://www.windowmac.app/install.sh | bash">curl -fsSL https://www.windowmac.app/install.sh | bash</span></span><span class="ft-l"> </span><span class="ft-l ft-ban" style="--c:#0A84FF;--cols:79">  ██╗    ██╗██╗███╗   ██╗██████╗  ██████╗ ██╗    ██╗███╗   ███╗ █████╗  ██████╗</span><span class="ft-l ft-ban" style="--c:#2D82FB;--cols:79">  ██║    ██║██║████╗  ██║██╔══██╗██╔═══██╗██║    ██║████╗ ████║██╔══██╗██╔════╝</span><span class="ft-l ft-ban" style="--c:#4A80F8;--cols:79">  ██║ █╗ ██║██║██╔██╗ ██║██║  ██║██║   ██║██║ █╗ ██║██╔████╔██║███████║██║</span><span class="ft-l ft-ban" style="--c:#5F7EF6;--cols:79">  ██║███╗██║██║██║╚██╗██║██║  ██║██║   ██║██║███╗██║██║╚██╔╝██║██╔══██║██║</span><span class="ft-l ft-ban" style="--c:#717CF5;--cols:79">  ╚███╔███╔╝██║██║ ╚████║██████╔╝╚██████╔╝╚███╔███╔╝██║ ╚═╝ ██║██║  ██║╚██████╗</span><span class="ft-l ft-ban" style="--c:#7D7BF4;--cols:79">   ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝╚═════╝  ╚═════╝  ╚══╝╚══╝ ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝</span><span class="ft-l"> </span><span class="ft-l ft-dim">  Flick windows into place on your Mac</span><span class="ft-l"> </span><span class="ft-l">  <b class="ft-step">→</b> Downloading the latest Windowmac…</span><span class="ft-l ft-progress"><span class="ft-prog">########################################</span> <span class="ft-pct">100.0%</span></span><span class="ft-l">  <b class="ft-ok">✓</b> Downloaded</span><span class="ft-l">  <b class="ft-ok">✓</b> Checksum verified</span><span class="ft-l">  <b class="ft-step">→</b> Installing…</span><span class="ft-l">  <b class="ft-ok">✓</b> Installed Windowmac to /Applications/Windowmac.app</span><span class="ft-l"> </span><span class="ft-l">  Hold <b class="ft-b">Left ⌥ (Option)</b> and flick your mouse. Enjoy!</span><span class="ft-l"> </span><span class="ft-l ft-in"><span class="ft-ps">~ %</span> <span class="ft-caret"></span></span></pre>
+            </figure>
           </div>
         </section>
 
@@ -171,6 +168,7 @@ const json = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
           </div>
         </div>
 
+        <div class="ft-mark-wrap" aria-hidden="true"><p class="ft-mark">Windowmac</p></div>
         <div class="k-foot-base">
           <p>Made with ♥ in Nepal by <a href={SITE.author.url}>{SITE.author.name}</a>. MIT license.</p>
           <a class="k-foot-top" href="#main">Back to top ↑</a>
@@ -203,5 +201,6 @@ const json = (d: unknown) => JSON.stringify(d).replace(/</g, '\\u003c');
         move(current);
       })();
     </script>
+    <script is:inline src="/foot-term.js?v=1" defer></script>
   </body>
 </html>

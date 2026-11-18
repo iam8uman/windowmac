@@ -1,37 +1,129 @@
 ---
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import InstallCta from '../../components/InstallCta.astro';
-import PostCard from '../../components/PostCard.astro';
 import { SITE, TOPICS } from '../../data/site';
 import Base from '../../layouts/Base.astro';
-import { getPublishedPosts, topicPath } from '../../lib/content';
+import { formatDate, getPublishedPosts, postPath, readingMinutes, topicPath } from '../../lib/content';
 import { breadcrumbJsonLd, itemListJsonLd } from '../../lib/jsonld';
+import '../../styles/hub.css';
 
 const posts = await getPublishedPosts();
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'Guides', path: '/blog/' }];
 const topics = Object.entries(TOPICS)
-  .map(([key, t]) => ({ key, ...t, posts: posts.filter((p) => p.data.tags.includes(key)) }))
-  .filter((t) => t.posts.length > 0);
+  .map(([key, t]) => ({ key, ...t, count: posts.filter((p) => p.data.tags.includes(key)).length }))
+  .filter((t) => t.count > 0);
+const label: Record<string, string> = {
+  'how-to': 'How-to', alternative: 'Alternatives', comparison: 'Versus', roundup: 'Best of 2027', explainer: 'Explainer', troubleshooting: 'Fix',
+};
+// "Start here": the roundups and head-to-heads people search for most, then the newest how-tos.
+const weight: Record<string, number> = { roundup: 0, comparison: 1, alternative: 2 };
+const featured = [...posts]
+  .sort((a, b) => (weight[a.data.type] ?? 9) - (weight[b.data.type] ?? 9))
+  .slice(0, 3);
+const latest = posts.reduce((d, p) => {
+  const t = p.data.updatedAt ?? p.data.publishedAt;
+  return t > d ? t : d;
+}, new Date(0));
 const title = `Mac Guides and How-tos | ${SITE.name}`;
-const description = `Practical Mac guides from ${SITE.name}: step-by-step how-tos, shortcuts, fixes and honest app comparisons, updated for macOS in 2027.`;
+const description = `Practical Mac guides from ${SITE.name}: step-by-step how-tos, shortcuts, fixes and app comparisons, updated for macOS in 2027.`;
 ---
 <Base title={title} description={description} path="/blog/" nav="blog"
-  jsonLd={[breadcrumbJsonLd(crumbs), itemListJsonLd('Guides', posts.map((p) => ({ name: p.data.title, path: `/blog/${p.data.slug}/` })))]}>
-  <div class="wrap">
-    <header class="k-head">
+  jsonLd={[breadcrumbJsonLd(crumbs), itemListJsonLd('Guides', posts.map((p) => ({ name: p.data.title, path: postPath(p.data.slug) })))]}>
+  <div class="wrap hub">
+    <header class="hub-head">
       <Breadcrumbs crumbs={crumbs} />
-      <p class="k-kicker">Guides</p>
-      <h1>Mac guides that get to the point</h1>
-      <p class="k-lede">Step-by-step answers, keyboard shortcuts, fixes and honest comparisons. Each one starts with the answer.</p>
-      <ul class="k-chips">{topics.map((t) => <li><a href={topicPath(t.key)}>{t.label} ({t.posts.length})</a></li>)}</ul>
+      <div class="hub-head-row">
+        <div>
+          <p class="hub-kicker"><span></span>The {SITE.name} guides</p>
+          <h1 class="hub-title">Mac answers, <em>first line first.</em></h1>
+          <p class="hub-lede">Step-by-step how-tos, shortcuts, fixes and head-to-head app comparisons. Every guide opens with the answer, then shows the work.</p>
+        </div>
+        <dl class="hub-stats">
+          <div><dt>Guides</dt><dd>{posts.length}</dd></div>
+          <div><dt>Topics</dt><dd>{topics.length}</dd></div>
+          <div><dt>Updated</dt><dd class="sm">{formatDate(latest)}</dd></div>
+        </dl>
+      </div>
     </header>
-    {topics.map((t) => (
-      <section class="k-section" aria-labelledby={`t-${t.key}`}>
-        <h2 id={`t-${t.key}`}><a href={topicPath(t.key)} style="color:inherit;text-decoration:none">{t.label}</a></h2>
-        <div class="k-grid">{t.posts.slice(0, 6).map((p) => <PostCard post={p} />)}</div>
-        {t.posts.length > 6 && <p><a href={topicPath(t.key)}>All {t.posts.length} {t.label.toLowerCase()} →</a></p>}
-      </section>
-    ))}
-    <InstallCta />
+
+    <section class="hub-feature" aria-labelledby="start-h">
+      <h2 id="start-h" class="hub-label">Start here</h2>
+      <div class="hub-feature-grid">
+        {featured.map((p, i) => (
+          <a class={`hub-feat${i === 0 ? ' big' : ''}`} href={postPath(p.data.slug)}>
+            <span class="hub-feat-glow" aria-hidden="true"></span>
+            <span class="hub-badge">{label[p.data.type]}</span>
+            <h3>{p.data.title}</h3>
+            <p>{p.data.description}</p>
+            <span class="hub-feat-foot">{readingMinutes(p.body ?? '')} min read <i aria-hidden="true">→</i></span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="hub-index" aria-labelledby="all-h" data-hub>
+      <div class="hub-index-bar">
+        <h2 id="all-h" class="hub-label">Every guide <span data-hub-count>{posts.length}</span></h2>
+        <label class="hub-search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+          <span class="sr">Search guides</span>
+          <input type="search" placeholder="Search guides…" autocomplete="off" data-hub-q />
+          <kbd aria-hidden="true">/</kbd>
+        </label>
+      </div>
+      <ul class="hub-chips" aria-label="Topics">
+        <li><a href="/blog/" class="on" data-topic="" aria-current="true">All</a></li>
+        {topics.map((t) => <li><a href={topicPath(t.key)} data-topic={t.key}>{t.label} <b>{t.count}</b></a></li>)}
+      </ul>
+      <ol class="hub-list">
+        {posts.map((p, i) => (
+          <li data-tags={p.data.tags.join(' ')} data-text={`${p.data.title} ${p.data.description}`.toLowerCase()}>
+            <a href={postPath(p.data.slug)}>
+              <span class="hub-n">{String(i + 1).padStart(2, '0')}</span>
+              <span class="hub-row-main">
+                <span class="hub-row-title">{p.data.title}</span>
+                <span class="hub-row-desc">{p.data.description}</span>
+              </span>
+              <span class="hub-row-meta"><span class="hub-type" data-type={p.data.type}>{label[p.data.type]}</span>{readingMinutes(p.body ?? '')} min</span>
+              <i class="hub-arrow" aria-hidden="true">→</i>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <p class="hub-empty" hidden data-hub-empty>No guide matches that yet. Try a shorter word, or <a href="/tools/">browse the free tools</a>.</p>
+    </section>
   </div>
+  <script>
+    // Filter the index in place. Topic chips stay real links (each topic has its own page),
+    // so without JS they simply navigate there.
+    const root = document.querySelector<HTMLElement>('[data-hub]');
+    if (root) {
+      const q = root.querySelector<HTMLInputElement>('[data-hub-q]')!;
+      const rows = [...root.querySelectorAll<HTMLLIElement>('.hub-list li')];
+      const chips = [...root.querySelectorAll<HTMLAnchorElement>('[data-topic]')];
+      const count = root.querySelector('[data-hub-count]')!;
+      const empty = root.querySelector<HTMLElement>('[data-hub-empty]')!;
+      let topic = '';
+      const apply = () => {
+        const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+        let shown = 0;
+        for (const r of rows) {
+          const ok = (!topic || (r.dataset.tags ?? '').split(' ').includes(topic)) && words.every((w) => (r.dataset.text ?? '').includes(w));
+          r.hidden = !ok;
+          if (ok) shown++;
+        }
+        count.textContent = String(shown);
+        empty.hidden = shown > 0;
+      };
+      chips.forEach((c) => c.addEventListener('click', (e) => {
+        e.preventDefault();
+        topic = c.dataset.topic ?? '';
+        chips.forEach((x) => { const on = x === c; x.classList.toggle('on', on); on ? x.setAttribute('aria-current', 'true') : x.removeAttribute('aria-current'); });
+        apply();
+      }));
+      q.addEventListener('input', apply);
+      addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement?.tagName !== 'INPUT') { e.preventDefault(); q.focus(); }
+      });
+    }
+  </script>
 </Base>

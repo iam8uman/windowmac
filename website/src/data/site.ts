@@ -125,7 +125,7 @@ export const TOPICS: Record<string, { label: string; description: string }> = {
   },
   alternatives: {
     label: 'Alternatives and comparisons',
-    description: 'Honest comparisons of Mac window managers, including when another app is the better pick.',
+    description: 'Mac window managers compared head to head, and why Windowmac is our pick.',
   },
   'best-apps-2027': {
     label: 'Best Mac apps 2027',
