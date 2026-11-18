@@ -75,6 +75,19 @@ macOS has no built-in switcher that lists every window of every app the way Wind
 - **Command-Tab, then Command-`** gets to any window in two steps.
 - **AltTab**, a free open-source app, adds a Windows-style window switcher.
 
+## Does Command-` work across desktops and full screen?
+
+Command-` cycles through the windows of the current app that macOS can bring forward. A window that is minimised in the Dock or open in full screen in its own space behaves differently: click a minimised window in the Dock to restore it, and use Mission Control or a swipe to reach a full-screen window. If the app's windows are spread over several desktop spaces, the setting **When switching to an application, switch to a Space with open windows for the application** in **Desktop & Dock** decides whether macOS jumps to them.
+
+## Which method should I use?
+
+| Windows open in the app | Best way to switch |
+| --- | --- |
+| Two | Command-` |
+| Three to five | Command-` or App Exposé |
+| Many, with clear titles | The Window menu |
+| Many, similar-looking | App Exposé, or merge them into tabs |
+
 ## How do I stop needing to switch so much?
 
 Switching is often a symptom of windows sitting on top of each other. Arranging two or three windows side by side means you can see them all and just click. [Snapping windows](/blog/how-to-snap-windows-on-mac/) covers the built-in way. With [Windowmac](/), its Strip mode (hold Option and press S) lines up every window on the screen as columns, and Option-A and Option-D jump between them, which turns window switching into moving left or right.

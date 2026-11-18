@@ -98,30 +98,70 @@ const otherApps = APPS.filter((a) => a.key !== SITE.key);
     </main>
     <footer class="k-foot">
       <div class="wrap">
-        <div>
-          <h2>{SITE.name}</h2>
-          <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href={SITE.installHref}>Install</a></li>
-            <li><a href={SITE.repoUrl}>{SITE.repoLabel}</a></li>
-          </ul>
+        <section class="k-foot-cta" aria-label={`Get ${SITE.name}`}>
+          <div class="k-foot-cta-copy">
+            <p class="k-foot-eyebrow">Free · Open source · No account</p>
+            <p class="k-foot-title">Every window, <em>right where you flick it.</em></p>
+            <p class="k-foot-hint">Hold <kbd>⌥</kbd> and flick toward a half, third or quarter. Let go. Done.</p>
+            <div class="k-foot-actions">
+              <a class="k-btn" href={SITE.installHref}>{SITE.ctaLabel}</a>
+              <a class="k-btn ghost" href={SITE.repoUrl}>★ Star on GitHub</a>
+            </div>
+          </div>
+          <div class="k-foot-demo" aria-hidden="true">
+            <div class="k-foot-screen">
+              <span class="k-foot-bar"><i></i><i></i><i></i></span>
+              <span class="k-foot-pane"></span>
+              <span class="k-foot-cursor"></span>
+            </div>
+          </div>
+        </section>
+
+        <div class="k-foot-grid">
+          <div class="k-foot-brand">
+            <a class="k-brand" href="/"><img src={SITE.favicon} alt="" width="28" height="28" />{SITE.name}</a>
+            <p>{SITE.tagline}. A tiny window manager for macOS 13 and later.</p>
+          </div>
+          <nav aria-label="Product">
+            <h2>Product</h2>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href={SITE.installHref}>Install</a></li>
+              <li><a href="/#faq">FAQ</a></li>
+              <li><a href={SITE.repoUrl}>{SITE.repoLabel}</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Learn">
+            <h2>Learn</h2>
+            <ul>
+              <li><a href="/blog/">All guides</a></li>
+              <li><a href="/tools/">Free tools and quizzes</a></li>
+              <li><a href="/llms.txt">llms.txt</a></li>
+            </ul>
+          </nav>
+          <div class="k-foot-apps">
+            <h2>More free Mac apps</h2>
+            <ul>
+              {
+                otherApps.map((a) => (
+                  <li>
+                    <a class="k-foot-app" href={a.url}>
+                      <img src={a.icon} alt="" width="36" height="36" loading="lazy" />
+                      <span>
+                        <strong>{a.name}</strong>
+                        <small>{a.pitch}</small>
+                      </span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
         </div>
-        <div>
-          <h2>Learn</h2>
-          <ul>
-            <li><a href="/blog/">All guides</a></li>
-            <li><a href="/tools/">Free tools and quizzes</a></li>
-            <li><a href="/llms.txt">llms.txt</a></li>
-          </ul>
-        </div>
-        <div>
-          <h2>More free Mac apps</h2>
-          <ul>
-            {otherApps.map((a) => <li><a href={a.url}>{a.name}</a></li>)}
-          </ul>
-        </div>
-        <div>
-          <p>Made in Nepal by <a href={SITE.author.url}>{SITE.author.name}</a>.</p>
+
+        <div class="k-foot-base">
+          <p>Made with ♥ in Nepal by <a href={SITE.author.url}>{SITE.author.name}</a>. MIT license.</p>
+          <a class="k-foot-top" href="#main">Back to top ↑</a>
         </div>
       </div>
     </footer>

@@ -576,10 +576,43 @@ $ <span class="caret"></span></pre>
   </main>
 
   <footer class="foot">
-    <div class="brand foot-brand"><img src="favicon.png" alt="" width="22" height="22"><span>Windowmac</span></div>
-    <p class="foot-links"><a href="/blog/">Mac guides</a> · <a href="/tools/">Free tools</a> · <a href="/quiz/which-mac-window-manager/">Window manager quiz</a> · <a href="https://www.slidemac.app/">Slidemac</a> · <a href="https://www.screenmac.app/">Screenmac</a></p>
-    <p>Made in Nepal by <a href="https://github.com/iam8uman">Suman Sharma</a>. MIT license.</p>
-    <p class="credit">Inspired by radial window managers like Loop. Independent code.</p>
+    <div class="foot-grid">
+      <div class="foot-brand-col">
+        <a class="brand foot-brand" href="#"><img src="favicon.png" alt="" width="26" height="26"><span>Windowmac</span></a>
+        <p class="foot-tag">Flick windows into place on your Mac. Free, open source, and it never touches the internet.</p>
+        <div class="foot-screen" aria-hidden="true"><span class="foot-pane"></span><span class="foot-cursor"></span></div>
+        <p class="foot-kbd">Hold <kbd>⌥</kbd> and flick.</p>
+      </div>
+      <nav aria-label="Product">
+        <h2>Product</h2>
+        <ul>
+          <li><a href="#install">Install</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="https://github.com/iam8uman/windowmac">Source on GitHub</a></li>
+          <li><a href="install.sh">Install script</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Learn">
+        <h2>Learn</h2>
+        <ul>
+          <li><a href="/blog/">Mac guides</a></li>
+          <li><a href="/tools/">Free tools</a></li>
+          <li><a href="/quiz/which-mac-window-manager/">Window manager quiz</a></li>
+        </ul>
+      </nav>
+      <div class="foot-apps">
+        <h2>More free Mac apps</h2>
+        <ul>
+          <li><a class="foot-app" href="https://www.slidemac.app/"><img src="https://slidemac.vercel.app/icon.png" alt="" width="36" height="36" loading="lazy"><span><strong>Slidemac</strong><small>Trackpad edges for volume, brightness and apps.</small></span></a></li>
+          <li><a class="foot-app" href="https://www.screenmac.app/"><img src="https://www.screenmac.app/icon.png" alt="" width="36" height="36" loading="lazy"><span><strong>Screenmac</strong><small>Screenshots and recordings with annotation. Nothing uploaded.</small></span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-base">
+      <p>Made with ♥ in Nepal by <a href="https://github.com/iam8uman">Suman Sharma</a>. MIT license.</p>
+      <p class="credit">Inspired by radial window managers like Loop. Independent code.</p>
+      <a class="foot-top" href="#">Back to top ↑</a>
+    </div>
   </footer>
 
   <script src="demo.js" defer></script>

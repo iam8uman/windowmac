@@ -90,6 +90,10 @@ Apple suggests this trick: start dragging the file from its window, press <kbd>C
 
 The full differences are explained in [hide vs minimise vs close](/blog/hide-minimize-close-mac/).
 
+## Why does Show Desktop not work in full screen?
+
+Full-screen apps live in their own space, so there are no other windows to move aside and no desktop behind them. Leave full screen first with Control-Command-F, or swipe to a normal desktop space, then show the desktop. Our guide to [exiting full screen](/blog/exit-full-screen-mac/) covers every way out.
+
 ## What if I want windows out of the way more permanently?
 
 Show Desktop is for a quick glance. If you constantly fight with windows covering each other, arranging them is a better fix than clearing them. [Snapping windows](/blog/how-to-snap-windows-on-mac/) puts two or more side by side with no overlap, and [Windowmac](/) can tuck a window behind the screen edge with **Stash** (hold Option and press the comma or full stop key), leaving a sliver you push against to slide it back out.

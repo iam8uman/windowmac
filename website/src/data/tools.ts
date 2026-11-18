@@ -142,7 +142,7 @@ export const TOOLS: ToolEntry[] = [
       {
         question: 'Is a 27-inch 4K monitor good for a Mac?',
         answer:
-          'At about 163 PPI it sits between a typical 1x monitor and a Retina laptop. Looks like 1920 by 1080 is sharp but large; looks like 2560 by 1440 gives more space and is a common compromise. Enter your monitor here to compare.',
+          'At about 163 PPI it sits between a typical 1x monitor and a Retina laptop. Looks like 1920 by 1080 is sharp but large; looks like 2560 by 1440 gives more space and is a good compromise. Enter your monitor here to compare.',
       },
       {
         question: 'Does scaling slow my Mac down?',

@@ -74,6 +74,10 @@ Some single-window apps do quit when you close their window, but that is the app
 
 <kbd>Command</kbd>-<kbd>Q</kbd> ends the app and closes all its windows. Whether those windows come back next time depends on the app and on the **Close windows when quitting an application** setting in **Desktop & Dock**: with it on, apps start fresh. If an app stops responding, <kbd>Option</kbd>-<kbd>Command</kbd>-<kbd>Esc</kbd> opens Force Quit.
 
+## What do the red, yellow and green buttons do?
+
+The three buttons in a window's top-left corner map onto these actions. Red closes the window, the same as Command-W. Yellow minimises it to the Dock, the same as Command-M. Green does not close or hide anything: clicking it makes the app full screen, and hovering over it shows tiling layouts. None of the buttons hides or quits an app, so the keyboard is the only quick way to do those.
+
 ## Which should I use?
 
 | You want to | Use |

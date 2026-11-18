@@ -77,6 +77,10 @@ A setup that suits many window-heavy workflows:
 
 Pick corners away from where you click most. If your Dock sits on the left or right, avoid putting a frequent action in a corner next to it.
 
+## Can I use Hot Corners with Stage Manager or Spaces?
+
+Yes. Hot Corners run the same actions whatever else is on, so a Mission Control corner is a quick way to see your spaces, and a Desktop corner clears Stage Manager's windows aside too. If you use a hot corner to open Mission Control, you can drag windows between spaces from there; our [multiple desktops guide](/blog/multiple-desktops-mac/) covers that.
+
 ## Hot Corners on multiple monitors
 
 The corners are the outer corners of your whole display arrangement. Where two displays meet, the pointer slides across to the other screen instead of stopping, so those inside corners are hard to hit. If you rearrange your displays, check that the corners you rely on are still on an outside edge. Our [multi-monitor planner](/tools/multi-monitor-planner/) can help you see how your displays line up.
