@@ -29,7 +29,8 @@
 .ft .ft-sub { margin: 0 0 22px; max-width: 42ch; color: var(--ft-soft); font: 400 16px/1.6 var(--ft-body); }
 .ft .ft-sub a { color: var(--ft-ink); text-decoration: underline; text-decoration-color: var(--ft-accent); text-underline-offset: 3px; }
 .ft-cmd {
-  display: flex; align-items: center; gap: 8px; max-width: 100%; padding: 6px 6px 6px 14px; border-radius: 12px;
+  display: flex; align-items: center; gap: 8px; width: 100%; max-width: 100%; min-width: 0;
+  padding: 6px 6px 6px 14px; border-radius: 12px;
   background: var(--ft-surface); border: 1px solid var(--ft-line);
 }
 .ft-cmd code {
@@ -104,9 +105,10 @@
 .ft-mark-wrap .ft-mark:hover { background-position: 0 0; }
 
 @media (max-width: 900px) {
-  .ft-band { grid-template-columns: 1fr; }
+  .ft-band { grid-template-columns: minmax(0, 1fr); }
+  .ft-copy { min-width: 0; }
   .ft-term { transform: none; }
-  .ft .ft-title { max-width: 20ch; }
+  .ft .ft-title { max-width: min(20ch, 100%); }
 }
 @media (max-width: 520px) {
   .ft-screen { padding: 12px 12px 14px; font-size: 11px; }
