@@ -23,7 +23,8 @@ export const SITE = {
   favicon: '/favicon.png',
   repoUrl: 'https://github.com/iam8uman/windowmac',
   repoLabel: 'Source on GitHub',
-  vercelInsights: false as boolean,
+  /** Search Console HTML-tag verification value (optional; DNS verification also works). */
+  googleSiteVerification: '' as string,
   gaId: 'G-F4NBF6XKFE' as string | null,
   author: { name: 'Suman Sharma', url: 'https://github.com/iam8uman' },
   fontsHref:
