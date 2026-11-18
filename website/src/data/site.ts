@@ -50,6 +50,36 @@ export interface AppInfo {
   pitch: string;
 }
 
+/** Work from the same maker that is not one of the Mac apps. */
+export interface MakerLink {
+  name: string;
+  url: string;
+  icon: string;
+  pitch: string;
+}
+
+/** Shown in the footer. Windowmac itself is the site, so it is not listed again. */
+export const SAME_MAKER: MakerLink[] = [
+  {
+    name: 'Slidemac',
+    url: 'https://www.slidemac.app/',
+    icon: 'https://slidemac.vercel.app/icon.png',
+    pitch: 'Trackpad edges for volume, brightness and apps.',
+  },
+  {
+    name: 'Screenmac',
+    url: 'https://www.screenmac.app/',
+    icon: 'https://www.screenmac.app/icon.png',
+    pitch: 'Screenshots and recordings with annotation. Nothing uploaded.',
+  },
+  {
+    name: 'Sumanifest UI',
+    url: 'https://ui.sumansharma.info.np',
+    icon: '/sumanifest.svg',
+    pitch: 'UI blocks you can copy, customize, and ship.',
+  },
+];
+
 /** The three free Mac apps. Every guide cross-promotes all three. */
 export const APPS: AppInfo[] = [
   {

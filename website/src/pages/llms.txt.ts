@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { publishedQuizzes, quizPath } from '../data/quizzes';
-import { APPS, SITE, TOPICS } from '../data/site';
+import { SAME_MAKER, SITE, TOPICS } from '../data/site';
 import { publishedTools, toolPath } from '../data/tools';
 import { absoluteUrl, getPublishedPosts, postPath } from '../lib/content';
 
@@ -34,9 +34,9 @@ export const GET: APIRoute = async () => {
       if (inTopic.length === 0) return [];
       return [`## ${t.label}`, '', ...inTopic.map((p) => `- [${p.data.title}](${absoluteUrl(postPath(p.data.slug))}): ${p.data.description}`), ''];
     }),
-    '## Related apps by the same developer',
+    '## From the same maker',
     '',
-    ...APPS.filter((a) => a.key !== SITE.key).map((a) => `- [${a.name}](${a.url}): ${a.pitch}`),
+    ...SAME_MAKER.map((a) => `- [${a.name}](${a.url}): ${a.pitch}`),
     '',
   ];
   return new Response(lines.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
